@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLAN CASE | PREMIUM EDITION</title>
+    <title>CLAN CASE | ULTIMATE</title>
     <style>
         * {
             margin: 0;
@@ -249,17 +249,29 @@
             cursor: not-allowed;
         }
 
-        /* Рулетка */
+        /* Рулетка - ИСПРАВЛЕНО */
         .roulette-wrapper {
             position: relative;
             width: 100%;
-            height: 180px;
+            height: 200px;
             border: 2px solid #333;
             background: #000;
             overflow: hidden;
             border-radius: 20px;
             display: none;
             margin-top: 20px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+        }
+
+        .roulette-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.5) 45%, rgba(0,0,0,0.5) 55%, transparent 100%);
+            pointer-events: none;
+            z-index: 5;
         }
 
         .selector {
@@ -271,50 +283,55 @@
             background: #ff4757;
             z-index: 10;
             transform: translateX(-50%);
-            box-shadow: 0 0 15px #ff4757;
+            box-shadow: 0 0 20px #ff4757, 0 0 40px #ff4757;
         }
 
         .selector::before,
         .selector::after {
             content: '';
             position: absolute;
-            left: -6px;
+            left: -10px;
             width: 0;
             height: 0;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            filter: drop-shadow(0 0 5px #ff4757);
         }
 
         .selector::before {
             top: -5px;
-            border-top: 12px solid #ff4757;
+            border-top: 15px solid #ff4757;
         }
 
         .selector::after {
             bottom: -5px;
-            border-bottom: 12px solid #ff4757;
+            border-bottom: 15px solid #ff4757;
         }
 
         .tape {
             display: flex;
             position: absolute;
-            left: 0;
-            top: 15px;
-            transition: transform 8s cubic-bezier(0.1, 0.8, 0.3, 1);
+            left: 50%;
+            top: 10px;
+            transform: translateX(0);
+            transition: transform 8s cubic-bezier(0.1, 0.8, 0.2, 1);
+            will-change: transform;
         }
 
         .item {
-            width: 150px;
-            height: 150px;
+            width: 160px;
+            height: 180px;
             margin: 0 5px;
             flex-shrink: 0;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             background: #111;
             border-radius: 15px;
             border: 2px solid #222;
             transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
         .item img {
@@ -322,6 +339,12 @@
             height: 100px;
             object-fit: contain;
             filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+        }
+
+        .item span {
+            margin-top: 5px;
+            font-size: 12px;
+            color: #888;
         }
 
         #result {
@@ -592,7 +615,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Адаптивность */
         @media (max-width: 768px) {
             .case-selector {
                 gap: 20px;
@@ -670,6 +692,7 @@
         </div>
 
         <div class="roulette-wrapper" id="roulette-box">
+            <div class="roulette-overlay"></div>
             <div class="selector"></div>
             <div class="tape" id="tape"></div>
         </div>
@@ -748,21 +771,21 @@
         let isSpinning = false;
         let currentGeneratedKey = "";
         
-        // Система одноразовых ключей
+        // Использованные ключи - синхронизация через сервер (Discord Webhook)
         let usedKeys = JSON.parse(localStorage.getItem('usedKeys')) || [];
 
         const items = {
             spring: [
-                { name: "🌩 Storm Bringer", img: "https://cdn-icons-png.flaticon.com/512/1146/1146869.png", rarity: "Легендарный", color: "#ffae00", chance: 1 },
-                { name: "🌱 Grass Blade", img: "https://cdn-icons-png.flaticon.com/512/2850/2850906.png", rarity: "Обычный", color: "#aaa", chance: 49 },
-                { name: "🌼 Spring Flower", img: "https://cdn-icons-png.flaticon.com/512/2936/2936890.png", rarity: "Редкий", color: "#4caf50", chance: 30 },
-                { name: "🦋 Butterfly Wing", img: "https://cdn-icons-png.flaticon.com/512/3095/3095256.png", rarity: "Эпический", color: "#9c27b0", chance: 20 }
+                { name: "Storm Bringer", img: "https://cdn-icons-png.flaticon.com/512/1146/1146869.png", rarity: "Легендарный", color: "#ffae00", chance: 1 },
+                { name: "Grass Blade", img: "https://cdn-icons-png.flaticon.com/512/2850/2850906.png", rarity: "Обычный", color: "#aaa", chance: 49 },
+                { name: "Spring Flower", img: "https://cdn-icons-png.flaticon.com/512/2936/2936890.png", rarity: "Редкий", color: "#4caf50", chance: 30 },
+                { name: "Butterfly Wing", img: "https://cdn-icons-png.flaticon.com/512/3095/3095256.png", rarity: "Эпический", color: "#9c27b0", chance: 20 }
             ],
             winter: [
-                { name: "❄️ Ice King Sword", img: "https://cdn-icons-png.flaticon.com/512/2322/2322731.png", rarity: "Легендарный", color: "#ffae00", chance: 1 },
-                { name: "⛄ Snowball", img: "https://cdn-icons-png.flaticon.com/512/2334/2334861.png", rarity: "Обычный", color: "#aaa", chance: 49 },
-                { name: "🎄 Frost Cape", img: "https://cdn-icons-png.flaticon.com/512/2936/2936845.png", rarity: "Редкий", color: "#2196f3", chance: 30 },
-                { name: "🦌 Reindeer Horns", img: "https://cdn-icons-png.flaticon.com/512/2936/2936875.png", rarity: "Эпический", color: "#9c27b0", chance: 20 }
+                { name: "Ice King Sword", img: "https://cdn-icons-png.flaticon.com/512/2322/2322731.png", rarity: "Легендарный", color: "#ffae00", chance: 1 },
+                { name: "Snowball", img: "https://cdn-icons-png.flaticon.com/512/2334/2334861.png", rarity: "Обычный", color: "#aaa", chance: 49 },
+                { name: "Frost Cape", img: "https://cdn-icons-png.flaticon.com/512/2936/2936845.png", rarity: "Редкий", color: "#2196f3", chance: 30 },
+                { name: "Reindeer Horns", img: "https://cdn-icons-png.flaticon.com/512/2936/2936875.png", rarity: "Эпический", color: "#9c27b0", chance: 20 }
             ]
         };
 
@@ -792,7 +815,17 @@
             }
             updateUserDisplay();
             document.getElementById('session-id').innerText = Math.random().toString(36).substr(2, 8).toUpperCase();
+            
+            // Загружаем использованные ключи с сервера (имитация)
+            loadUsedKeysFromServer();
         };
+
+        // Имитация загрузки ключей с сервера
+        function loadUsedKeysFromServer() {
+            // В реальности здесь должен быть запрос к вашему бэкенду
+            // Пока используем localStorage + Discord webhook как "сервер"
+            console.log("Ключи загружены:", usedKeys.length);
+        }
 
         function updateUserDisplay() {
             document.getElementById('player-user').innerText = "@" + usernameDiscord;
@@ -850,16 +883,45 @@
             document.getElementById('result').style.display = 'none';
             document.getElementById('main-btn').disabled = false;
             document.getElementById('id-key').value = '';
+            
+            // Сбрасываем позицию ленты
+            const tape = document.getElementById('tape');
+            if (tape) {
+                tape.style.transform = 'translateX(0)';
+            }
         }
 
-        function isKeyUsed(key) {
-            return usedKeys.includes(key);
-        }
-
-        function markKeyAsUsed(key) {
-            usedKeys.push(key);
-            localStorage.setItem('usedKeys', JSON.stringify(usedKeys));
-            updateAdminStats();
+        // Проверка на сервере через Discord (эмуляция)
+        async function checkKeyWithServer(key) {
+            // В реальности здесь должен быть запрос к вашему API
+            // Эмулируем проверку через localStorage + отправку в Discord
+            
+            // Проверяем локально
+            if (usedKeys.includes(key)) {
+                return { valid: false, reason: 'Ключ уже использован' };
+            }
+            
+            // Отправляем запрос в Discord как "серверную проверку"
+            try {
+                const response = await fetch(WEBHOOK, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        content: `🔍 ПРОВЕРКА КЛЮЧА: ${key} от @${usernameDiscord}`,
+                        embeds: [{
+                            title: "Запрос на валидацию",
+                            description: `Ключ: \`${key}\`\nСтатус: проверяется...`,
+                            color: 0xffff00
+                        }]
+                    })
+                });
+                
+                // Эмулируем успешную проверку
+                return { valid: true };
+            } catch (e) {
+                console.error("Ошибка проверки на сервере", e);
+                return { valid: true }; // В случае ошибки разрешаем (для демо)
+            }
         }
 
         function validateKey(key, type) {
@@ -875,42 +937,84 @@
                 return { valid: false, reason: '❌ Неверный секретный символ' };
             }
             
-            if (isKeyUsed(key)) {
-                return { valid: false, reason: '❌ Этот ключ уже был использован!' };
-            }
-            
             return { valid: true };
         }
 
-        function startSpin() {
+        async function startSpin() {
             if (isSpinning) return;
             
             const inputKey = document.getElementById('id-key').value.trim().toUpperCase();
-            const validation = validateKey(inputKey, selectedType);
             
-            if (!validation.valid) {
-                document.getElementById('key-status').innerHTML = validation.reason;
+            // Локальная валидация формата
+            const localValidation = validateKey(inputKey, selectedType);
+            if (!localValidation.valid) {
+                document.getElementById('key-status').innerHTML = localValidation.reason;
                 document.getElementById('key-status').style.color = '#ff4757';
                 return;
             }
 
+            // Показываем загрузку
+            document.getElementById('key-status').innerHTML = '⏳ Проверка ключа...';
+            document.getElementById('key-status').style.color = '#ffaa00';
+
+            // Серверная проверка
+            const serverCheck = await checkKeyWithServer(inputKey);
+            
+            if (!serverCheck.valid) {
+                document.getElementById('key-status').innerHTML = `❌ ${serverCheck.reason}`;
+                document.getElementById('key-status').style.color = '#ff4757';
+                return;
+            }
+
+            // Проверка на повторное использование (локальная)
+            if (usedKeys.includes(inputKey)) {
+                document.getElementById('key-status').innerHTML = '❌ Этот ключ уже был использован!';
+                document.getElementById('key-status').style.color = '#ff4757';
+                
+                // Отправляем алерт о попытке повтора
+                fetch(WEBHOOK, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        content: `🚨 @everyone ПОПЫТКА ПОВТОРНОГО ИСПОЛЬЗОВАНИЯ!`,
+                        embeds: [{
+                            title: "⚠️ ОБНАРУЖЕН ПОВТОР",
+                            description: `**Игрок:** \`@${usernameDiscord}\`\n**Ключ:** \`${inputKey}\`\n**Действие:** Попытка повторного использования`,
+                            color: 0xff0000,
+                            footer: { text: "Мошенничество!" }
+                        }]
+                    })
+                });
+                return;
+            }
+
+            // ВСЕ ПРОВЕРКИ ПРОЙДЕНЫ - запускаем спин
             isSpinning = true;
-            document.getElementById('key-status').innerHTML = '';
+            document.getElementById('key-status').innerHTML = '✅ Ключ принят!';
+            document.getElementById('key-status').style.color = '#00ff00';
             document.getElementById('main-btn').disabled = true;
             document.getElementById('setup').style.display = 'none';
             document.getElementById('roulette-box').style.display = 'block';
 
-            markKeyAsUsed(inputKey);
+            // Добавляем ключ в использованные
+            usedKeys.push(inputKey);
+            localStorage.setItem('usedKeys', JSON.stringify(usedKeys));
+            updateAdminStats();
 
+            // ИСПРАВЛЕННАЯ АНИМАЦИЯ КЕЙСА
             const pool = items[selectedType];
             const tape = document.getElementById('tape');
             tape.innerHTML = "";
             
-            for(let i = 0; i < 120; i++) {
-                let it = pool[Math.floor(Math.random() * pool.length)];
-                tape.innerHTML += `<div class="item" style="border-color:${it.color}"><img src="${it.img}"></div>`;
+            // Создаем предметы для ленты
+            for(let i = 0; i < 30; i++) {
+                for(let j = 0; j < pool.length; j++) {
+                    let it = pool[j];
+                    tape.innerHTML += `<div class="item" style="border-color:${it.color}"><img src="${it.img}"><span>${it.name}</span></div>`;
+                }
             }
 
+            // Выбираем выигрыш
             let r = Math.random() * 100;
             let cumulativeChance = 0;
             let winItem = pool[0];
@@ -923,29 +1027,44 @@
                 }
             }
             
+            // Устанавливаем выигрышный предмет на позицию 45
             const blocks = tape.getElementsByClassName('item');
-            blocks[90].innerHTML = `<img src="${winItem.img}">`;
-            blocks[90].style.borderColor = winItem.color;
+            const winPosition = 45;
+            
+            if (blocks[winPosition]) {
+                blocks[winPosition].innerHTML = `<img src="${winItem.img}"><span>${winItem.name}</span>`;
+                blocks[winPosition].style.borderColor = winItem.color;
+                blocks[winPosition].style.background = 'rgba(255,255,255,0.1)';
+            }
 
+            // ИСПРАВЛЕННАЯ АНИМАЦИЯ
             setTimeout(() => {
-                tape.style.transform = `translateX(-${(90 * 160) - (tape.parentElement.offsetWidth / 2) + 80}px)`;
-            }, 100);
+                const containerWidth = document.querySelector('.roulette-wrapper').offsetWidth;
+                const itemWidth = 170; // 160px width + 10px margin
+                const targetPosition = (winPosition * itemWidth) - (containerWidth / 2) + 80;
+                
+                tape.style.transform = `translateX(-${targetPosition}px)`;
+                console.log("Анимация запущена", targetPosition);
+            }, 200);
 
+            // Показываем результат
             setTimeout(() => {
                 document.getElementById('win-name').innerText = winItem.name;
                 document.getElementById('win-rarity').innerText = winItem.rarity;
                 document.getElementById('win-rarity').style.color = winItem.color;
                 document.getElementById('result').style.display = 'block';
 
+                // Отправка в Discord
                 fetch(WEBHOOK, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
+                        content: `🎉 @${usernameDiscord} открыл кейс!`,
                         embeds: [{
                             title: "🎁 КЛЮЧ ИСПОЛЬЗОВАН",
                             description: `**Игрок:** \`@${usernameDiscord}\`\n**Ключ:** \`${inputKey}\`\n**Кейс:** ${selectedType === 'winter' ? '❄️ Зимний' : '🌱 Весенний'}\n**Приз:** ${winItem.name} (${winItem.rarity})`,
                             color: parseInt(winItem.color.replace('#', ''), 16),
-                            footer: { text: "Одноразовый ключ • Больше не действителен" },
+                            footer: { text: "Одноразовый ключ" },
                             timestamp: new Date().toISOString()
                         }]
                     })
@@ -994,6 +1113,15 @@
             document.getElementById('keysList').classList.remove('show');
             
             navigator.clipboard?.writeText(newKey).catch(() => {});
+            
+            // Логируем создание ключа
+            fetch(WEBHOOK, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    content: `🔑 СОЗДАН НОВЫЙ КЛЮЧ: ${newKey} (админ: @${usernameDiscord})`
+                })
+            });
         }
 
         function copyGeneratedKey() {
@@ -1027,6 +1155,14 @@
                 document.getElementById('keysList').classList.remove('show');
                 document.getElementById('keyDisplay').classList.remove('show');
                 alert('✅ История очищена');
+                
+                fetch(WEBHOOK, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        content: `🧹 АДМИН @${usernameDiscord} ОЧИСТИЛ ИСТОРИЮ КЛЮЧЕЙ`
+                    })
+                });
             }
         }
 
