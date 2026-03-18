@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLAN CASE | SECURE V3</title>
+    <title>CLAN CASE | PYTHON BACKEND</title>
     <style>
         /* Стили такие же как в предыдущей версии */
         * {
@@ -198,6 +198,27 @@
             width: 16px;
             height: 16px;
             fill: currentColor;
+        }
+
+        .server-status {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+        }
+
+        .server-status.online {
+            border-color: #00ff00;
+            color: #00ff00;
+        }
+
+        .server-status.offline {
+            border-color: #ff0000;
+            color: #ff0000;
         }
 
         input {
@@ -415,11 +436,13 @@
             border-radius: 40px;
             padding: 40px;
             width: 90%;
-            max-width: 500px;
+            max-width: 600px;
             border: 2px solid #667eea;
             box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
             position: relative;
             animation: slideUp 0.4s ease;
+            max-height: 80vh;
+            overflow-y: auto;
         }
 
         @keyframes slideUp {
@@ -611,6 +634,24 @@
             100% { transform: rotate(360deg); }
         }
 
+        .recent-keys, .top-users {
+            margin-top: 20px;
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 15px;
+        }
+
+        .recent-keys h4, .top-users h4 {
+            color: #888;
+            margin-bottom: 10px;
+        }
+
+        .recent-item, .user-item {
+            padding: 8px;
+            border-bottom: 1px solid #333;
+            font-size: 14px;
+        }
+
         @media (max-width: 768px) {
             .case-selector {
                 gap: 20px;
@@ -643,9 +684,7 @@
             <div class="avatar" id="avatar">?</div>
             <span id="player-user">username</span>
         </div>
-        <div style="font-size: 11px; color: #555; font-family: monospace;">
-            ID: <span id="session-id">----</span>
-        </div>
+        <div class="server-status" id="serverStatus">🔄 Подключение...</div>
     </div>
 
     <div id="selector-screen">
@@ -706,7 +745,7 @@
             
             <div class="admin-header">
                 <h2>⚡ ADMIN PANEL</h2>
-                <p>Управление ключами и статистика</p>
+                <p>Python Backend • SQLite Database</p>
             </div>
 
             <div class="admin-stats">
@@ -715,12 +754,23 @@
                     <div class="stat-label">Всего ключей</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value" id="springKeys">0</div>
-                    <div class="stat-label">Весенних</div>
+                    <div class="stat-value" id="usedKeys">0</div>
+                    <div class="stat-label">Использовано</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value" id="winterKeys">0</div>
-                    <div class="stat-label">Зимних</div>
+                    <div class="stat-value" id="availableKeys">0</div>
+                    <div class="stat-label">Доступно</div>
+                </div>
+            </div>
+
+            <div class="admin-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="springUsed">0</div>
+                    <div class="stat-label">🌱 Весенних</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="winterUsed">0</div>
+                    <div class="stat-label">❄️ Зимних</div>
                 </div>
             </div>
 
@@ -733,17 +783,9 @@
                     <i>❄️</i>
                     Создать зимний ключ
                 </button>
-                <button class="admin-btn" onclick="showAllKeys()">
-                    <i>📋</i>
-                    Показать все ключи
-                </button>
-                <button class="admin-btn" onclick="syncWithDiscord()">
-                    <i>🔄</i>
-                    Синхронизировать с Discord
-                </button>
-                <button class="admin-btn" onclick="clearUsedKeys()">
-                    <i>🗑️</i>
-                    Очистить историю
+                <button class="admin-btn" onclick="loadAdminStats()">
+                    <i>📊</i>
+                    Обновить статистику
                 </button>
             </div>
 
@@ -752,46 +794,57 @@
                 <button class="copy-btn" onclick="copyGeneratedKey()">📋 Копировать</button>
             </div>
 
-            <div class="key-display" id="keysList" style="max-height: 200px; overflow-y: auto;">
-                <div id="keysListContent"></div>
+            <div id="recentKeys" class="recent-keys">
+                <h4>📋 Последние использования</h4>
+                <div id="recentKeysList"></div>
+            </div>
+
+            <div id="topUsers" class="top-users">
+                <h4>🏆 Топ пользователей</h4>
+                <div id="topUsersList"></div>
             </div>
         </div>
     </div>
 
     <script>
-        const WEBHOOK = "https://discord.com/api/webhooks/1483941280248496210/QHWJYcnhPD8Voht5mElw7KVNX-vr4yU5gHQrFoAwTE14vqB9MNnIISuTCjOfMYCEq0cA";
+        // Конфигурация
+        const API_URL = 'http://localhost:5000'; // URL вашего Python сервера
         const ADMIN_PASS = "1337";
         
         let selectedType = "";
-        let usernameDiscord = "гость";
+        let usernameDiscord = localStorage.getItem('discordUser') || "гость";
         let isSpinning = false;
         let currentGeneratedKey = "";
-        
-        // База данных ключей (эмуляция сервера)
-        let keyDatabase = JSON.parse(localStorage.getItem('keyDatabase')) || {
-            used: {}, // { "KEY": { used: true, user: "@username", timestamp: 123456789 } }
-            valid: {} // Для хранения созданных ключей
+
+        const items = {
+            spring: [
+                { name: "Storm Bringer", img: "https://cdn-icons-png.flaticon.com/512/1146/1146869.png", rarity: "Легендарный", color: "#ffae00", chance: 1 },
+                { name: "Grass Blade", img: "https://cdn-icons-png.flaticon.com/512/2850/2850906.png", rarity: "Обычный", color: "#aaa", chance: 49 },
+                { name: "Spring Flower", img: "https://cdn-icons-png.flaticon.com/512/2936/2936890.png", rarity: "Редкий", color: "#4caf50", chance: 30 },
+                { name: "Butterfly Wing", img: "https://cdn-icons-png.flaticon.com/512/3095/3095256.png", rarity: "Эпический", color: "#9c27b0", chance: 20 }
+            ],
+            winter: [
+                { name: "Ice King Sword", img: "https://cdn-icons-png.flaticon.com/512/2322/2322731.png", rarity: "Легендарный", color: "#ffae00", chance: 1 },
+                { name: "Snowball", img: "https://cdn-icons-png.flaticon.com/512/2334/2334861.png", rarity: "Обычный", color: "#aaa", chance: 49 },
+                { name: "Frost Cape", img: "https://cdn-icons-png.flaticon.com/512/2936/2936845.png", rarity: "Редкий", color: "#2196f3", chance: 30 },
+                { name: "Reindeer Horns", img: "https://cdn-icons-png.flaticon.com/512/2936/2936875.png", rarity: "Эпический", color: "#9c27b0", chance: 20 }
+            ]
         };
 
         // Инициализация
         window.onload = () => {
             createParticles();
-            let savedUser = localStorage.getItem('discordUser');
-            if (savedUser) {
-                usernameDiscord = savedUser;
-            } else {
+            
+            if (!localStorage.getItem('discordUser')) {
                 let n = prompt("Твой Username в Discord (без @):");
                 usernameDiscord = n ? n.toLowerCase().trim() : "гость";
                 localStorage.setItem('discordUser', usernameDiscord);
             }
-            updateUserDisplay();
-            document.getElementById('session-id').innerText = Math.random().toString(36).substr(2, 8).toUpperCase();
             
-            // Синхронизация с Discord при загрузке
-            syncFromDiscord();
+            updateUserDisplay();
+            checkServerStatus();
         };
 
-        // Создание частиц
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
             for (let i = 0; i < 30; i++) {
@@ -802,6 +855,26 @@
                 particle.style.animationDelay = Math.random() * -20 + 's';
                 particle.innerHTML = ['✨', '❄️', '⭐', '🌟', '💫'][Math.floor(Math.random() * 5)];
                 particlesContainer.appendChild(particle);
+            }
+        }
+
+        async function checkServerStatus() {
+            const statusEl = document.getElementById('serverStatus');
+            try {
+                const response = await fetch(`${API_URL}/api/key_status/TEST`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                if (response.ok) {
+                    statusEl.innerHTML = '✅ Сервер ONLINE';
+                    statusEl.className = 'server-status online';
+                } else {
+                    throw new Error('Server error');
+                }
+            } catch (e) {
+                statusEl.innerHTML = '❌ Сервер OFFLINE';
+                statusEl.className = 'server-status offline';
+                console.error('Server check failed:', e);
             }
         }
 
@@ -868,106 +941,45 @@
             }
         }
 
-        // 🔥 НАСТОЯЩАЯ ПРОВЕРКА НА СЕРВЕРЕ
+        // 🔥 ПРОВЕРКА НА PYTHON СЕРВЕРЕ
         async function checkKeyWithServer(key) {
-            // Отправляем запрос в Discord как в базу данных
             try {
-                // Сначала проверяем локальную БД (для скорости)
-                if (keyDatabase.used[key]) {
-                    return { 
-                        valid: false, 
-                        reason: `Ключ уже использован пользователем ${keyDatabase.used[key].user} ${new Date(keyDatabase.used[key].timestamp).toLocaleString()}` 
-                    };
-                }
-
-                // Отправляем запрос в Discord для кросс-браузерной проверки
-                const checkId = Date.now() + '-' + Math.random().toString(36);
-                
-                // Сохраняем в локальную БД временно
-                keyDatabase.used[key] = {
-                    used: false,
-                    checking: true,
-                    checkId: checkId,
-                    timestamp: Date.now()
-                };
-                localStorage.setItem('keyDatabase', JSON.stringify(keyDatabase));
-
-                // Отправляем запрос на проверку
-                const response = await fetch(WEBHOOK, {
+                const response = await fetch(`${API_URL}/api/check_key`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        content: `🔍 ЗАПРОС ПРОВЕРКИ КЛЮЧА: ${key}`,
-                        embeds: [{
-                            title: "🔄 Серверная валидация",
-                            description: `**Ключ:** \`${key}\`\n**Пользователь:** @${usernameDiscord}\n**CheckID:** \`${checkId}\``,
-                            color: 0xffff00,
-                            footer: { text: "Ожидание ответа..." }
-                        }]
+                        key: key,
+                        username: usernameDiscord
                     })
                 });
-
-                // В реальном приложении здесь должен быть WebSocket или polling
-                // Эмулируем серверную проверку
-                await new Promise(resolve => setTimeout(resolve, 1000));
-
-                // Проверяем, не использовал ли кто-то этот ключ за это время
-                // В реальности - получаем ответ от сервера
                 
-                // Проверяем историю в Discord через поиск (эмуляция)
-                const keyUsedInDiscord = checkDiscordHistory(key);
-                
-                if (keyUsedInDiscord) {
-                    keyDatabase.used[key] = {
-                        used: true,
-                        user: "другой пользователь",
-                        timestamp: Date.now()
-                    };
-                    localStorage.setItem('keyDatabase', JSON.stringify(keyDatabase));
-                    
-                    return { valid: false, reason: '❌ Ключ уже использован в другом браузере!' };
-                }
-
-                return { valid: true };
-                
+                const data = await response.json();
+                return data;
             } catch (e) {
-                console.error("Ошибка серверной проверки", e);
-                return { valid: false, reason: '❌ Ошибка сервера. Попробуйте позже.' };
+                console.error('Server check failed:', e);
+                return { 
+                    valid: false, 
+                    reason: '❌ Ошибка подключения к серверу' 
+                };
             }
         }
 
-        // Эмуляция проверки истории Discord
-        function checkDiscordHistory(key) {
-            // В реальности здесь должен быть запрос к API Discord
-            // Эмулируем проверку по локальной БД (для демо)
-            return keyDatabase.used[key]?.used === true;
-        }
-
-        // Синхронизация с Discord
-        async function syncFromDiscord() {
-            document.getElementById('key-status').innerHTML = '🔄 Синхронизация с сервером...';
-            
-            // Эмулируем получение данных с сервера
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            
-            // В реальности здесь парсинг сообщений из Discord
-            document.getElementById('key-status').innerHTML = '';
-        }
-
-        function validateKeyFormat(key, type) {
-            const prefix = type === 'winter' ? 'WINT' : 'SPRG';
-            const keyRegex = new RegExp(`^${prefix}-[A-Z0-9]{8}-[A-Z]$`);
-            
-            if (!keyRegex.test(key)) {
-                return { valid: false, reason: '❌ Неверный формат ключа' };
+        // 🔥 АКТИВАЦИЯ НА СЕРВЕРЕ
+        async function activateKeyOnServer(key, winItem, winRarity) {
+            try {
+                await fetch(`${API_URL}/api/activate_key`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        key: key,
+                        username: usernameDiscord,
+                        win_item: winItem,
+                        win_rarity: winRarity
+                    })
+                });
+            } catch (e) {
+                console.error('Activation failed:', e);
             }
-            
-            const secretChar = key.split('-')[2];
-            if (secretChar !== 'L') {
-                return { valid: false, reason: '❌ Неверный секретный символ' };
-            }
-            
-            return { valid: true };
         }
 
         async function startSpin() {
@@ -975,47 +987,25 @@
             
             const inputKey = document.getElementById('id-key').value.trim().toUpperCase();
             
-            // Проверка формата
-            const formatValidation = validateKeyFormat(inputKey, selectedType);
-            if (!formatValidation.valid) {
-                document.getElementById('key-status').innerHTML = formatValidation.reason;
+            // Базовая проверка формата
+            const prefix = selectedType === 'winter' ? 'WINT' : 'SPRG';
+            const keyRegex = new RegExp(`^${prefix}-[A-Z0-9]{8}-L$`);
+            
+            if (!keyRegex.test(inputKey)) {
+                document.getElementById('key-status').innerHTML = '❌ Неверный формат ключа';
                 document.getElementById('key-status').style.color = '#ff4757';
                 return;
             }
 
-            // Показываем загрузку
-            document.getElementById('key-status').innerHTML = '⏳ Серверная проверка ключа...';
+            // Проверка на сервере
+            document.getElementById('key-status').innerHTML = '⏳ Проверка на сервере...';
             document.getElementById('key-status').style.color = '#ffaa00';
             document.getElementById('main-btn').disabled = true;
 
-            // СЕРВЕРНАЯ ПРОВЕРКА
             const serverCheck = await checkKeyWithServer(inputKey);
             
             if (!serverCheck.valid) {
                 document.getElementById('key-status').innerHTML = serverCheck.reason;
-                document.getElementById('key-status').style.color = '#ff4757';
-                document.getElementById('main-btn').disabled = false;
-                
-                // Отправляем алерт о попытке повтора
-                fetch(WEBHOOK, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        content: `🚨 @everyone ПОПЫТКА ПОВТОРНОГО ИСПОЛЬЗОВАНИЯ!`,
-                        embeds: [{
-                            title: "⚠️ ОБНАРУЖЕН ПОВТОР",
-                            description: `**Игрок:** \`@${usernameDiscord}\`\n**Ключ:** \`${inputKey}\`\n**Причина:** ${serverCheck.reason}`,
-                            color: 0xff0000,
-                            timestamp: new Date().toISOString()
-                        }]
-                    })
-                });
-                return;
-            }
-
-            // Проверка локальной БД (финальная)
-            if (keyDatabase.used[inputKey]?.used) {
-                document.getElementById('key-status').innerHTML = '❌ Ключ уже использован!';
                 document.getElementById('key-status').style.color = '#ff4757';
                 document.getElementById('main-btn').disabled = false;
                 return;
@@ -1023,15 +1013,6 @@
 
             // ВСЕ ПРОВЕРКИ ПРОЙДЕНЫ
             isSpinning = true;
-            
-            // Сохраняем в БД
-            keyDatabase.used[inputKey] = {
-                used: true,
-                user: "@" + usernameDiscord,
-                timestamp: Date.now()
-            };
-            localStorage.setItem('keyDatabase', JSON.stringify(keyDatabase));
-
             document.getElementById('key-status').innerHTML = '✅ Ключ принят!';
             document.getElementById('setup').style.display = 'none';
             document.getElementById('roulette-box').style.display = 'block';
@@ -1077,39 +1058,25 @@
                 tape.style.transform = `translateX(-${targetPosition}px)`;
             }, 200);
 
-            setTimeout(() => {
+            setTimeout(async () => {
                 document.getElementById('win-name').innerText = winItem.name;
                 document.getElementById('win-rarity').innerText = winItem.rarity;
                 document.getElementById('win-rarity').style.color = winItem.color;
                 document.getElementById('result').style.display = 'block';
 
-                // ФИНАЛЬНОЕ ПОДТВЕРЖДЕНИЕ В DISCORD
-                fetch(WEBHOOK, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        content: `✅ @${usernameDiscord} использовал ключ ${inputKey}`,
-                        embeds: [{
-                            title: "🎁 КЛЮЧ АКТИВИРОВАН",
-                            description: `**Ключ:** \`${inputKey}\`\n**Пользователь:** @${usernameDiscord}\n**Кейс:** ${selectedType === 'winter' ? '❄️ Зимний' : '🌱 Весенний'}\n**Приз:** ${winItem.name} (${winItem.rarity})`,
-                            color: parseInt(winItem.color.replace('#', ''), 16),
-                            footer: { text: "Ключ заблокирован для всех браузеров" }
-                        }]
-                    })
-                });
+                // Активация на сервере
+                await activateKeyOnServer(inputKey, winItem.name, winItem.rarity);
 
                 isSpinning = false;
             }, 8500);
         }
 
         // Админ функции
-        function openAdminPanel() {
+        async function openAdminPanel() {
             const pass = prompt("🔐 Введите пароль администратора:");
             if (pass === ADMIN_PASS) {
                 document.getElementById('adminPanel').style.display = 'flex';
-                updateAdminStats();
-                document.getElementById('keyDisplay').classList.remove('show');
-                document.getElementById('keysList').classList.remove('show');
+                await loadAdminStats();
             } else if (pass !== null) {
                 alert("❌ Неверный пароль!");
             }
@@ -1119,41 +1086,68 @@
             document.getElementById('adminPanel').style.display = 'none';
         }
 
-        function updateAdminStats() {
-            const usedKeysCount = Object.keys(keyDatabase.used).filter(k => keyDatabase.used[k].used).length;
-            const springKeys = Object.keys(keyDatabase.used).filter(k => k.startsWith('SPRG')).length;
-            const winterKeys = Object.keys(keyDatabase.used).filter(k => k.startsWith('WINT')).length;
-            
-            document.getElementById('totalKeys').innerText = usedKeysCount;
-            document.getElementById('springKeys').innerText = springKeys;
-            document.getElementById('winterKeys').innerText = winterKeys;
+        async function loadAdminStats() {
+            try {
+                const response = await fetch(`${API_URL}/api/stats`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ admin_pass: ADMIN_PASS })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('totalKeys').innerText = data.stats.total_keys;
+                    document.getElementById('usedKeys').innerText = data.stats.used_keys;
+                    document.getElementById('availableKeys').innerText = data.stats.available_keys;
+                    document.getElementById('springUsed').innerText = data.stats.spring_used;
+                    document.getElementById('winterUsed').innerText = data.stats.winter_used;
+                    
+                    // Последние ключи
+                    let recentHtml = '';
+                    data.stats.recent.forEach(item => {
+                        recentHtml += `<div class="recent-item">🔑 ${item.key} - ${item.user} - ${item.item}</div>`;
+                    });
+                    document.getElementById('recentKeysList').innerHTML = recentHtml || '<div class="recent-item">Нет данных</div>';
+                    
+                    // Топ пользователей
+                    let topHtml = '';
+                    data.stats.top_users.forEach(user => {
+                        topHtml += `<div class="user-item">👤 ${user.user} - ${user.count} ключей</div>`;
+                    });
+                    document.getElementById('topUsersList').innerHTML = topHtml || '<div class="user-item">Нет данных</div>';
+                }
+            } catch (e) {
+                console.error('Failed to load stats:', e);
+            }
         }
 
-        function adminGenerateKey(type) {
-            const prefix = type === 'winter' ? 'WINT' : 'SPRG';
-            const randomPart = Math.random().toString(36).substr(2, 8).toUpperCase();
-            const secretChar = "L";
-            const newKey = `${prefix}-${randomPart}-${secretChar}`;
-            
-            currentGeneratedKey = newKey;
-            document.getElementById('generatedKey').innerText = newKey;
-            document.getElementById('keyDisplay').classList.add('show');
-            document.getElementById('keysList').classList.remove('show');
-            
-            navigator.clipboard?.writeText(newKey).catch(() => {});
-            
-            // Логируем создание ключа
-            fetch(WEBHOOK, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    content: `🔑 СОЗДАН НОВЫЙ КЛЮЧ: ${newKey} (админ: @${usernameDiscord})`,
-                    embeds: [{
-                        description: `**Ключ:** \`${newKey}\`\n**Тип:** ${type === 'winter' ? '❄️ Зимний' : '🌱 Весенний'}`,
-                        color: 0x00ff00
-                    }]
-                })
-            });
+        async function adminGenerateKey(type) {
+            try {
+                const response = await fetch(`${API_URL}/api/create_key`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        admin_pass: ADMIN_PASS,
+                        key_type: type,
+                        admin_user: usernameDiscord
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentGeneratedKey = data.key;
+                    document.getElementById('generatedKey').innerText = data.key;
+                    document.getElementById('keyDisplay').classList.add('show');
+                    
+                    navigator.clipboard?.writeText(data.key).catch(() => {});
+                    await loadAdminStats();
+                }
+            } catch (e) {
+                console.error('Failed to generate key:', e);
+                alert('❌ Ошибка генерации ключа');
+            }
         }
 
         function copyGeneratedKey() {
@@ -1162,54 +1156,6 @@
             }).catch(() => {
                 alert('📋 Ключ: ' + currentGeneratedKey);
             });
-        }
-
-        function showAllKeys() {
-            const usedKeysList = Object.entries(keyDatabase.used)
-                .filter(([_, data]) => data.used)
-                .sort((a, b) => b[1].timestamp - a[1].timestamp);
-            
-            if (usedKeysList.length === 0) {
-                document.getElementById('keysListContent').innerHTML = '<p style="color: #666; text-align: center;">Нет использованных ключей</p>';
-            } else {
-                let html = '<h4 style="margin-bottom: 10px;">📋 Использованные ключи:</h4>';
-                usedKeysList.forEach(([key, data]) => {
-                    const type = key.startsWith('SPRG') ? '🌱' : '❄️';
-                    const date = new Date(data.timestamp).toLocaleString();
-                    html += `<div style="font-family: monospace; padding: 8px; border-bottom: 1px solid #333;">
-                        ${type} ${key}<br>
-                        <span style="font-size: 10px; color: #666;">👤 ${data.user} • ${date}</span>
-                    </div>`;
-                });
-                document.getElementById('keysListContent').innerHTML = html;
-            }
-            document.getElementById('keysList').classList.add('show');
-            document.getElementById('keyDisplay').classList.remove('show');
-        }
-
-        function syncWithDiscord() {
-            alert('🔄 Синхронизация с Discord... (эмуляция)');
-            syncFromDiscord();
-            updateAdminStats();
-        }
-
-        function clearUsedKeys() {
-            if (confirm('⚠️ Точно очистить все использованные ключи?')) {
-                keyDatabase = { used: {}, valid: {} };
-                localStorage.removeItem('keyDatabase');
-                updateAdminStats();
-                document.getElementById('keysList').classList.remove('show');
-                document.getElementById('keyDisplay').classList.remove('show');
-                alert('✅ История очищена');
-                
-                fetch(WEBHOOK, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        content: `🧹 АДМИН @${usernameDiscord} ОЧИСТИЛ ИСТОРИЮ КЛЮЧЕЙ`
-                    })
-                });
-            }
         }
 
         // Обработка Enter
@@ -1224,21 +1170,6 @@
                 closeAdminPanel();
             }
         });
-
-        const items = {
-            spring: [
-                { name: "Storm Bringer", img: "https://cdn-icons-png.flaticon.com/512/1146/1146869.png", rarity: "Легендарный", color: "#ffae00", chance: 1 },
-                { name: "Grass Blade", img: "https://cdn-icons-png.flaticon.com/512/2850/2850906.png", rarity: "Обычный", color: "#aaa", chance: 49 },
-                { name: "Spring Flower", img: "https://cdn-icons-png.flaticon.com/512/2936/2936890.png", rarity: "Редкий", color: "#4caf50", chance: 30 },
-                { name: "Butterfly Wing", img: "https://cdn-icons-png.flaticon.com/512/3095/3095256.png", rarity: "Эпический", color: "#9c27b0", chance: 20 }
-            ],
-            winter: [
-                { name: "Ice King Sword", img: "https://cdn-icons-png.flaticon.com/512/2322/2322731.png", rarity: "Легендарный", color: "#ffae00", chance: 1 },
-                { name: "Snowball", img: "https://cdn-icons-png.flaticon.com/512/2334/2334861.png", rarity: "Обычный", color: "#aaa", chance: 49 },
-                { name: "Frost Cape", img: "https://cdn-icons-png.flaticon.com/512/2936/2936845.png", rarity: "Редкий", color: "#2196f3", chance: 30 },
-                { name: "Reindeer Horns", img: "https://cdn-icons-png.flaticon.com/512/2936/2936875.png", rarity: "Эпический", color: "#9c27b0", chance: 20 }
-            ]
-        };
     </script>
 </body>
 </html>
