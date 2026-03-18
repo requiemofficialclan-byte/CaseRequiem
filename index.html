@@ -3,58 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clan Case Palace | [L] Edition</title>
+    <title>Clan Case System | [L] Premium</title>
     <style>
-        :root { --main-color: #00ffcc; --bg-dark: #0a0a0a; --card-bg: #151515; }
-        body { background: var(--bg-dark); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
+        :root { --main-color: #00ffcc; --winter-color: #00d4ff; --bg-dark: #070707; }
+        body { background: var(--bg-dark); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow: hidden; }
         
-        .header { width: 100%; max-width: 1000px; display: flex; justify-content: space-between; align-items: center; padding: 20px; box-sizing: border-box; }
-        .user-profile { display: flex; align-items: center; gap: 10px; background: var(--card-bg); padding: 8px 15px; border-radius: 50px; border: 1px solid #222; }
+        /* Анимации частиц */
+        .particle { position: fixed; top: -10%; pointer-events: none; z-index: 99; animation: fall linear infinite; }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+
+        .header { width: 100%; max-width: 1000px; display: flex; justify-content: space-between; align-items: center; padding: 20px; z-index: 100; }
+        .user-profile { display: flex; align-items: center; gap: 10px; background: #111; padding: 8px 15px; border-radius: 50px; border: 1px solid #222; }
         .avatar { width: 30px; height: 30px; background: var(--main-color); border-radius: 50%; color: black; display: flex; align-items: center; justify-content: center; font-weight: bold; }
 
-        .main-container { text-align: center; margin-top: 30px; width: 90%; max-width: 600px; }
-        .case-img { width: 160px; height: 160px; border-radius: 50%; border: 3px solid var(--main-color); box-shadow: 0 0 30px rgba(0,255,204,0.2); margin-bottom: 20px; }
+        .case-selector { display: flex; gap: 20px; margin-top: 50px; z-index: 100; flex-wrap: wrap; justify-content: center; }
+        .case-card { background: #111; padding: 20px; border-radius: 20px; border: 2px solid #333; cursor: pointer; transition: 0.3s; width: 180px; text-align: center; }
+        .case-card:hover { transform: translateY(-10px); border-color: var(--main-color); box-shadow: 0 10px 30px rgba(0,255,204,0.2); }
+        .case-card img { width: 100px; height: 100px; border-radius: 50%; margin-bottom: 10px; }
 
-        input { background: #1a1a1a; border: 2px solid #333; color: white; padding: 15px; border-radius: 10px; width: 100%; box-sizing: border-box; font-size: 18px; text-align: center; margin-bottom: 15px; font-family: monospace; }
-        input:focus { border-color: var(--main-color); outline: none; }
-
-        .btn { background: var(--main-color); color: black; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; font-size: 18px; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
-        .btn:hover { transform: scale(1.02); box-shadow: 0 0 20px rgba(0,255,204,0.4); }
+        .main-container { text-align: center; display: none; width: 90%; max-width: 600px; margin-top: 30px; z-index: 100; }
+        input { background: #111; border: 2px solid #333; color: white; padding: 15px; border-radius: 10px; width: 100%; box-sizing: border-box; font-size: 18px; text-align: center; margin-bottom: 15px; }
+        .btn { background: var(--main-color); color: black; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; font-size: 18px; cursor: pointer; text-transform: uppercase; }
+        .btn:disabled { background: #333; cursor: not-allowed; }
 
         /* Рулетка */
-        .roulette-wrapper { position: relative; width: 100%; height: 160px; border: 2px solid #222; background: #0d0d0d; overflow: hidden; border-radius: 15px; display: none; margin-top: 20px; }
+        .roulette-wrapper { position: relative; width: 100%; height: 160px; border: 2px solid #222; background: #000; overflow: hidden; border-radius: 15px; display: none; margin-top: 20px; }
         .selector { position: absolute; left: 50%; top: 0; width: 4px; height: 100%; background: #ff4757; z-index: 10; transform: translateX(-50%); box-shadow: 0 0 10px red; }
         .tape { display: flex; position: absolute; left: 0; top: 15px; transition: transform 8s cubic-bezier(0.1, 0, 0.05, 1); }
-        .item { width: 130px; height: 130px; margin: 0 5px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #111; border-radius: 12px; border-bottom: 4px solid #444; }
+        .item { width: 130px; height: 130px; margin: 0 5px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: #111; border-radius: 12px; border-bottom: 4px solid #444; }
         .item img { width: 85px; height: 85px; object-fit: contain; }
-        .item span { font-size: 11px; margin-top: 5px; font-weight: bold; text-align: center; width: 90%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 
-        /* Результат */
-        #result { display: none; margin-top: 20px; padding: 25px; border: 2px solid var(--main-color); border-radius: 20px; background: #111; animation: pop 0.5s ease; }
-        @keyframes pop { 0% { transform: scale(0.8); } 100% { transform: scale(1); } }
+        #result { display: none; margin-top: 20px; padding: 25px; border-radius: 20px; background: #111; border: 2px solid var(--main-color); animation: scaleUp 0.5s ease; }
+        @keyframes scaleUp { from {transform: scale(0.8); opacity: 0;} to {transform: scale(1); opacity: 1;} }
 
-        /* Скрытая кнопка админа */
-        .admin-gear { position: fixed; bottom: 15px; right: 15px; opacity: 0.2; cursor: pointer; font-size: 18px; color: white; border: none; background: none; }
-        #admin-panel { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1a1a1a; padding: 30px; border-radius: 20px; border: 2px solid var(--main-color); z-index: 1000; width: 320px; box-shadow: 0 0 100px #000; text-align: center; }
+        /* Админка */
+        .admin-gear { position: fixed; bottom: 15px; right: 15px; opacity: 0.1; cursor: pointer; border: none; background: none; color: white; }
+        #admin-panel { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #111; padding: 25px; border-radius: 20px; border: 2px solid var(--main-color); z-index: 1000; width: 300px; text-align: center; }
+        .key-box { background: #000; padding: 10px; border-radius: 10px; font-size: 11px; text-align: left; max-height: 120px; overflow-y: auto; margin-top: 10px; }
     </style>
 </head>
 <body>
 
+    <div id="particles-container"></div>
+
     <div class="header">
         <div class="user-profile">
             <div class="avatar" id="avatar">?</div>
-            <span id="player-name">Игрок</span>
+            <span id="player-user">username</span>
         </div>
-        <div style="font-size: 14px; color: var(--main-color); font-weight: bold;">[L] SPRING LIMITED</div>
+        <div style="font-size: 10px; color: gray;">v3.5 ANTI-CHEAT</div>
     </div>
 
-    <div class="main-container">
-        <h1>КЕЙС: SPRING DROP 📦</h1>
-        <img src="https://r.jina.ai/i/9e67d268d8794f878950d24c0d481076" class="case-img">
+    <div id="selector-screen">
+        <h1 style="text-align:center; margin-top:40px;">ВЫБЕРИТЕ КЕЙС</h1>
+        <div class="case-selector">
+            <div class="case-card" onclick="selectCase('spring')">
+                <img src="https://r.jina.ai/i/9e67d268d8794f878950d24c0d481076">
+                <h3>ВЕСЕННИЙ</h3>
+                <p style="font-size:10px; color:var(--main-color);">[SPRG КЛЮЧИ]</p>
+            </div>
+            <div class="case-card" style="border-color:var(--winter-color);" onclick="selectCase('winter')">
+                <img src="https://cdn-icons-png.flaticon.com/512/2322/2322731.png">
+                <h3 style="color:var(--winter-color);">ЗИМНИЙ</h3>
+                <p style="font-size:10px; color:var(--winter-color);">[WINT КЛЮЧИ]</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container" id="case-screen">
+        <h1 id="case-title">КЕЙС</h1>
+        <img src="" id="case-preview" style="width:140px; height:140px; border-radius:50%; border:3px solid var(--main-color); margin-bottom:20px;">
 
         <div id="setup">
-            <input type="text" id="id-key" placeholder="ВСТАВЬТЕ ID КЛЮЧ">
-            <button class="btn" onclick="startProcess()">АКТИВИРОВАТЬ</button>
+            <input type="text" id="id-key" placeholder="ВСТАВЬТЕ ВАШ ID КЛЮЧ">
+            <button class="btn" id="main-btn" onclick="startSpin()">АКТИВИРОВАТЬ</button>
         </div>
 
         <div class="roulette-wrapper" id="roulette-box">
@@ -64,77 +86,112 @@
 
         <div id="result">
             <h2 id="win-name" style="margin:0;"></h2>
-            <p id="win-rarity" style="margin:10px 0; font-weight:bold; letter-spacing: 1px;"></p>
-            <div style="font-size: 12px; color: #666; margin-bottom: 15px;">ЛОГ ОТПРАВЛЕН В DISCORD</div>
-            <button class="btn" style="width: auto; padding: 10px 20px; font-size: 14px;" onclick="location.reload()">ОТКРЫТЬ ЕЩЕ</button>
+            <p id="win-rarity" style="margin:10px 0; font-weight:bold;"></p>
+            <button class="btn" onclick="location.reload()" style="width:auto; padding:5px 20px;">ВЕРНУТЬСЯ</button>
         </div>
     </div>
 
     <button class="admin-gear" onclick="adminAuth()">⚙️</button>
 
     <div id="admin-panel">
-        <h3 style="color: var(--main-color);">🔐 ПАНЕЛЬ УПРАВЛЕНИЯ</h3>
-        <button class="btn" onclick="makeKey()">СОЗДАТЬ ID КЛЮЧ</button>
-        <div id="keys-history" style="background:#000; margin-top:15px; padding:10px; border-radius:10px; font-family:monospace; font-size:12px; text-align:left; max-height: 150px; overflow-y: auto;">Ключи не создавались</div>
-        <button onclick="document.getElementById('admin-panel').style.display='none'" style="margin-top:20px; background:none; color:gray; border:none; cursor:pointer;">Закрыть</button>
+        <h3 style="color:var(--main-color);">ГЕНЕРАТОР</h3>
+        <button class="btn" style="font-size:12px; margin-bottom:5px;" onclick="makeKey('SPRG')">ВЕСНА (SPRG-)</button>
+        <button class="btn" style="font-size:12px; background:var(--winter-color);" onclick="makeKey('WINT')">ЗИМА (WINT-)</button>
+        <div id="keys-log" class="key-box">История пуста</div>
+        <button onclick="document.getElementById('admin-panel').style.display='none'" style="margin-top:15px; color:gray; background:none; border:none; cursor:pointer;">Закрыть</button>
     </div>
 
     <script>
         const WEBHOOK = "https://discord.com/api/webhooks/1483941280248496210/QHWJYcnhPD8Voht5mElw7KVNX-vr4yU5gHQrFoAwTE14vqB9MNnIISuTCjOfMYCEq0cA";
         const ADMIN_PASS = "1337";
+        let usedKeys = []; // Одноразовость в текущей сессии
 
-        // === НАСТРОЙКА ПРЕДМЕТОВ И ШАНСОВ ===
-        // chance: выставляй проценты. Сумма всех chance должна быть 100.
-        const items = [
+        let selectedType = "";
+        let usernameDiscord = "гость";
+
+        const springItems = [
             { name: "Storm Bringer", img: "https://r.jina.ai/i/9e67d268d8794f878950d24c0d481076", rarity: "Легендарный", color: "#ffae00", chance: 0.01 },
             { name: "Vortex Lord", img: "https://r.jina.ai/i/450b71ca7db94f6f81e646270b2be881", rarity: "Эпический", color: "#a335ee", chance: 1 },
-            { name: "Crystal Caster", img: "https://r.jina.ai/i/65022e389df04a439df68971f11a4325", rarity: "Редкий", color: "#0070dd", chance: 9 },
-            { name: "Clan Member Item", img: "https://cdn-icons-png.flaticon.com/512/615/615075.png", rarity: "Необычный", color: "#1eff00", chance: 15 },
-            { name: "Bronze Coin", img: "https://cdn-icons-png.flaticon.com/512/100/100236.png", rarity: "Обычный", color: "#aaa", chance: 74.99 }
+            { name: "Grass Blade", img: "https://cdn-icons-png.flaticon.com/512/615/615075.png", rarity: "Обычный", color: "#aaa", chance: 98.99 }
         ];
 
-        let pName = "Гость";
+        const winterItems = [
+            { name: "Ice King Sword", img: "https://cdn-icons-png.flaticon.com/512/2322/2322731.png", rarity: "Легендарный", color: "#ffae00", chance: 0.1 },
+            { name: "Frost Shield", img: "https://cdn-icons-png.flaticon.com/512/2535/2535552.png", rarity: "Эпический", color: "#a335ee", chance: 5 },
+            { name: "Snowball", img: "https://cdn-icons-png.flaticon.com/512/2334/2334861.png", rarity: "Обычный", color: "#aaa", chance: 94.9 }
+        ];
 
         window.onload = () => {
-            let n = prompt("Ваш ник в Discord:");
+            let n = prompt("ВВЕДИТЕ ВАШ USERNAME (Имя пользователя Discord без @):");
             if(n) {
-                pName = n;
-                document.getElementById('player-name').innerText = n;
-                document.getElementById('avatar').innerText = n[0].toUpperCase();
+                usernameDiscord = n.toLowerCase().trim();
+                document.getElementById('player-user').innerText = "@" + usernameDiscord;
+                document.getElementById('avatar').innerText = usernameDiscord[0].toUpperCase();
             }
         };
 
-        function getPrize() {
-            let r = Math.random() * 100;
-            let sum = 0;
-            for (let i of items) {
-                sum += i.chance;
-                if (r <= sum) return i;
+        function spawnParticles(type) {
+            const container = document.getElementById('particles-container');
+            const chars = type === 'winter' ? ['❄', '❅', '❆'] : ['🌸', '🍀', '✨'];
+            for(let i=0; i<30; i++) {
+                let p = document.createElement('div');
+                p.className = 'particle';
+                p.innerText = chars[Math.floor(Math.random()*chars.length)];
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                p.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                p.style.opacity = Math.random();
+                container.appendChild(p);
             }
-            return items[items.length - 1];
         }
 
-        function startProcess() {
-            const k = document.getElementById('id-key').value.trim();
-            if(k.length < 5) return alert("Введите верный ID ключ!");
+        function selectCase(type) {
+            selectedType = type;
+            document.getElementById('selector-screen').style.display = 'none';
+            document.getElementById('case-screen').style.display = 'block';
+            spawnParticles(type);
+            
+            if(type === 'winter') {
+                document.getElementById('case-title').innerText = "WINTER FROST ❄️";
+                document.getElementById('case-preview').src = "https://cdn-icons-png.flaticon.com/512/2322/2322731.png";
+                document.documentElement.style.setProperty('--main-color', '#00d4ff');
+            } else {
+                document.getElementById('case-title').innerText = "SPRING DROP 🌸";
+                document.getElementById('case-preview').src = "https://r.jina.ai/i/9e67d268d8794f878950d24c0d481076";
+                document.documentElement.style.setProperty('--main-color', '#00ffcc');
+            }
+        }
 
+        function startSpin() {
+            const key = document.getElementById('id-key').value.trim();
+            const prefix = selectedType === 'winter' ? 'WINT' : 'SPRG';
+            
+            if(!key.startsWith(prefix)) return alert("КЛЮЧ НЕ ОТ ЭТОГО КЕЙСА!");
+            if(usedKeys.includes(key)) return alert("ЭТОТ КЛЮЧ УЖЕ БЫЛ ИСПОЛЬЗОВАН!");
+
+            usedKeys.push(key); // Блокируем ключ
+            document.getElementById('main-btn').disabled = true;
             document.getElementById('setup').style.display = 'none';
             document.getElementById('roulette-box').style.display = 'block';
 
+            const pool = selectedType === 'winter' ? winterItems : springItems;
             const tape = document.getElementById('tape');
             tape.innerHTML = "";
-            
-            // Наполняем ленту случайными вещами
+
             for(let i=0; i<100; i++) {
-                let it = items[Math.floor(Math.random()*items.length)];
-                tape.innerHTML += `<div class="item" style="border-color:${it.color}"><img src="${it.img}"><span>${it.name}</span></div>`;
+                let it = pool[Math.floor(Math.random()*pool.length)];
+                tape.innerHTML += `<div class="item" style="border-color:${it.color}"><img src="${it.img}"></div>`;
             }
 
-            const win = getPrize();
-            // Ставим приз точно на 90-ю позицию
-            const winBlock = `<div class="item" style="border-color:${win.color}"><img src="${win.img}"><span>${win.name}</span></div>`;
+            // Шансовая логика
+            let r = Math.random() * 100;
+            let sum = 0, win;
+            for (let i of pool) { sum += i.chance; if (r <= sum) { win = i; break; } }
+            if(!win) win = pool[pool.length-1];
+
             const blocks = tape.getElementsByClassName('item');
-            blocks[90].innerHTML = winBlock; 
+            blocks[90].innerHTML = `<img src="${win.img}">`;
+            blocks[90].style.borderColor = win.color;
 
             setTimeout(() => {
                 tape.style.transform = `translateX(-${(90 * 140) - (tape.parentElement.offsetWidth/2) + 70}px)`;
@@ -142,25 +199,23 @@
 
             setTimeout(() => {
                 document.getElementById('win-name').innerText = win.name;
-                document.getElementById('win-name').style.color = win.color;
-                document.getElementById('win-rarity').innerText = win.rarity.toUpperCase();
+                document.getElementById('win-rarity').innerText = win.rarity;
                 document.getElementById('win-rarity').style.color = win.color;
                 document.getElementById('result').style.display = 'block';
 
-                // ОТПРАВКА В DISCORD
                 fetch(WEBHOOK, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         embeds: [{
-                            title: "🎮 ОТКРЫТИЕ КЕЙСА",
+                            title: "🚨 ОТКРЫТИЕ КЕЙСА",
                             color: parseInt(win.color.replace('#',''), 16),
                             fields: [
-                                { name: "👤 Игрок", value: pName, inline: true },
-                                { name: "🔑 ID Ключ", value: `\`${k}\``, inline: true },
-                                { name: "🎁 Награда", value: `**${win.name}**\nРедкость: ${win.rarity}`, inline: false }
+                                { name: "👤 Игрок", value: `\`@${usernameDiscord}\``, inline: true },
+                                { name: "🔑 Ключ", value: `\`${key}\``, inline: true },
+                                { name: "🎁 Приз", value: `**${win.name}** (${win.rarity})` }
                             ],
-                            timestamp: new Date()
+                            footer: { text: "ID сессии: " + Math.random().toString(36).substr(2, 5) }
                         }]
                     })
                 });
@@ -168,16 +223,16 @@
         }
 
         function adminAuth() {
-            if(prompt("Пароль создателя:") === ADMIN_PASS) document.getElementById('admin-panel').style.display = 'block';
+            if(prompt("Пароль:") === ADMIN_PASS) document.getElementById('admin-panel').style.display = 'block';
         }
 
-        function makeKey() {
-            const key = Math.random().toString(36).substr(2, 10).toUpperCase();
-            const log = document.getElementById('keys-history');
-            if(log.innerText.includes("не создавались")) log.innerText = "";
-            log.innerHTML += `<div>Ключ: <b>${key}</b></div>`;
-            navigator.clipboard.writeText(key);
-            alert("Скопирован: " + key);
+        function makeKey(prefix) {
+            const k = prefix + "-" + Math.random().toString(36).substr(2, 8).toUpperCase();
+            const log = document.getElementById('keys-log');
+            if(log.innerText.includes("История")) log.innerText = "";
+            log.innerHTML += `<div>[${prefix}] <b>${k}</b></div>`;
+            navigator.clipboard.writeText(k);
+            alert("Создан: " + k);
         }
     </script>
 </body>
