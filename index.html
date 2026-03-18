@@ -3,149 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clan Case Palace</title>
+    <title>Clan Case Palace | [L] Edition</title>
     <style>
-        :root { --main-color: #00ffcc; --bg-dark: #121212; --card-bg: #1e1e1e; }
-        body { background: var(--bg-dark); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        :root { --main-color: #00ffcc; --bg-dark: #0a0a0a; --card-bg: #151515; }
+        body { background: var(--bg-dark); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
         
         .header { width: 100%; max-width: 1000px; display: flex; justify-content: space-between; align-items: center; padding: 20px; box-sizing: border-box; }
-        .user-profile { display: flex; align-items: center; gap: 10px; background: var(--card-bg); padding: 8px 15px; border-radius: 50px; border: 1px solid #333; }
+        .user-profile { display: flex; align-items: center; gap: 10px; background: var(--card-bg); padding: 8px 15px; border-radius: 50px; border: 1px solid #222; }
         .avatar { width: 30px; height: 30px; background: var(--main-color); border-radius: 50%; color: black; display: flex; align-items: center; justify-content: center; font-weight: bold; }
 
-        .main-container { text-align: center; margin-top: 50px; width: 90%; max-width: 600px; }
-        .case-img { width: 180px; height: 180px; border-radius: 50%; border: 3px solid var(--main-color); box-shadow: 0 0 20px rgba(0,255,204,0.3); margin-bottom: 20px; }
+        .main-container { text-align: center; margin-top: 30px; width: 90%; max-width: 600px; }
+        .case-img { width: 160px; height: 160px; border-radius: 50%; border: 3px solid var(--main-color); box-shadow: 0 0 30px rgba(0,255,204,0.2); margin-bottom: 20px; }
 
-        input { background: #222; border: 2px solid #444; color: white; padding: 15px; border-radius: 10px; width: 100%; box-sizing: border-box; font-size: 18px; text-align: center; margin-bottom: 15px; }
+        input { background: #1a1a1a; border: 2px solid #333; color: white; padding: 15px; border-radius: 10px; width: 100%; box-sizing: border-box; font-size: 18px; text-align: center; margin-bottom: 15px; font-family: monospace; }
         input:focus { border-color: var(--main-color); outline: none; }
 
-        .btn { background: var(--main-color); color: black; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; font-size: 18px; cursor: pointer; text-transform: uppercase; }
-        .btn:hover { background: #00d4aa; }
+        .btn { background: var(--main-color); color: black; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; font-size: 18px; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
+        .btn:hover { transform: scale(1.02); box-shadow: 0 0 20px rgba(0,255,204,0.4); }
 
         /* Рулетка */
-        .roulette-wrapper { position: relative; width: 100%; height: 140px; border: 2px solid #333; background: #111; overflow: hidden; border-radius: 15px; display: none; margin-top: 20px; }
-        .selector { position: absolute; left: 50%; top: 0; width: 3px; height: 100%; background: red; z-index: 10; transform: translateX(-50%); }
-        .tape { display: flex; position: absolute; left: 0; top: 10px; transition: transform 5s cubic-bezier(0.15, 0, 0.05, 1); }
-        .item { width: 120px; height: 120px; margin: 0 5px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-        .item img { width: 100px; height: 100px; border-radius: 10px; }
+        .roulette-wrapper { position: relative; width: 100%; height: 160px; border: 2px solid #222; background: #0d0d0d; overflow: hidden; border-radius: 15px; display: none; margin-top: 20px; }
+        .selector { position: absolute; left: 50%; top: 0; width: 4px; height: 100%; background: #ff4757; z-index: 10; transform: translateX(-50%); box-shadow: 0 0 10px red; }
+        .tape { display: flex; position: absolute; left: 0; top: 15px; transition: transform 8s cubic-bezier(0.1, 0, 0.05, 1); }
+        .item { width: 130px; height: 130px; margin: 0 5px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #111; border-radius: 12px; border-bottom: 4px solid #444; }
+        .item img { width: 85px; height: 85px; object-fit: contain; }
+        .item span { font-size: 11px; margin-top: 5px; font-weight: bold; text-align: center; width: 90%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 
-        /* Админка (сделал заметнее) */
-        .admin-btn { position: fixed; bottom: 20px; right: 20px; background: #333; color: white; border: none; padding: 10px; border-radius: 50%; cursor: pointer; font-size: 20px; opacity: 0.5; }
-        .admin-btn:hover { opacity: 1; background: var(--main-color); color: black; }
-        
-        #admin-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1e1e1e; padding: 30px; border-radius: 20px; border: 2px solid var(--main-color); z-index: 1000; width: 300px; text-align: center; box-shadow: 0 0 100px #000; }
-        .key-list { background: #000; padding: 10px; border-radius: 10px; margin-top: 15px; max-height: 150px; overflow-y: auto; text-align: left; font-family: monospace; font-size: 13px; }
+        /* Результат */
+        #result { display: none; margin-top: 20px; padding: 25px; border: 2px solid var(--main-color); border-radius: 20px; background: #111; animation: pop 0.5s ease; }
+        @keyframes pop { 0% { transform: scale(0.8); } 100% { transform: scale(1); } }
+
+        /* Скрытая кнопка админа */
+        .admin-gear { position: fixed; bottom: 15px; right: 15px; opacity: 0.2; cursor: pointer; font-size: 18px; color: white; border: none; background: none; }
+        #admin-panel { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1a1a1a; padding: 30px; border-radius: 20px; border: 2px solid var(--main-color); z-index: 1000; width: 320px; box-shadow: 0 0 100px #000; text-align: center; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <div class="user-profile">
-            <div class="avatar" id="u-av">?</div>
-            <span id="u-name">Гость</span>
+            <div class="avatar" id="avatar">?</div>
+            <span id="player-name">Игрок</span>
         </div>
-        <div style="font-size: 12px; color: #666;">[L] SPRING</div>
+        <div style="font-size: 14px; color: var(--main-color); font-weight: bold;">[L] SPRING LIMITED</div>
     </div>
 
     <div class="main-container">
-        <h1 id="title">КЕЙС: STORM BRINGER 🌩️</h1>
+        <h1>КЕЙС: SPRING DROP 📦</h1>
         <img src="https://r.jina.ai/i/9e67d268d8794f878950d24c0d481076" class="case-img">
 
-        <div id="input-area">
-            <input type="text" id="key-input" placeholder="ВСТАВЬТЕ ID КЛЮЧ">
-            <button class="btn" onclick="openCase()">АКТИВИРОВАТЬ</button>
+        <div id="setup">
+            <input type="text" id="id-key" placeholder="ВСТАВЬТЕ ID КЛЮЧ">
+            <button class="btn" onclick="startProcess()">АКТИВИРОВАТЬ</button>
         </div>
 
-        <div class="roulette-wrapper" id="roulette">
+        <div class="roulette-wrapper" id="roulette-box">
             <div class="selector"></div>
             <div class="tape" id="tape"></div>
         </div>
 
-        <div id="result" style="display:none; margin-top: 20px; padding: 20px; border: 1px solid var(--main-color); border-radius: 10px;">
-            <h2 id="win-text" style="color: var(--main-color);"></h2>
-            <p>Код подтверждения (отправлен админу):</p>
-            <code id="win-code" style="font-size: 20px; background: #000; padding: 5px 10px;"></code>
+        <div id="result">
+            <h2 id="win-name" style="margin:0;"></h2>
+            <p id="win-rarity" style="margin:10px 0; font-weight:bold; letter-spacing: 1px;"></p>
+            <div style="font-size: 12px; color: #666; margin-bottom: 15px;">ЛОГ ОТПРАВЛЕН В DISCORD</div>
+            <button class="btn" style="width: auto; padding: 10px 20px; font-size: 14px;" onclick="location.reload()">ОТКРЫТЬ ЕЩЕ</button>
         </div>
     </div>
 
-    <button class="admin-btn" onclick="adminAuth()">⚙️</button>
+    <button class="admin-gear" onclick="adminAuth()">⚙️</button>
 
-    <div id="admin-modal">
-        <h3>🔐 ПАНЕЛЬ СОЗДАТЕЛЯ</h3>
-        <button class="btn" onclick="genKey()">СОЗДАТЬ ID КЛЮЧ</button>
-        <div class="key-list" id="keys-log">Ключей нет</div>
-        <button onclick="closeAdmin()" style="margin-top:15px; background:none; color:gray; border:none; cursor:pointer;">Закрыть</button>
+    <div id="admin-panel">
+        <h3 style="color: var(--main-color);">🔐 ПАНЕЛЬ УПРАВЛЕНИЯ</h3>
+        <button class="btn" onclick="makeKey()">СОЗДАТЬ ID КЛЮЧ</button>
+        <div id="keys-history" style="background:#000; margin-top:15px; padding:10px; border-radius:10px; font-family:monospace; font-size:12px; text-align:left; max-height: 150px; overflow-y: auto;">Ключи не создавались</div>
+        <button onclick="document.getElementById('admin-panel').style.display='none'" style="margin-top:20px; background:none; color:gray; border:none; cursor:pointer;">Закрыть</button>
     </div>
 
     <script>
-        const MY_PASS = "1337"; // Твой пароль
-        const WEBHOOK = "ТВОЙ_ВЕБХУК_ТУТ"; // Вставь ссылку на вебхук сюда!
+        const WEBHOOK = "https://discord.com/api/webhooks/1483941280248496210/QHWJYcnhPD8Voht5mElw7KVNX-vr4yU5gHQrFoAwTE14vqB9MNnIISuTCjOfMYCEq0cA";
+        const ADMIN_PASS = "1337";
 
+        // === НАСТРОЙКА ПРЕДМЕТОВ И ШАНСОВ ===
+        // chance: выставляй проценты. Сумма всех chance должна быть 100.
         const items = [
-            { name: "Storm Bringer", img: "https://r.jina.ai/i/9e67d268d8794f878950d24c0d481076" },
-            { name: "Vortex Lord", img: "https://r.jina.ai/i/450b71ca7db94f6f81e646270b2be881" },
-            { name: "Crystal Caster", img: "https://r.jina.ai/i/65022e389df04a439df68971f11a4325" }
+            { name: "Storm Bringer", img: "https://r.jina.ai/i/9e67d268d8794f878950d24c0d481076", rarity: "Легендарный", color: "#ffae00", chance: 0.01 },
+            { name: "Vortex Lord", img: "https://r.jina.ai/i/450b71ca7db94f6f81e646270b2be881", rarity: "Эпический", color: "#a335ee", chance: 1 },
+            { name: "Crystal Caster", img: "https://r.jina.ai/i/65022e389df04a439df68971f11a4325", rarity: "Редкий", color: "#0070dd", chance: 9 },
+            { name: "Clan Member Item", img: "https://cdn-icons-png.flaticon.com/512/615/615075.png", rarity: "Необычный", color: "#1eff00", chance: 15 },
+            { name: "Bronze Coin", img: "https://cdn-icons-png.flaticon.com/512/100/100236.png", rarity: "Обычный", color: "#aaa", chance: 74.99 }
         ];
 
-        let userName = "Гость";
+        let pName = "Гость";
 
         window.onload = () => {
             let n = prompt("Ваш ник в Discord:");
             if(n) {
-                userName = n;
-                document.getElementById('u-name').innerText = n;
-                document.getElementById('u-av').innerText = n[0].toUpperCase();
+                pName = n;
+                document.getElementById('player-name').innerText = n;
+                document.getElementById('avatar').innerText = n[0].toUpperCase();
             }
         };
 
-        function openCase() {
-            const k = document.getElementById('key-input').value;
-            if(k.length < 5) return alert("Введите верный ключ!");
-            
-            document.getElementById('input-area').style.display = 'none';
-            document.getElementById('roulette').style.display = 'block';
-            
+        function getPrize() {
+            let r = Math.random() * 100;
+            let sum = 0;
+            for (let i of items) {
+                sum += i.chance;
+                if (r <= sum) return i;
+            }
+            return items[items.length - 1];
+        }
+
+        function startProcess() {
+            const k = document.getElementById('id-key').value.trim();
+            if(k.length < 5) return alert("Введите верный ID ключ!");
+
+            document.getElementById('setup').style.display = 'none';
+            document.getElementById('roulette-box').style.display = 'block';
+
             const tape = document.getElementById('tape');
-            for(let i=0; i<60; i++) {
+            tape.innerHTML = "";
+            
+            // Наполняем ленту случайными вещами
+            for(let i=0; i<100; i++) {
                 let it = items[Math.floor(Math.random()*items.length)];
-                tape.innerHTML += `<div class="item"><img src="${it.img}"></div>`;
+                tape.innerHTML += `<div class="item" style="border-color:${it.color}"><img src="${it.img}"><span>${it.name}</span></div>`;
             }
 
+            const win = getPrize();
+            // Ставим приз точно на 90-ю позицию
+            const winBlock = `<div class="item" style="border-color:${win.color}"><img src="${win.img}"><span>${win.name}</span></div>`;
+            const blocks = tape.getElementsByClassName('item');
+            blocks[90].innerHTML = winBlock; 
+
             setTimeout(() => {
-                tape.style.transform = "translateX(-6500px)";
+                tape.style.transform = `translateX(-${(90 * 140) - (tape.parentElement.offsetWidth/2) + 70}px)`;
             }, 100);
 
             setTimeout(() => {
-                const prize = items[Math.floor(Math.random()*items.length)];
-                const code = "WIN-" + Math.random().toString(36).substr(2, 5).toUpperCase();
-                document.getElementById('win-text').innerText = "ВЫПАЛО: " + prize.name;
-                document.getElementById('win-code').innerText = code;
+                document.getElementById('win-name').innerText = win.name;
+                document.getElementById('win-name').style.color = win.color;
+                document.getElementById('win-rarity').innerText = win.rarity.toUpperCase();
+                document.getElementById('win-rarity').style.color = win.color;
                 document.getElementById('result').style.display = 'block';
-                
-                // Отправка лога
-                if(WEBHOOK !== "ТВОЙ_ВЕБХУК_ТУТ") {
-                    fetch(WEBHOOK, {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({
-                            content: `📦 **${userName}** открыл кейс!\nКлюч: \`${k}\`\nПриз: **${prize.name}**\nКод: \`${code}\``
-                        })
-                    });
-                }
-            }, 5500);
+
+                // ОТПРАВКА В DISCORD
+                fetch(WEBHOOK, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        embeds: [{
+                            title: "🎮 ОТКРЫТИЕ КЕЙСА",
+                            color: parseInt(win.color.replace('#',''), 16),
+                            fields: [
+                                { name: "👤 Игрок", value: pName, inline: true },
+                                { name: "🔑 ID Ключ", value: `\`${k}\``, inline: true },
+                                { name: "🎁 Награда", value: `**${win.name}**\nРедкость: ${win.rarity}`, inline: false }
+                            ],
+                            timestamp: new Date()
+                        }]
+                    })
+                });
+            }, 8500);
         }
 
         function adminAuth() {
-            if(prompt("Пароль:") === MY_PASS) document.getElementById('admin-modal').style.display = 'block';
+            if(prompt("Пароль создателя:") === ADMIN_PASS) document.getElementById('admin-panel').style.display = 'block';
         }
-        function closeAdmin() { document.getElementById('admin-modal').style.display = 'none'; }
-        
-        function genKey() {
-            const newK = Math.random().toString(36).substr(2, 10).toUpperCase();
-            const log = document.getElementById('keys-log');
-            if(log.innerText === "Ключей нет") log.innerText = "";
-            log.innerHTML += `<div>ID: <b>${newK}</b></div>`;
-            navigator.clipboard.writeText(newK);
-            alert("Ключ скопирован: " + newK);
+
+        function makeKey() {
+            const key = Math.random().toString(36).substr(2, 10).toUpperCase();
+            const log = document.getElementById('keys-history');
+            if(log.innerText.includes("не создавались")) log.innerText = "";
+            log.innerHTML += `<div>Ключ: <b>${key}</b></div>`;
+            navigator.clipboard.writeText(key);
+            alert("Скопирован: " + key);
         }
     </script>
 </body>
