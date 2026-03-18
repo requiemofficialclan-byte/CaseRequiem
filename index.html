@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLAN CASE | PYTHON BACKEND</title>
+    <title>CLAN CASE | RACE CONDITION FIXED</title>
     <style>
         /* Стили такие же как в предыдущей версии */
         * {
@@ -18,6 +18,8 @@
             --bg-dark: #0a0a0a;
             --neon-glow: 0 0 10px rgba(0, 255, 204, 0.5);
             --admin-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --warning-color: #ffaa00;
+            --danger-color: #ff4757;
         }
 
         body {
@@ -92,6 +94,36 @@
             justify-content: center;
             font-weight: bold;
             font-size: 18px;
+        }
+
+        .session-timer {
+            font-size: 12px;
+            color: var(--warning-color);
+            margin-left: 10px;
+            display: none;
+        }
+
+        .server-status {
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+        }
+
+        .server-status.online {
+            border-color: #00ff00;
+            color: #00ff00;
+        }
+
+        .server-status.offline {
+            border-color: #ff0000;
+            color: #ff0000;
+        }
+
+        .server-status.warning {
+            border-color: var(--warning-color);
+            color: var(--warning-color);
         }
 
         .case-selector {
@@ -200,27 +232,6 @@
             fill: currentColor;
         }
 
-        .server-status {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 12px;
-            padding: 5px 10px;
-            border-radius: 15px;
-            background: #1a1a1a;
-            border: 1px solid #333;
-        }
-
-        .server-status.online {
-            border-color: #00ff00;
-            color: #00ff00;
-        }
-
-        .server-status.offline {
-            border-color: #ff0000;
-            color: #ff0000;
-        }
-
         input {
             background: #1a1a1a;
             border: 2px solid #333;
@@ -266,6 +277,10 @@
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
         }
 
         .roulette-wrapper {
@@ -436,7 +451,7 @@
             border-radius: 40px;
             padding: 40px;
             width: 90%;
-            max-width: 600px;
+            max-width: 700px;
             border: 2px solid #667eea;
             box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
             position: relative;
@@ -476,15 +491,15 @@
 
         .admin-stats {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 15px;
             margin-bottom: 30px;
         }
 
         .stat-card {
             background: rgba(255, 255, 255, 0.05);
-            padding: 20px;
-            border-radius: 20px;
+            padding: 15px;
+            border-radius: 15px;
             text-align: center;
             border: 1px solid #333;
             transition: 0.3s;
@@ -496,7 +511,7 @@
         }
 
         .stat-value {
-            font-size: 2em;
+            font-size: 1.8em;
             font-weight: bold;
             background: var(--admin-gradient);
             -webkit-background-clip: text;
@@ -505,7 +520,7 @@
 
         .stat-label {
             color: #888;
-            font-size: 12px;
+            font-size: 11px;
             margin-top: 5px;
         }
 
@@ -616,6 +631,7 @@
             font-size: 12px;
             margin-top: 5px;
             min-height: 20px;
+            font-weight: bold;
         }
 
         .loader {
@@ -634,25 +650,37 @@
             100% { transform: rotate(360deg); }
         }
 
-        .recent-keys, .top-users {
+        .recent-keys, .top-users, .active-sessions {
             margin-top: 20px;
             background: rgba(255,255,255,0.05);
             padding: 15px;
             border-radius: 15px;
         }
 
-        .recent-keys h4, .top-users h4 {
+        .recent-keys h4, .top-users h4, .active-sessions h4 {
             color: #888;
             margin-bottom: 10px;
         }
 
-        .recent-item, .user-item {
+        .recent-item, .user-item, .session-item {
             padding: 8px;
             border-bottom: 1px solid #333;
             font-size: 14px;
         }
 
+        .warning-text {
+            color: var(--warning-color);
+        }
+
+        .danger-text {
+            color: var(--danger-color);
+        }
+
         @media (max-width: 768px) {
+            .admin-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
             .case-selector {
                 gap: 20px;
             }
@@ -660,10 +688,6 @@
             .case-card {
                 width: 200px;
                 padding: 20px;
-            }
-            
-            .admin-stats {
-                grid-template-columns: 1fr;
             }
             
             .back-button {
@@ -683,6 +707,7 @@
         <div class="user-profile" onclick="changeUsername()">
             <div class="avatar" id="avatar">?</div>
             <span id="player-user">username</span>
+            <span class="session-timer" id="sessionTimer"></span>
         </div>
         <div class="server-status" id="serverStatus">🔄 Подключение...</div>
     </div>
@@ -745,7 +770,7 @@
             
             <div class="admin-header">
                 <h2>⚡ ADMIN PANEL</h2>
-                <p>Python Backend • SQLite Database</p>
+                <p>Race Condition Protection • Active Sessions Tracking</p>
             </div>
 
             <div class="admin-stats">
@@ -761,6 +786,10 @@
                     <div class="stat-value" id="availableKeys">0</div>
                     <div class="stat-label">Доступно</div>
                 </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="activeSessions">0</div>
+                    <div class="stat-label">Активных</div>
+                </div>
             </div>
 
             <div class="admin-stats">
@@ -775,13 +804,21 @@
             </div>
 
             <div class="admin-actions">
-                <button class="admin-btn" onclick="adminGenerateKey('spring')">
+                <button class="admin-btn" onclick="adminGenerateKey('spring', 1)">
                     <i>🌱</i>
-                    Создать весенний ключ
+                    Создать 1 весенний ключ
                 </button>
-                <button class="admin-btn" onclick="adminGenerateKey('winter')">
+                <button class="admin-btn" onclick="adminGenerateKey('winter', 1)">
                     <i>❄️</i>
-                    Создать зимний ключ
+                    Создать 1 зимний ключ
+                </button>
+                <button class="admin-btn" onclick="adminGenerateKey('spring', 5)">
+                    <i>🌱🌱🌱</i>
+                    Создать 5 весенних ключей
+                </button>
+                <button class="admin-btn" onclick="adminGenerateKey('winter', 5)">
+                    <i>❄️❄️❄️</i>
+                    Создать 5 зимних ключей
                 </button>
                 <button class="admin-btn" onclick="loadAdminStats()">
                     <i>📊</i>
@@ -791,7 +828,12 @@
 
             <div class="key-display" id="keyDisplay">
                 <div class="key-text" id="generatedKey"></div>
-                <button class="copy-btn" onclick="copyGeneratedKey()">📋 Копировать</button>
+                <button class="copy-btn" onclick="copyGeneratedKey()">📋 Копировать все</button>
+            </div>
+
+            <div id="activeSessionsList" class="active-sessions">
+                <h4>🔒 Активные сессии</h4>
+                <div id="activeSessionsContent"></div>
             </div>
 
             <div id="recentKeys" class="recent-keys">
@@ -807,14 +849,17 @@
     </div>
 
     <script>
-        // Конфигурация
-        const API_URL = 'http://localhost:5000'; // URL вашего Python сервера
+        const API_URL = 'http://localhost:5000';
         const ADMIN_PASS = "1337";
         
         let selectedType = "";
         let usernameDiscord = localStorage.getItem('discordUser') || "гость";
         let isSpinning = false;
-        let currentGeneratedKey = "";
+        let currentGeneratedKeys = [];
+        let currentSessionId = null;
+        let currentKey = null;
+        let sessionTimer = null;
+        let sessionEndTime = null;
 
         const items = {
             spring: [
@@ -831,7 +876,6 @@
             ]
         };
 
-        // Инициализация
         window.onload = () => {
             createParticles();
             
@@ -843,6 +887,9 @@
             
             updateUserDisplay();
             checkServerStatus();
+            
+            // Очистка сессии при закрытии вкладки
+            window.addEventListener('beforeunload', releaseKey);
         };
 
         function createParticles() {
@@ -861,20 +908,22 @@
         async function checkServerStatus() {
             const statusEl = document.getElementById('serverStatus');
             try {
-                const response = await fetch(`${API_URL}/api/key_status/TEST`, {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' }
+                const response = await fetch(`${API_URL}/api/stats`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ admin_pass: ADMIN_PASS })
                 });
+                
                 if (response.ok) {
                     statusEl.innerHTML = '✅ Сервер ONLINE';
                     statusEl.className = 'server-status online';
                 } else {
-                    throw new Error('Server error');
+                    statusEl.innerHTML = '⚠️ Сервер ERROR';
+                    statusEl.className = 'server-status warning';
                 }
             } catch (e) {
                 statusEl.innerHTML = '❌ Сервер OFFLINE';
                 statusEl.className = 'server-status offline';
-                console.error('Server check failed:', e);
             }
         }
 
@@ -916,12 +965,14 @@
             if (isSpinning) {
                 if (!confirm('Спин в процессе! Вернуться в меню?')) return;
             }
+            releaseKey(); // Освобождаем ключ если был заблокирован
             resetSpin();
             document.getElementById('selector-screen').style.display = 'block';
             document.getElementById('case-screen').style.display = 'none';
         }
 
         function resetToMenu() {
+            releaseKey();
             resetSpin();
             document.getElementById('selector-screen').style.display = 'block';
             document.getElementById('case-screen').style.display = 'none';
@@ -934,6 +985,12 @@
             document.getElementById('result').style.display = 'none';
             document.getElementById('main-btn').disabled = false;
             document.getElementById('id-key').value = '';
+            document.getElementById('sessionTimer').style.display = 'none';
+            
+            if (sessionTimer) {
+                clearInterval(sessionTimer);
+                sessionTimer = null;
+            }
             
             const tape = document.getElementById('tape');
             if (tape) {
@@ -941,19 +998,64 @@
             }
         }
 
-        // 🔥 ПРОВЕРКА НА PYTHON СЕРВЕРЕ
+        function startSessionTimer(seconds) {
+            sessionEndTime = Date.now() + seconds * 1000;
+            document.getElementById('sessionTimer').style.display = 'inline-block';
+            
+            if (sessionTimer) clearInterval(sessionTimer);
+            
+            sessionTimer = setInterval(() => {
+                const remaining = Math.round((sessionEndTime - Date.now()) / 1000);
+                if (remaining <= 0) {
+                    document.getElementById('sessionTimer').style.display = 'none';
+                    clearInterval(sessionTimer);
+                    sessionTimer = null;
+                } else {
+                    document.getElementById('sessionTimer').innerHTML = `⏳ ${remaining}с`;
+                }
+            }, 1000);
+        }
+
+        async function releaseKey() {
+            if (currentKey && currentSessionId) {
+                try {
+                    await fetch(`${API_URL}/api/release_key`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            key: currentKey,
+                            session_id: currentSessionId
+                        })
+                    });
+                } catch (e) {
+                    console.error('Release failed:', e);
+                }
+                currentKey = null;
+                currentSessionId = null;
+            }
+        }
+
         async function checkKeyWithServer(key) {
+            currentSessionId = Math.random().toString(36).substr(2, 16) + Date.now();
+            
             try {
                 const response = await fetch(`${API_URL}/api/check_key`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         key: key,
-                        username: usernameDiscord
+                        username: usernameDiscord,
+                        session_id: currentSessionId
                     })
                 });
                 
                 const data = await response.json();
+                
+                if (data.valid) {
+                    currentKey = key;
+                    startSessionTimer(25); // 25 секунд на открытие
+                }
+                
                 return data;
             } catch (e) {
                 console.error('Server check failed:', e);
@@ -964,7 +1066,6 @@
             }
         }
 
-        // 🔥 АКТИВАЦИЯ НА СЕРВЕРЕ
         async function activateKeyOnServer(key, winItem, winRarity) {
             try {
                 await fetch(`${API_URL}/api/activate_key`, {
@@ -973,10 +1074,14 @@
                     body: JSON.stringify({
                         key: key,
                         username: usernameDiscord,
+                        session_id: currentSessionId,
                         win_item: winItem,
                         win_rarity: winRarity
                     })
                 });
+                currentKey = null;
+                currentSessionId = null;
+                document.getElementById('sessionTimer').style.display = 'none';
             } catch (e) {
                 console.error('Activation failed:', e);
             }
@@ -997,8 +1102,8 @@
                 return;
             }
 
-            // Проверка на сервере
-            document.getElementById('key-status').innerHTML = '⏳ Проверка на сервере...';
+            // Проверка на сервере с блокировкой
+            document.getElementById('key-status').innerHTML = '⏳ Блокировка ключа на сервере...';
             document.getElementById('key-status').style.color = '#ffaa00';
             document.getElementById('main-btn').disabled = true;
 
@@ -1011,9 +1116,9 @@
                 return;
             }
 
-            // ВСЕ ПРОВЕРКИ ПРОЙДЕНЫ
+            // Ключ заблокирован для всех остальных
             isSpinning = true;
-            document.getElementById('key-status').innerHTML = '✅ Ключ принят!';
+            document.getElementById('key-status').innerHTML = '✅ Ключ заблокирован! Открывайте...';
             document.getElementById('setup').style.display = 'none';
             document.getElementById('roulette-box').style.display = 'block';
 
@@ -1064,7 +1169,7 @@
                 document.getElementById('win-rarity').style.color = winItem.color;
                 document.getElementById('result').style.display = 'block';
 
-                // Активация на сервере
+                // Финальная активация на сервере
                 await activateKeyOnServer(inputKey, winItem.name, winItem.rarity);
 
                 isSpinning = false;
@@ -1102,6 +1207,7 @@
                     document.getElementById('availableKeys').innerText = data.stats.available_keys;
                     document.getElementById('springUsed').innerText = data.stats.spring_used;
                     document.getElementById('winterUsed').innerText = data.stats.winter_used;
+                    document.getElementById('activeSessions').innerText = data.stats.active_sessions || 0;
                     
                     // Последние ключи
                     let recentHtml = '';
@@ -1122,7 +1228,7 @@
             }
         }
 
-        async function adminGenerateKey(type) {
+        async function adminGenerateKey(type, count = 1) {
             try {
                 const response = await fetch(`${API_URL}/api/create_key`, {
                     method: 'POST',
@@ -1130,18 +1236,22 @@
                     body: JSON.stringify({
                         admin_pass: ADMIN_PASS,
                         key_type: type,
-                        admin_user: usernameDiscord
+                        admin_user: usernameDiscord,
+                        count: count
                     })
                 });
                 
                 const data = await response.json();
                 
                 if (data.success) {
-                    currentGeneratedKey = data.key;
-                    document.getElementById('generatedKey').innerText = data.key;
+                    currentGeneratedKeys = data.keys;
+                    document.getElementById('generatedKey').innerHTML = data.keys.join('<br>');
                     document.getElementById('keyDisplay').classList.add('show');
                     
-                    navigator.clipboard?.writeText(data.key).catch(() => {});
+                    // Копируем все ключи в буфер обмена
+                    const keysText = data.keys.join('\n');
+                    navigator.clipboard?.writeText(keysText).catch(() => {});
+                    
                     await loadAdminStats();
                 }
             } catch (e) {
@@ -1151,10 +1261,11 @@
         }
 
         function copyGeneratedKey() {
-            navigator.clipboard?.writeText(currentGeneratedKey).then(() => {
-                alert('✅ Ключ скопирован!');
+            const keysText = currentGeneratedKeys.join('\n');
+            navigator.clipboard?.writeText(keysText).then(() => {
+                alert(`✅ ${currentGeneratedKeys.length} ключей скопировано!`);
             }).catch(() => {
-                alert('📋 Ключ: ' + currentGeneratedKey);
+                alert('📋 Ключи:\n' + keysText);
             });
         }
 
