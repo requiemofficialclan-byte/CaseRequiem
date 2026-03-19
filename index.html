@@ -1,69 +1,285 @@
-<script>
-    // АВТОМАТИЧЕСКОЕ ОПРЕДЕЛЕНИЕ СЕРВЕРА
-    const SERVER = (() => {
-        // Если сайт на GitHub Pages
-        if (window.location.hostname.includes('github.io')) {
-            // ВАЖНО: ЗАМЕНИТЕ НА ВАШ ЛОКАЛЬНЫЙ IP!
-            return 'http://192.168.1.100:5000';  // Узнайте ваш IP из консоли сервера
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLAN CASE</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
         }
-        return 'http://localhost:5000';
-    })();
+        body {
+            background: #0a0a0a;
+            color: white;
+        }
+        .header {
+            background: #111;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+        }
+        .balance {
+            font-size: 24px;
+            color: gold;
+        }
+        .username {
+            cursor: pointer;
+            padding: 10px 20px;
+            background: #333;
+            border-radius: 30px;
+        }
+        .key-section {
+            display: flex;
+            gap: 10px;
+            padding: 20px;
+        }
+        .key-input {
+            flex: 1;
+            padding: 15px;
+            background: #111;
+            border: 1px solid #333;
+            color: white;
+            border-radius: 10px;
+        }
+        .key-btn {
+            padding: 15px 30px;
+            background: #00ffcc;
+            color: black;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .cases {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .case {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 20px;
+            padding: 20px;
+        }
+        .case h3 {
+            margin-bottom: 15px;
+        }
+        .price {
+            color: gold;
+            font-size: 20px;
+            margin: 15px 0;
+        }
+        .items {
+            margin: 15px 0;
+        }
+        .item {
+            padding: 8px;
+            background: #1a1a1a;
+            margin: 5px 0;
+            border-radius: 8px;
+        }
+        .open-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--color, #00ffcc);
+            color: black;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 30px;
+            background: #00ffcc;
+            color: black;
+            border-radius: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="balance">💰 <span id="balance">0</span></div>
+        <div class="username" onclick="changeUser()" id="usernameDisplay">гость</div>
+    </div>
 
-    console.log('🔌 Подключаемся к серверу:', SERVER);
+    <div class="key-section">
+        <input type="text" class="key-input" id="keyInput" placeholder="ВВЕДИТЕ КЛЮЧ">
+        <button class="key-btn" onclick="useKey()">Активировать</button>
+    </div>
 
-    // Функция для запросов с поддержкой CORS
-    async function apiRequest(endpoint, options = {}) {
-        const url = `${SERVER}${endpoint}`;
-        const defaultOptions = {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            mode: 'cors'
+    <div class="cases" id="cases"></div>
+
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // ============ НАСТРОЙКИ ============
+        const SERVER = 'http://192.168.1.100:5000'; // ← ВАШ IP (узнайте из консоли)
+        let username = localStorage.getItem('username') || 'гость';
+        let balance = 0;
+
+        // ============ ЗАГРУЗКА ============
+        window.onload = async () => {
+            await loadUser();
+            renderCases();
         };
-        
-        try {
-            const response = await fetch(url, { ...defaultOptions, ...options });
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return await response.json();
-        } catch (error) {
-            console.error('API Error:', error);
-            showNotif('❌ Ошибка соединения с сервером. Убедитесь, что сервер запущен на ПК', 'error');
-            return null;
-        }
-    }
 
-    // Проверка авторизации
-    async function checkAuth() {
-        try {
-            const data = await apiRequest('/api/auth/me');
-            if (data && data.authenticated) {
-                isAuthenticated = true;
+        async function loadUser() {
+            try {
+                const res = await fetch(`${SERVER}/user`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({username})
+                });
+                const data = await res.json();
                 balance = data.balance;
-                document.getElementById('loginBtn').style.display = 'none';
-                document.getElementById('profileBtn').style.display = 'flex';
-                document.getElementById('username').innerText = data.global_name || data.username;
-                document.getElementById('avatar').innerText = (data.global_name || data.username)[0].toUpperCase();
-                document.getElementById('balance').innerText = balance.toLocaleString();
-                document.getElementById('loginMessage').style.display = 'none';
-                document.getElementById('mainContent').style.display = 'block';
-            } else {
-                isAuthenticated = false;
-                document.getElementById('loginBtn').style.display = 'flex';
-                document.getElementById('profileBtn').style.display = 'none';
-                document.getElementById('loginMessage').style.display = 'block';
-                document.getElementById('mainContent').style.display = 'none';
+                updateUI();
+            } catch (e) {
+                showNotif('Сервер не запущен!', 'error');
             }
-        } catch (e) {
-            console.error('Auth check failed:', e);
         }
-    }
 
-    // Вход через Discord
-    function loginWithDiscord() {
-        window.location.href = `${SERVER}/api/auth/discord`;
-    }
-</script>
+        function updateUI() {
+            document.getElementById('balance').innerText = balance;
+            document.getElementById('usernameDisplay').innerText = username;
+        }
+
+        function changeUser() {
+            let name = prompt('Ваш ник:');
+            if (name) {
+                username = name;
+                localStorage.setItem('username', username);
+                loadUser();
+            }
+        }
+
+        // ============ КЛЮЧИ ============
+        async function useKey() {
+            const key = document.getElementById('keyInput').value.trim().toUpperCase();
+            if (!key) return;
+
+            try {
+                const res = await fetch(`${SERVER}/use_key`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({key, username})
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    if (data.type === 'balance') {
+                        balance += data.value;
+                        updateUI();
+                        showNotif(`+${data.value} монет!`);
+                    } else {
+                        showNotif('Ключ активирован!');
+                    }
+                    document.getElementById('keyInput').value = '';
+                } else {
+                    showNotif(data.message, 'error');
+                }
+            } catch (e) {
+                showNotif('Ошибка', 'error');
+            }
+        }
+
+        // ============ КЕЙСЫ ============
+        const cases = [
+            {
+                name: '❄️ ЗИМНИЙ 2025',
+                price: 50000,
+                color: '#00d4ff',
+                items: ['NY Limited', 'HOLIDAY', 'WINTER', 'Snow Reaper']
+            },
+            {
+                name: '🌱 ВЕСЕННИЙ 2026',
+                price: 55000,
+                color: '#00ffcc',
+                items: ['FrostBolt', 'NeonCloud', 'AbyssalThunder']
+            },
+            {
+                name: '🔑 РОЛЕВОЙ',
+                price: 0,
+                color: '#ff4757',
+                keyOnly: true,
+                items: [
+                    '23% Bloodbound [L]',
+                    '12% Shadow [E]',
+                    '7% Veteran [R]',
+                    '3% Eternal [R]',
+                    '3% Phantom [R]'
+                ]
+            }
+        ];
+
+        function renderCases() {
+            const container = document.getElementById('cases');
+            container.innerHTML = cases.map(c => `
+                <div class="case" style="border-color: ${c.color}">
+                    <h3>${c.name}</h3>
+                    <div class="price">${c.price ? c.price.toLocaleString() + ' 💰' : '🔑 ПО КЛЮЧУ'}</div>
+                    <div class="items">
+                        ${c.items.map(item => `<div class="item">${item}</div>`).join('')}
+                    </div>
+                    <button class="open-btn" 
+                            style="--color: ${c.color}"
+                            onclick="openCase('${c.name}')"
+                            ${c.keyOnly ? 'disabled' : ''}>
+                        ${c.keyOnly ? 'ТОЛЬКО ПО КЛЮЧУ' : 'ОТКРЫТЬ'}
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        async function openCase(caseName) {
+            const caseData = cases.find(c => c.name === caseName);
+            if (!caseData || caseData.keyOnly) return;
+
+            if (balance < caseData.price) {
+                showNotif('Недостаточно монет!', 'error');
+                return;
+            }
+
+            try {
+                const res = await fetch(`${SERVER}/open_case`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        username,
+                        case_type: caseName,
+                        price: caseData.price
+                    })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    balance = data.new_balance;
+                    updateUI();
+                    
+                    const winItem = caseData.items[Math.floor(Math.random() * caseData.items.length)];
+                    showNotif(`🎉 Вы получили: ${winItem}!`);
+                }
+            } catch (e) {
+                showNotif('Ошибка', 'error');
+            }
+        }
+
+        // ============ УВЕДОМЛЕНИЯ ============
+        function showNotif(text, type = 'success') {
+            const notif = document.getElementById('notification');
+            notif.style.background = type === 'success' ? '#00ffcc' : '#ff4757';
+            notif.style.color = type === 'success' ? 'black' : 'white';
+            notif.innerText = text;
+            notif.style.display = 'block';
+            setTimeout(() => notif.style.display = 'none', 3000);
+        }
+    </script>
+</body>
+</html>
