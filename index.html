@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLAN CASE | РЕГИСТРАЦИЯ И ЛОГИН</title>
+    <title>CLAN CASE | ПРЕМИУМ КЕЙСЫ</title>
     <style>
         * {
             margin: 0;
@@ -29,6 +29,9 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 15px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .balance {
@@ -149,6 +152,25 @@
             border-radius: 30px;
             padding: 30px;
             transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .case-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.03), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
         }
 
         .case-card:hover {
@@ -161,6 +183,12 @@
             font-size: 60px;
             text-align: center;
             margin-bottom: 15px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
         .case-name {
@@ -193,6 +221,12 @@
             padding: 10px;
             display: flex;
             justify-content: space-between;
+            transition: 0.2s;
+        }
+
+        .item:hover {
+            border-color: var(--case-color);
+            transform: translateX(5px);
         }
 
         .item-name {
@@ -214,10 +248,12 @@
             font-size: 18px;
             cursor: pointer;
             width: 100%;
-            transition: 0.2s;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
         }
 
-        .open-btn:hover {
+        .open-btn:hover:not(:disabled) {
             transform: scale(1.02);
             box-shadow: 0 0 20px var(--case-color);
         }
@@ -272,7 +308,7 @@
             color: #5865F2;
         }
 
-        .modal input {
+        .modal input, .modal select {
             width: 100%;
             padding: 15px;
             margin: 10px 0;
@@ -283,7 +319,7 @@
             font-size: 16px;
         }
 
-        .modal input:focus {
+        .modal input:focus, .modal select:focus {
             outline: none;
             border-color: #5865F2;
         }
@@ -306,6 +342,10 @@
             border: 2px solid #5865F2;
         }
 
+        .modal-btn.danger {
+            background: #ff4757;
+        }
+
         .error-message {
             color: #ff4757;
             font-size: 14px;
@@ -313,6 +353,7 @@
             display: none;
         }
 
+        /* Админ панель */
         .admin-btn {
             position: fixed;
             bottom: 20px;
@@ -327,11 +368,123 @@
             cursor: pointer;
             opacity: 0.3;
             z-index: 100;
+            transition: 0.3s;
         }
 
         .admin-btn:hover {
             opacity: 1;
             background: #ff4757;
+            transform: rotate(90deg);
+        }
+
+        .admin-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admin-panel.active {
+            display: flex;
+        }
+
+        .admin-content {
+            background: linear-gradient(135deg, #111, #1a1a1a);
+            padding: 40px;
+            border-radius: 30px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 2px solid #ff4757;
+            animation: modalPop 0.3s;
+        }
+
+        .admin-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .admin-header h2 {
+            color: #ff4757;
+            font-size: 2em;
+        }
+
+        .admin-section {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .admin-section h3 {
+            color: #ff4757;
+            margin-bottom: 15px;
+        }
+
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #0a0a0a;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff4757;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .keys-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 15px 0;
+        }
+
+        .key-item {
+            background: #0a0a0a;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: monospace;
+        }
+
+        .key-status {
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 5px;
+        }
+
+        .status-available {
+            background: #00ffcc;
+            color: black;
+        }
+
+        .status-used {
+            background: #ff4757;
+            color: white;
         }
 
         .notification {
@@ -341,8 +494,9 @@
             padding: 15px 30px;
             border-radius: 10px;
             display: none;
-            z-index: 2000;
+            z-index: 3000;
             animation: slideIn 0.3s;
+            font-weight: bold;
         }
 
         @keyframes slideIn {
@@ -354,6 +508,55 @@
                 transform: translateX(0);
                 opacity: 1;
             }
+        }
+
+        /* Анимация открытия кейса */
+        @keyframes spin {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-1000%); }
+        }
+
+        .roulette {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 4000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .roulette.active {
+            display: flex;
+        }
+
+        .roulette-items {
+            display: flex;
+            gap: 10px;
+            animation: spin 3s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+        }
+
+        .roulette-item {
+            width: 100px;
+            height: 100px;
+            background: #1a1a1a;
+            border: 2px solid var(--case-color);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .roulette-result {
+            margin-top: 30px;
+            font-size: 24px;
+            color: var(--case-color);
+            display: none;
         }
     </style>
 </head>
@@ -409,6 +612,95 @@
         </div>
     </div>
 
+    <!-- Админ панель -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-content">
+            <div class="admin-header">
+                <h2>⚡ ADMIN PANEL</h2>
+            </div>
+
+            <!-- Вход в админку -->
+            <div id="adminLoginSection">
+                <div class="admin-section">
+                    <input type="password" class="admin-input" id="adminPass" placeholder="Пароль администратора">
+                    <button class="modal-btn" onclick="adminLogin()">ВОЙТИ</button>
+                </div>
+            </div>
+
+            <!-- Управление (после входа) -->
+            <div id="adminControls" style="display: none;">
+                <!-- Статистика -->
+                <div class="admin-section">
+                    <h3>📊 СТАТИСТИКА</h3>
+                    <div class="admin-stats">
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalUsers">0</div>
+                            <div class="stat-label">Пользователей</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalKeys">0</div>
+                            <div class="stat-label">Ключей</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="usedKeys">0</div>
+                            <div class="stat-label">Использовано</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="availableKeys">0</div>
+                            <div class="stat-label">Доступно</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Создание ключей -->
+                <div class="admin-section">
+                    <h3>🔑 СОЗДАТЬ КЛЮЧ</h3>
+                    <select id="keyType">
+                        <option value="balance">💰 На баланс</option>
+                        <option value="winter">❄️ На зимний кейс</option>
+                        <option value="spring">🌱 На весенний кейс</option>
+                        <option value="role">🎲 На ролевой кейс</option>
+                    </select>
+                    
+                    <div id="balanceInput">
+                        <input type="number" id="keyValue" placeholder="Сумма" value="1000">
+                    </div>
+                    
+                    <button class="modal-btn" onclick="createKey()">СОЗДАТЬ КЛЮЧ</button>
+                    
+                    <div id="newKeyDisplay" style="display: none; margin-top: 15px;">
+                        <div style="background: #0a0a0a; padding: 15px; border-radius: 10px; font-family: monospace; word-break: break-all;" id="newKeyText"></div>
+                        <button class="modal-btn" onclick="copyKey()" style="margin-top: 10px;">КОПИРОВАТЬ</button>
+                    </div>
+                </div>
+
+                <!-- Список ключей -->
+                <div class="admin-section">
+                    <h3>📋 ВСЕ КЛЮЧИ</h3>
+                    <div class="keys-list" id="keysList"></div>
+                    <button class="modal-btn" onclick="loadKeys()">ОБНОВИТЬ</button>
+                </div>
+
+                <!-- Пользователи -->
+                <div class="admin-section">
+                    <h3>👥 ПОЛЬЗОВАТЕЛИ</h3>
+                    <div class="keys-list" id="usersList"></div>
+                    <button class="modal-btn" onclick="loadUsers()">ОБНОВИТЬ</button>
+                </div>
+
+                <button class="modal-btn danger" onclick="logoutAdmin()">ВЫЙТИ</button>
+            </div>
+
+            <button class="modal-btn secondary" onclick="closeAdmin()" style="margin-top: 20px;">ЗАКРЫТЬ</button>
+        </div>
+    </div>
+
+    <!-- Анимация открытия -->
+    <div class="roulette" id="roulette">
+        <div class="roulette-items" id="rouletteItems"></div>
+        <div class="roulette-result" id="rouletteResult"></div>
+    </div>
+
     <!-- Админ кнопка -->
     <button class="admin-btn" onclick="openAdmin()">⚙️</button>
 
@@ -418,8 +710,10 @@
     <script>
         // ============ ДАННЫЕ ============
         let users = JSON.parse(localStorage.getItem('users')) || {};
+        let keys = JSON.parse(localStorage.getItem('keys')) || [];
         let currentUser = null;
         let balance = 0;
+        let adminLoggedIn = false;
 
         // Кейсы
         const cases = [
@@ -465,26 +759,23 @@
 
         // ============ ЗАГРУЗКА ============
         window.onload = () => {
-            // Создаем тестового пользователя если нет
-            if (!users['admin']) {
-                users['admin'] = { password: 'admin', balance: 1000000 };
-            }
-            if (!users['test']) {
-                users['test'] = { password: 'test', balance: 50000 };
-            }
-            localStorage.setItem('users', JSON.stringify(users));
-            
             checkSession();
             renderCases();
+            updateAdminStats();
         };
 
         function checkSession() {
             const session = localStorage.getItem('session');
             if (session) {
                 const data = JSON.parse(session);
-                currentUser = data.username;
-                balance = data.balance;
-                updateUIForAuth();
+                if (users[data.username]) {
+                    currentUser = data.username;
+                    balance = users[data.username].balance;
+                    updateUIForAuth();
+                } else {
+                    localStorage.removeItem('session');
+                    updateUIForGuest();
+                }
             } else {
                 updateUIForGuest();
             }
@@ -539,10 +830,7 @@
                 currentUser = username;
                 balance = users[username].balance;
                 
-                localStorage.setItem('session', JSON.stringify({
-                    username: currentUser,
-                    balance: balance
-                }));
+                localStorage.setItem('session', JSON.stringify({ username: currentUser }));
                 
                 closeModals();
                 updateUIForAuth();
@@ -588,10 +876,10 @@
                 return;
             }
 
-            // Создаем нового пользователя
+            // Создаем нового пользователя с балансом 0
             users[username] = {
                 password: password,
-                balance: 1000 // Стартовый бонус
+                balance: 0
             };
             
             localStorage.setItem('users', JSON.stringify(users));
@@ -616,43 +904,51 @@
                 return;
             }
 
-            const key = document.getElementById('keyInput').value.trim().toUpperCase();
-            if (!key) {
+            const keyText = document.getElementById('keyInput').value.trim().toUpperCase();
+            if (!keyText) {
                 showNotification('❌ Введите ключ', 'error');
                 return;
             }
 
-            // Простая проверка ключей
-            if (key.startsWith('BAL-')) {
-                const value = parseInt(key.split('-')[1]) || 1000;
-                balance += value;
-                
-                // Сохраняем
-                users[currentUser].balance = balance;
-                localStorage.setItem('users', JSON.stringify(users));
-                
-                const session = JSON.parse(localStorage.getItem('session'));
-                session.balance = balance;
-                localStorage.setItem('session', JSON.stringify(session));
-                
-                document.getElementById('balance').innerText = balance.toLocaleString();
-                showNotification(`✅ +${value} монет!`);
-                
-            } else if (key.startsWith('ROLE-')) {
-                openRoleCase();
-                showNotification('✅ Ключ на ролевой кейс активирован!');
-                
-            } else if (key.startsWith('WINT-')) {
-                showNotification('✅ Ключ на зимний кейс активирован!');
-                
-            } else if (key.startsWith('SPRG-')) {
-                showNotification('✅ Ключ на весенний кейс активирован!');
-                
-            } else {
-                showNotification('❌ Неверный ключ', 'error');
+            // Ищем ключ
+            const keyIndex = keys.findIndex(k => k.key === keyText);
+            if (keyIndex === -1) {
+                showNotification('❌ Ключ не найден', 'error');
+                return;
             }
+
+            const key = keys[keyIndex];
+            if (key.used) {
+                showNotification('❌ Ключ уже использован', 'error');
+                return;
+            }
+
+            // Активируем ключ
+            key.used = true;
+            key.usedBy = currentUser;
+            key.usedAt = new Date().toISOString();
+            
+            if (key.type === 'balance') {
+                // Ключ на баланс
+                users[currentUser].balance += key.value;
+                balance = users[currentUser].balance;
+                document.getElementById('balance').innerText = balance.toLocaleString();
+                showNotification(`✅ +${key.value} монет!`);
+            } else {
+                // Ключ на кейс
+                if (key.caseType === 'role') {
+                    openRoleCase();
+                } else {
+                    showNotification(`✅ Ключ на ${key.caseType} кейс активирован!`);
+                }
+            }
+
+            // Сохраняем
+            localStorage.setItem('users', JSON.stringify(users));
+            localStorage.setItem('keys', JSON.stringify(keys));
             
             document.getElementById('keyInput').value = '';
+            updateAdminStats();
         }
 
         // ============ КЕЙСЫ ============
@@ -699,20 +995,39 @@
                 return;
             }
 
-            balance -= caseData.price;
+            // Показываем анимацию
+            showRoulette(caseData);
+        }
+
+        function showRoulette(caseData) {
+            const roulette = document.getElementById('roulette');
+            const items = document.getElementById('rouletteItems');
+            const result = document.getElementById('rouletteResult');
             
-            // Сохраняем
+            // Создаем предметы для анимации
+            items.innerHTML = '';
+            for (let i = 0; i < 30; i++) {
+                const item = caseData.items[Math.floor(Math.random() * caseData.items.length)];
+                items.innerHTML += `<div class="roulette-item" style="--case-color: ${caseData.color}">${caseData.icon}</div>`;
+            }
+            
+            // Выбираем выигрыш
+            const winItem = caseData.items[Math.floor(Math.random() * caseData.items.length)];
+            
+            // Показываем анимацию
+            roulette.classList.add('active');
+            
+            // Списываем монеты
+            balance -= caseData.price;
             users[currentUser].balance = balance;
             localStorage.setItem('users', JSON.stringify(users));
-            
-            const session = JSON.parse(localStorage.getItem('session'));
-            session.balance = balance;
-            localStorage.setItem('session', JSON.stringify(session));
-            
             document.getElementById('balance').innerText = balance.toLocaleString();
-
-            const winItem = caseData.items[Math.floor(Math.random() * caseData.items.length)];
-            showNotification(`🎉 Вы получили: ${winItem.name} [${winItem.rarity}]!`);
+            
+            // Показываем результат
+            setTimeout(() => {
+                roulette.classList.remove('active');
+                showNotification(`🎉 Вы получили: ${winItem.name} [${winItem.rarity}]!`);
+            }, 3000);
         }
 
         function openRoleCase() {
@@ -729,24 +1044,113 @@
             showNotification(`🎉 Вы получили: ${winItem.name} [${winItem.rarity}]!`);
         }
 
-        // ============ АДМИН ============
+        // ============ АДМИН ПАНЕЛЬ ============
         function openAdmin() {
-            const pass = prompt('Пароль админа:');
-            if (pass === '1337') {
-                let action = prompt('1 - Создать ключ на баланс\n2 - Создать ключ на кейс');
-                
-                if (action === '1') {
-                    let amount = prompt('Сумма:', '1000');
-                    let key = `BAL-${amount}-${Math.floor(Math.random() * 9000 + 1000)}-L`;
-                    showNotification(`✅ Ключ создан: ${key}`);
-                } else if (action === '2') {
-                    let type = prompt('Тип кейса (role/winter/spring):', 'role');
-                    let key = `${type.toUpperCase()}-${Math.floor(Math.random() * 9000 + 1000)}-L`;
-                    showNotification(`✅ Ключ создан: ${key}`);
-                }
+            document.getElementById('adminPanel').classList.add('active');
+            document.getElementById('adminLoginSection').style.display = 'block';
+            document.getElementById('adminControls').style.display = 'none';
+            document.getElementById('adminPass').value = '';
+        }
+
+        function closeAdmin() {
+            document.getElementById('adminPanel').classList.remove('active');
+            adminLoggedIn = false;
+        }
+
+        function adminLogin() {
+            const pass = document.getElementById('adminPass').value;
+            if (pass === '34125') {
+                adminLoggedIn = true;
+                document.getElementById('adminLoginSection').style.display = 'none';
+                document.getElementById('adminControls').style.display = 'block';
+                updateAdminStats();
+                loadKeys();
+                loadUsers();
+                showNotification('✅ Добро пожаловать, Админ!');
             } else {
                 showNotification('❌ Неверный пароль', 'error');
             }
+        }
+
+        function logoutAdmin() {
+            adminLoggedIn = false;
+            document.getElementById('adminLoginSection').style.display = 'block';
+            document.getElementById('adminControls').style.display = 'none';
+        }
+
+        function updateAdminStats() {
+            document.getElementById('totalUsers').innerText = Object.keys(users).length;
+            document.getElementById('totalKeys').innerText = keys.length;
+            document.getElementById('usedKeys').innerText = keys.filter(k => k.used).length;
+            document.getElementById('availableKeys').innerText = keys.filter(k => !k.used).length;
+        }
+
+        function createKey() {
+            const type = document.getElementById('keyType').value;
+            
+            let key = {
+                key: '',
+                type: type,
+                used: false,
+                createdAt: new Date().toISOString()
+            };
+
+            if (type === 'balance') {
+                const value = parseInt(document.getElementById('keyValue').value) || 1000;
+                key.value = value;
+                key.key = `BAL-${value}-${Math.floor(Math.random() * 9000 + 1000)}-L`;
+            } else {
+                key.caseType = type;
+                key.key = `${type.toUpperCase()}-${Math.floor(Math.random() * 9000 + 1000)}-L`;
+            }
+
+            keys.push(key);
+            localStorage.setItem('keys', JSON.stringify(keys));
+
+            document.getElementById('newKeyText').innerText = key.key;
+            document.getElementById('newKeyDisplay').style.display = 'block';
+            
+            updateAdminStats();
+            loadKeys();
+            showNotification('✅ Ключ создан!');
+        }
+
+        function copyKey() {
+            const key = document.getElementById('newKeyText').innerText;
+            navigator.clipboard.writeText(key);
+            showNotification('✅ Ключ скопирован!');
+        }
+
+        function loadKeys() {
+            const list = document.getElementById('keysList');
+            list.innerHTML = '';
+            
+            keys.slice().reverse().forEach(key => {
+                const div = document.createElement('div');
+                div.className = 'key-item';
+                div.innerHTML = `
+                    <span style="font-family: monospace;">${key.key}</span>
+                    <span class="key-status ${key.used ? 'status-used' : 'status-available'}">
+                        ${key.used ? 'ИСПОЛЬЗОВАН' : 'ДОСТУПЕН'}
+                    </span>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function loadUsers() {
+            const list = document.getElementById('usersList');
+            list.innerHTML = '';
+            
+            Object.keys(users).forEach(username => {
+                const div = document.createElement('div');
+                div.className = 'key-item';
+                div.innerHTML = `
+                    <span>${username}</span>
+                    <span style="color: #ffd700;">💰 ${users[username].balance}</span>
+                `;
+                list.appendChild(div);
+            });
         }
 
         // ============ УВЕДОМЛЕНИЯ ============
@@ -761,6 +1165,12 @@
                 notif.style.display = 'none';
             }, 3000);
         }
+
+        // Показываем/скрываем поле суммы для ключа на баланс
+        document.getElementById('keyType').addEventListener('change', function(e) {
+            const balanceInput = document.getElementById('balanceInput');
+            balanceInput.style.display = e.target.value === 'balance' ? 'block' : 'none';
+        });
     </script>
 </body>
 </html>
