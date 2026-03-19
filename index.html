@@ -2,195 +2,361 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>CLAN CASE | SIMPLE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLAN CASES | БАЛАНС</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
         }
-        
+
         body {
             background: #0a0a0a;
             color: white;
-            font-family: Arial, sans-serif;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
         }
-        
-        .container {
-            width: 90%;
-            max-width: 400px;
+
+        /* Шапка с балансом */
+        .header {
+            width: 100%;
             background: #111;
-            padding: 30px;
-            border-radius: 20px;
-            border: 1px solid #333;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
+
+        .balance {
+            background: #1a1a1a;
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: 1px solid #00ffcc;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .balance-icon {
+            color: #ffd700;
+            font-size: 20px;
+        }
+
+        .balance-amount {
+            font-size: 20px;
+            font-weight: bold;
             color: #00ffcc;
         }
-        
-        .case-selector {
+
+        .user {
             display: flex;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .case {
-            flex: 1;
-            padding: 20px;
+            align-items: center;
+            gap: 10px;
             background: #1a1a1a;
-            border: 2px solid #333;
-            border-radius: 15px;
+            padding: 8px 15px;
+            border-radius: 30px;
             cursor: pointer;
+        }
+
+        .avatar {
+            width: 35px;
+            height: 35px;
+            background: #00ffcc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: black;
+            font-weight: bold;
+        }
+
+        /* Главный экран */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin-top: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            text-shadow: 0 0 10px #00ffcc;
+        }
+
+        .cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            padding: 20px;
+        }
+
+        .case-card {
+            background: #111;
+            border: 2px solid #333;
+            border-radius: 20px;
+            padding: 25px;
             text-align: center;
             transition: 0.3s;
-        }
-        
-        .case:hover {
-            border-color: #00ffcc;
-            transform: translateY(-5px);
-        }
-        
-        .case img {
-            width: 60px;
-            height: 60px;
-            margin-bottom: 10px;
-        }
-        
-        .case.selected {
-            border-color: #00ffcc;
-            background: #1a1a1a;
-        }
-        
-        input {
-            width: 100%;
-            padding: 15px;
-            background: #1a1a1a;
-            border: 2px solid #333;
-            color: white;
-            border-radius: 10px;
-            font-size: 16px;
-            text-align: center;
-            margin-bottom: 15px;
-            font-family: monospace;
-        }
-        
-        input:focus {
-            outline: none;
-            border-color: #00ffcc;
-        }
-        
-        button {
-            width: 100%;
-            padding: 15px;
-            background: #00ffcc;
-            color: black;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
             cursor: pointer;
-            margin-bottom: 10px;
+            position: relative;
+            overflow: hidden;
         }
-        
-        button:disabled {
+
+        .case-card:hover {
+            transform: translateY(-10px);
+            border-color: #00ffcc;
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.3);
+        }
+
+        .case-card.disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
-        
-        .message {
-            padding: 10px;
-            border-radius: 10px;
-            margin-top: 10px;
-            text-align: center;
-            font-size: 14px;
+
+        .case-card.disabled:hover {
+            transform: none;
+            border-color: #333;
         }
-        
-        .message.error {
-            background: #ff4757;
-            color: white;
-        }
-        
-        .message.success {
-            background: #00ffcc;
-            color: black;
-        }
-        
-        .message.info {
-            background: #ffaa00;
-            color: black;
-        }
-        
-        .roulette {
-            display: none;
-            margin: 20px 0;
+
+        .case-icon {
+            width: 100px;
             height: 100px;
-            overflow: hidden;
-            position: relative;
-            border: 2px solid #333;
-            border-radius: 10px;
-        }
-        
-        .roulette-items {
-            display: flex;
-            animation: spin 3s ease-out forwards;
-        }
-        
-        .roulette-item {
-            min-width: 80px;
-            height: 80px;
-            margin: 10px 5px;
+            margin: 0 auto 20px;
             background: #1a1a1a;
-            border: 2px solid #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            border: 3px solid #00ffcc;
+        }
+
+        .case-name {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .case-price {
+            background: #1a1a1a;
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin: 15px 0;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .case-items {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .item-preview {
+            width: 40px;
+            height: 40px;
+            background: #1a1a1a;
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 20px;
+            border: 1px solid #333;
         }
-        
-        .roulette-item img {
-            width: 50px;
-            height: 50px;
+
+        /* Модальное окно кейса */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
         }
-        
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #111;
+            border-radius: 30px;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            border: 2px solid #00ffcc;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: white;
+        }
+
+        .case-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .case-header h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .case-header .price {
+            color: #ffd700;
+            font-size: 20px;
+        }
+
+        /* Рулетка */
+        .roulette-container {
+            position: relative;
+            width: 100%;
+            height: 150px;
+            overflow: hidden;
+            border: 2px solid #333;
+            border-radius: 15px;
+            margin: 30px 0;
+            background: #000;
+        }
+
+        .roulette-items {
+            display: flex;
+            position: absolute;
+            left: 50%;
+            transform: translateX(0);
+            transition: transform 5s cubic-bezier(0.1, 0.8, 0.3, 1);
+        }
+
+        .roulette-item {
+            width: 120px;
+            height: 120px;
+            margin: 15px 5px;
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+        }
+
+        .selector {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: #ff4757;
+            transform: translateX(-50%);
+            z-index: 10;
+            box-shadow: 0 0 10px #ff4757;
+        }
+
+        /* Кнопки */
+        .btn {
+            background: #00ffcc;
+            color: black;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #333;
+            color: white;
+            margin-top: 15px;
+        }
+
+        /* Результат */
         .result {
             display: none;
+            text-align: center;
             margin-top: 20px;
             padding: 20px;
             background: #1a1a1a;
-            border: 2px solid #00ffcc;
             border-radius: 15px;
-            text-align: center;
+            border: 2px solid #00ffcc;
         }
-        
+
+        .win-item {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .win-name {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .win-rarity {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        /* Админ панель */
         .admin-btn {
             position: fixed;
             bottom: 20px;
             right: 20px;
             width: 50px;
             height: 50px;
-            border-radius: 50%;
             background: #333;
+            border: none;
+            border-radius: 50%;
             color: white;
             font-size: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             cursor: pointer;
-            opacity: 0.5;
+            opacity: 0.3;
+            transition: 0.3s;
+            z-index: 100;
         }
-        
+
         .admin-btn:hover {
             opacity: 1;
+            background: #00ffcc;
+            color: black;
         }
-        
+
         .admin-panel {
             display: none;
             position: fixed;
@@ -198,317 +364,465 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
             align-items: center;
             justify-content: center;
         }
-        
-        .admin-box {
+
+        .admin-panel.active {
+            display: flex;
+        }
+
+        .admin-content {
             background: #111;
             padding: 30px;
             border-radius: 20px;
             width: 90%;
-            max-width: 300px;
+            max-width: 400px;
+            border: 2px solid #ff4757;
         }
-        
-        .new-key {
-            margin-top: 15px;
+
+        .admin-content h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ff4757;
+        }
+
+        .admin-content input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: white;
+            border-radius: 10px;
+        }
+
+        .users-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 15px 0;
+        }
+
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             padding: 10px;
             background: #1a1a1a;
+            margin: 5px 0;
+            border-radius: 10px;
+        }
+
+        .user-name {
+            font-weight: bold;
+        }
+
+        .user-balance {
+            color: #ffd700;
+        }
+
+        .add-balance {
+            background: #00ffcc;
+            color: black;
+            border: none;
+            padding: 5px 10px;
             border-radius: 5px;
-            font-family: monospace;
-            word-break: break-all;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: #00ffcc;
+            color: black;
+            padding: 15px 25px;
+            border-radius: 10px;
+            animation: slideIn 0.3s;
+            z-index: 1000;
+            display: none;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Шапка -->
+    <div class="header">
+        <div class="balance">
+            <span class="balance-icon">💰</span>
+            <span class="balance-amount" id="balance">0</span>
+        </div>
+        <div class="user" onclick="changeUser()">
+            <div class="avatar" id="avatar">?</div>
+            <span id="username">гость</span>
+        </div>
+    </div>
+
+    <!-- Главный экран -->
     <div class="container">
-        <h1>🎲 CLAN CASE</h1>
-        
-        <!-- Выбор кейса -->
-        <div class="case-selector">
-            <div class="case" onclick="selectCase('spring')" id="caseSpring">
-                <img src="https://cdn-icons-png.flaticon.com/512/2850/2850906.png">
-                <div>Весенний</div>
+        <h1>🎲 ВЫБЕРИТЕ КЕЙС</h1>
+        <div class="cases-grid" id="casesGrid"></div>
+    </div>
+
+    <!-- Модалка кейса -->
+    <div class="modal" id="caseModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeCase()">✕</button>
+            
+            <div class="case-header">
+                <h2 id="modalCaseName">Название кейса</h2>
+                <div class="price" id="modalCasePrice">💰 2</div>
             </div>
-            <div class="case" onclick="selectCase('winter')" id="caseWinter">
-                <img src="https://cdn-icons-png.flaticon.com/512/2322/2322731.png">
-                <div>Зимний</div>
+
+            <div class="roulette-container">
+                <div class="selector"></div>
+                <div class="roulette-items" id="rouletteItems"></div>
             </div>
-        </div>
-        
-        <!-- Поле для ключа -->
-        <input type="text" id="keyInput" placeholder="Введите ключ" disabled>
-        
-        <!-- Кнопка -->
-        <button id="mainBtn" onclick="startSpin()" disabled>Активировать</button>
-        
-        <!-- Сообщения -->
-        <div class="message" id="message"></div>
-        
-        <!-- Рулетка -->
-        <div class="roulette" id="roulette">
-            <div class="roulette-items" id="rouletteItems"></div>
-        </div>
-        
-        <!-- Результат -->
-        <div class="result" id="result">
-            <h2 id="winName"></h2>
-            <p id="winRarity"></p>
-            <button onclick="resetGame()">Завершить</button>
+
+            <button class="btn" id="openBtn" onclick="openCase()">ОТКРЫТЬ (2 💰)</button>
+            <button class="btn btn-secondary" onclick="closeCase()">НАЗАД</button>
+
+            <div class="result" id="result">
+                <div class="win-item" id="winIcon">🎁</div>
+                <div class="win-name" id="winName"></div>
+                <div class="win-rarity" id="winRarity"></div>
+                <button class="btn" onclick="closeResult()">ПРОДОЛЖИТЬ</button>
+            </div>
         </div>
     </div>
-    
-    <!-- Админка -->
-    <div class="admin-btn" onclick="openAdmin()">⚙️</div>
-    
+
+    <!-- Админ панель -->
+    <button class="admin-btn" onclick="openAdmin()">⚙️</button>
+
     <div class="admin-panel" id="adminPanel">
-        <div class="admin-box">
-            <h3 style="margin-bottom: 20px;">Админ панель</h3>
-            <button onclick="createKey('spring')" style="margin-bottom: 10px;">🌱 Создать весенний</button>
-            <button onclick="createKey('winter')" style="margin-bottom: 10px;">❄️ Создать зимний</button>
-            <div class="new-key" id="newKey"></div>
-            <button onclick="closeAdmin()" style="margin-top: 20px; background: #ff4757;">Закрыть</button>
+        <div class="admin-content">
+            <h2>⚡ ADMIN PANEL</h2>
+            
+            <input type="password" id="adminPass" placeholder="Пароль">
+            <button class="btn" onclick="loginAdmin()" style="margin-bottom: 20px;">ВОЙТИ</button>
+
+            <div id="adminControls" style="display: none;">
+                <h3 style="margin: 20px 0;">Пользователи:</h3>
+                <div class="users-list" id="usersList"></div>
+                
+                <h3 style="margin: 20px 0;">Создать пользователя:</h3>
+                <input type="text" id="newUserName" placeholder="Username">
+                <input type="number" id="newUserBalance" placeholder="Начальный баланс" value="10">
+                <button class="btn" onclick="createUser()">СОЗДАТЬ</button>
+                
+                <button class="btn" onclick="saveData()" style="margin-top: 20px; background: #00ffcc;">СОХРАНИТЬ</button>
+                <button class="btn" onclick="closeAdmin()" style="margin-top: 10px; background: #ff4757;">ЗАКРЫТЬ</button>
+            </div>
         </div>
     </div>
-    
+
+    <!-- Уведомления -->
+    <div class="notification" id="notification"></div>
+
     <script>
-        // Настройки
-        const SERVER = 'http://localhost:5000';
-        let selectedCase = '';
-        let username = localStorage.getItem('username') || 'user';
-        let currentKey = '';
+        // ============ ДАННЫЕ ============
+        const ADMIN_PASSWORD = '1337';
+        
+        // Кейсы
+        const cases = [
+            {
+                id: 1,
+                name: '🌱 ВЕСЕННИЙ КЕЙС',
+                icon: '🌸',
+                price: 2,
+                items: [
+                    { name: 'Буря', rarity: 'Легендарный', icon: '⚡', chance: 1 },
+                    { name: 'Трава', rarity: 'Обычный', icon: '🌿', chance: 49 },
+                    { name: 'Цветок', rarity: 'Редкий', icon: '🌺', chance: 30 },
+                    { name: 'Бабочка', rarity: 'Эпический', icon: '🦋', chance: 20 }
+                ]
+            },
+            {
+                id: 2,
+                name: '❄️ ЗИМНИЙ КЕЙС',
+                icon: '⛄',
+                price: 2,
+                items: [
+                    { name: 'Ледяной меч', rarity: 'Легендарный', icon: '🗡️', chance: 1 },
+                    { name: 'Снежок', rarity: 'Обычный', icon: '⚪', chance: 49 },
+                    { name: 'Морозный плащ', rarity: 'Редкий', icon: '🧥', chance: 30 },
+                    { name: 'Рога', rarity: 'Эпический', icon: '🦌', chance: 20 }
+                ]
+            }
+        ];
+
+        // Пользователи (сохраняем в localStorage)
+        let users = JSON.parse(localStorage.getItem('users')) || {
+            'гость': { balance: 10, password: '' }
+        };
+
+        let currentUser = localStorage.getItem('currentUser') || 'гость';
+        let currentCase = null;
         let isSpinning = false;
-        
-        // Предметы
-        const items = {
-            spring: [
-                { name: 'Легендарный меч', rarity: 'Легендарный', color: '#ffae00', chance: 1 },
-                { name: 'Трава', rarity: 'Обычный', color: '#aaa', chance: 49 },
-                { name: 'Цветок', rarity: 'Редкий', color: '#4caf50', chance: 30 },
-                { name: 'Бабочка', rarity: 'Эпический', color: '#9c27b0', chance: 20 }
-            ],
-            winter: [
-                { name: 'Ледяной меч', rarity: 'Легендарный', color: '#ffae00', chance: 1 },
-                { name: 'Снежок', rarity: 'Обычный', color: '#aaa', chance: 49 },
-                { name: 'Морозный плащ', rarity: 'Редкий', color: '#2196f3', chance: 30 },
-                { name: 'Рога', rarity: 'Эпический', color: '#9c27b0', chance: 20 }
-            ]
-        };
-        
-        // Иконки (для красоты)
-        const icons = {
-            'Легендарный меч': '⚔️',
-            'Трава': '🌱',
-            'Цветок': '🌸',
-            'Бабочка': '🦋',
-            'Ледяной меч': '❄️⚔️',
-            'Снежок': '⛄',
-            'Морозный плащ': '🧥',
-            'Рога': '🦌'
-        };
-        
-        // Запуск
+        let adminLoggedIn = false;
+
+        // ============ ИНИЦИАЛИЗАЦИЯ ============
         window.onload = () => {
-            let name = prompt('Ваш Discord username (без @):');
-            if (name) {
-                username = name.toLowerCase().trim();
-                localStorage.setItem('username', username);
-            }
+            updateUserDisplay();
+            renderCases();
+            checkFirstUser();
         };
-        
-        // Выбор кейса
-        function selectCase(type) {
-            selectedCase = type;
-            document.getElementById('caseSpring').style.borderColor = '#333';
-            document.getElementById('caseWinter').style.borderColor = '#333';
-            
-            if (type === 'spring') {
-                document.getElementById('caseSpring').style.borderColor = '#00ffcc';
-            } else {
-                document.getElementById('caseWinter').style.borderColor = '#00d4ff';
+
+        function checkFirstUser() {
+            if (currentUser === 'гость' && !users['гость']) {
+                users['гость'] = { balance: 10, password: '' };
+                saveUsers();
             }
-            
-            document.getElementById('keyInput').disabled = false;
-            document.getElementById('mainBtn').disabled = false;
-            document.getElementById('keyInput').focus();
-            showMessage('');
         }
-        
-        // Показать сообщение
-        function showMessage(text, type = '') {
-            const msg = document.getElementById('message');
-            msg.textContent = text;
-            msg.className = 'message ' + type;
+
+        // ============ ПОЛЬЗОВАТЕЛИ ============
+        function changeUser() {
+            let name = prompt('Введите ваш username:');
+            if (name) {
+                name = name.toLowerCase().trim();
+                if (!users[name]) {
+                    users[name] = { balance: 0, password: '' };
+                }
+                currentUser = name;
+                localStorage.setItem('currentUser', currentUser);
+                updateUserDisplay();
+                showNotif(`✅ Добро пожаловать, ${name}!`);
+            }
         }
-        
-        // ОСНОВНАЯ ФУНКЦИЯ
-        async function startSpin() {
-            if (isSpinning) return;
+
+        function updateUserDisplay() {
+            document.getElementById('username').innerText = currentUser;
+            document.getElementById('avatar').innerText = currentUser[0].toUpperCase();
+            document.getElementById('balance').innerText = users[currentUser]?.balance || 0;
+        }
+
+        // ============ КЕЙСЫ ============
+        function renderCases() {
+            const grid = document.getElementById('casesGrid');
+            grid.innerHTML = '';
             
-            const key = document.getElementById('keyInput').value.trim().toUpperCase();
-            if (!key) {
-                showMessage('Введите ключ', 'error');
+            cases.forEach(c => {
+                const card = document.createElement('div');
+                card.className = 'case-card';
+                card.onclick = () => openCaseModal(c);
+                
+                card.innerHTML = `
+                    <div class="case-icon">${c.icon}</div>
+                    <div class="case-name">${c.name}</div>
+                    <div class="case-price">💰 ${c.price}</div>
+                    <div class="case-items">
+                        ${c.items.map(item => `<div class="item-preview" title="${item.name}">${item.icon}</div>`).join('')}
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        function openCaseModal(c) {
+            if (users[currentUser]?.balance < c.price) {
+                showNotif('❌ Недостаточно средств!', 'error');
                 return;
             }
             
-            // Блокируем кнопки
-            isSpinning = true;
-            document.getElementById('mainBtn').disabled = true;
-            document.getElementById('keyInput').disabled = true;
-            showMessage('Проверка ключа...', 'info');
-            
-            try {
-                // Проверяем ключ на сервере
-                const response = await fetch(`${SERVER}/check`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        key: key,
-                        username: username
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (!data.success) {
-                    showMessage(data.message, 'error');
-                    isSpinning = false;
-                    document.getElementById('mainBtn').disabled = false;
-                    document.getElementById('keyInput').disabled = false;
-                    return;
-                }
-                
-                // Ключ принят - запускаем рулетку
-                currentKey = key;
-                showMessage('✅ Ключ принят!', 'success');
-                startRoulette();
-                
-            } catch (error) {
-                showMessage('Ошибка соединения с сервером', 'error');
-                isSpinning = false;
-                document.getElementById('mainBtn').disabled = false;
-                document.getElementById('keyInput').disabled = false;
-            }
+            currentCase = c;
+            document.getElementById('modalCaseName').innerText = c.name;
+            document.getElementById('modalCasePrice').innerHTML = `💰 ${c.price}`;
+            document.getElementById('caseModal').classList.add('active');
+            document.getElementById('openBtn').disabled = false;
         }
-        
-        // Запуск рулетки
-        function startRoulette() {
-            const pool = items[selectedCase];
+
+        function closeCase() {
+            document.getElementById('caseModal').classList.remove('active');
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('rouletteItems').innerHTML = '';
+            currentCase = null;
+        }
+
+        // ============ ОТКРЫТИЕ КЕЙСА ============
+        async function openCase() {
+            if (isSpinning) return;
             
+            const balance = users[currentUser]?.balance || 0;
+            if (balance < currentCase.price) {
+                showNotif('❌ Недостаточно средств!', 'error');
+                closeCase();
+                return;
+            }
+
+            // Списываем баланс
+            users[currentUser].balance -= currentCase.price;
+            updateUserDisplay();
+            saveUsers();
+
+            // Блокируем кнопку
+            isSpinning = true;
+            document.getElementById('openBtn').disabled = true;
+
             // Создаем ленту
             const roulette = document.getElementById('rouletteItems');
             roulette.innerHTML = '';
             
-            for (let i = 0; i < 20; i++) {
-                for (let j = 0; j < pool.length; j++) {
-                    const item = pool[j];
-                    const icon = icons[item.name] || '🎁';
-                    roulette.innerHTML += `<div class="roulette-item">${icon}</div>`;
+            for (let i = 0; i < 30; i++) {
+                for (let j = 0; j < currentCase.items.length; j++) {
+                    const item = currentCase.items[j];
+                    roulette.innerHTML += `<div class="roulette-item">${item.icon}</div>`;
                 }
             }
-            
+
             // Выбираем выигрыш
             let r = Math.random() * 100;
             let cumulative = 0;
-            let winItem = pool[0];
+            let winItem = currentCase.items[0];
             
-            for (let item of pool) {
+            for (let item of currentCase.items) {
                 cumulative += item.chance;
                 if (r <= cumulative) {
                     winItem = item;
                     break;
                 }
             }
-            
-            // Показываем рулетку
-            document.getElementById('roulette').style.display = 'block';
-            
+
             // Запускаем анимацию
             setTimeout(() => {
-                roulette.style.animation = 'spin 3s ease-out forwards';
+                roulette.style.transform = `translateX(-${45 * 130}px)`;
             }, 100);
-            
+
             // Показываем результат
-            setTimeout(async () => {
-                document.getElementById('roulette').style.display = 'none';
+            setTimeout(() => {
+                document.getElementById('winIcon').innerText = winItem.icon;
+                document.getElementById('winName').innerText = winItem.name;
+                document.getElementById('winRarity').innerText = winItem.rarity;
+                document.getElementById('winRarity').style.color = 
+                    winItem.rarity === 'Легендарный' ? '#ffae00' :
+                    winItem.rarity === 'Эпический' ? '#9c27b0' :
+                    winItem.rarity === 'Редкий' ? '#2196f3' : '#aaa';
+                
                 document.getElementById('result').style.display = 'block';
-                document.getElementById('winName').textContent = winItem.name;
-                document.getElementById('winRarity').textContent = winItem.rarity;
-                
-                // Активируем ключ на сервере
-                try {
-                    await fetch(`${SERVER}/activate`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            key: currentKey,
-                            username: username
-                        })
-                    });
-                } catch {}
-                
-                currentKey = '';
                 isSpinning = false;
-            }, 3100);
-        }
-        
-        // Сброс игры
-        function resetGame() {
-            document.getElementById('result').style.display = 'none';
-            document.getElementById('keyInput').value = '';
-            document.getElementById('keyInput').disabled = false;
-            document.getElementById('mainBtn').disabled = false;
-            document.getElementById('rouletteItems').style.animation = 'none';
-            showMessage('');
-            selectedCase = '';
-            document.getElementById('caseSpring').style.borderColor = '#333';
-            document.getElementById('caseWinter').style.borderColor = '#333';
-        }
-        
-        // Админка
-        async function openAdmin() {
-            const pass = prompt('Пароль:');
-            if (pass === '1337') {
-                document.getElementById('adminPanel').style.display = 'flex';
-            }
-        }
-        
-        function closeAdmin() {
-            document.getElementById('adminPanel').style.display = 'none';
-        }
-        
-        async function createKey(type) {
-            try {
-                const response = await fetch(`${SERVER}/create`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        pass: '1337',
-                        type: type
-                    })
-                });
                 
-                const data = await response.json();
-                if (data.success) {
-                    document.getElementById('newKey').innerHTML = 
-                        `✅ Новый ключ:<br><strong>${data.key}</strong>`;
-                }
-            } catch (error) {
-                document.getElementById('newKey').innerHTML = '❌ Ошибка';
+                // Логируем в консоль (для истории)
+                console.log(`${currentUser} открыл ${currentCase.name} и получил ${winItem.name}`);
+                
+            }, 5100);
+        }
+
+        function closeResult() {
+            document.getElementById('result').style.display = 'none';
+            closeCase();
+        }
+
+        // ============ АДМИН ПАНЕЛЬ ============
+        function openAdmin() {
+            document.getElementById('adminPanel').classList.add('active');
+            document.getElementById('adminPass').value = '';
+            document.getElementById('adminControls').style.display = 'none';
+        }
+
+        function closeAdmin() {
+            document.getElementById('adminPanel').classList.remove('active');
+            adminLoggedIn = false;
+        }
+
+        function loginAdmin() {
+            const pass = document.getElementById('adminPass').value;
+            if (pass === ADMIN_PASSWORD) {
+                adminLoggedIn = true;
+                document.getElementById('adminControls').style.display = 'block';
+                renderUsersList();
+            } else {
+                alert('Неверный пароль!');
             }
         }
-        
-        // Освобождаем ключ при закрытии
-        window.addEventListener('beforeunload', () => {
-            if (currentKey) {
-                fetch(`${SERVER}/cancel`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ key: currentKey })
-                });
+
+        function renderUsersList() {
+            const list = document.getElementById('usersList');
+            list.innerHTML = '';
+            
+            Object.keys(users).forEach(name => {
+                const div = document.createElement('div');
+                div.className = 'user-item';
+                div.innerHTML = `
+                    <span class="user-name">${name}</span>
+                    <span>
+                        <span class="user-balance">💰 ${users[name].balance}</span>
+                        <button class="add-balance" onclick="addBalance('${name}')">+</button>
+                    </span>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function addBalance(username) {
+            const amount = prompt(`Сколько добавить ${username}?`, '10');
+            if (amount && !isNaN(amount)) {
+                users[username].balance += parseInt(amount);
+                saveUsers();
+                renderUsersList();
+                if (username === currentUser) {
+                    updateUserDisplay();
+                }
+                showNotif(`✅ Добавлено ${amount} 💰 ${username}`);
             }
-        });
+        }
+
+        function createUser() {
+            const name = document.getElementById('newUserName').value.toLowerCase().trim();
+            const balance = parseInt(document.getElementById('newUserBalance').value) || 0;
+            
+            if (!name) {
+                alert('Введите имя!');
+                return;
+            }
+            
+            if (users[name]) {
+                alert('Пользователь уже существует!');
+                return;
+            }
+            
+            users[name] = { balance: balance, password: '' };
+            saveUsers();
+            renderUsersList();
+            document.getElementById('newUserName').value = '';
+            showNotif(`✅ Создан пользователь ${name}`);
+        }
+
+        // ============ СОХРАНЕНИЕ ============
+        function saveUsers() {
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        function saveData() {
+            saveUsers();
+            updateUserDisplay();
+            showNotif('✅ Данные сохранены!');
+        }
+
+        // ============ УВЕДОМЛЕНИЯ ============
+        function showNotif(text, type = 'success') {
+            const notif = document.getElementById('notification');
+            notif.style.background = type === 'success' ? '#00ffcc' : '#ff4757';
+            notif.style.color = type === 'success' ? 'black' : 'white';
+            notif.innerText = text;
+            notif.style.display = 'block';
+            
+            setTimeout(() => {
+                notif.style.display = 'none';
+            }, 3000);
+        }
     </script>
 </body>
 </html>
