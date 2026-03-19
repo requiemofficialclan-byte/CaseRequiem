@@ -68,6 +68,12 @@
             border-radius: 30px;
             cursor: pointer;
             font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .logout-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px #ff4757;
         }
 
         .auth-buttons {
@@ -83,6 +89,12 @@
             border-radius: 40px;
             cursor: pointer;
             font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .auth-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px #5865F2;
         }
 
         .key-section {
@@ -102,6 +114,7 @@
             border-radius: 30px;
             width: 250px;
             font-family: monospace;
+            font-size: 14px;
         }
 
         .key-input:focus {
@@ -117,6 +130,12 @@
             border-radius: 30px;
             font-weight: bold;
             cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .key-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px #5865F2;
         }
 
         .container {
@@ -156,6 +175,7 @@
             padding: 30px;
             transition: 0.3s;
             position: relative;
+            overflow: hidden;
         }
 
         .case-card:hover {
@@ -172,6 +192,7 @@
             border-radius: 20px;
             font-size: 12px;
             font-weight: bold;
+            z-index: 10;
         }
 
         .badge-key {
@@ -188,6 +209,7 @@
             font-size: 70px;
             text-align: center;
             margin-bottom: 20px;
+            filter: drop-shadow(0 0 10px var(--case-color));
         }
 
         .case-name {
@@ -220,17 +242,26 @@
             padding: 12px 15px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            transition: 0.2s;
+        }
+
+        .item:hover {
+            border-color: var(--case-color);
+            transform: translateX(5px);
         }
 
         .item-name {
             font-size: 15px;
+            font-weight: 500;
         }
 
         .item-rarity {
             font-size: 12px;
-            padding: 2px 10px;
-            border-radius: 15px;
+            padding: 4px 12px;
+            border-radius: 20px;
             background: #333;
+            font-weight: bold;
         }
 
         .rarity-legendary { color: #ffae00; }
@@ -248,6 +279,12 @@
             cursor: pointer;
             width: 100%;
             margin-top: 15px;
+            transition: 0.2s;
+        }
+
+        .open-btn:hover:not(:disabled) {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px var(--case-color);
         }
 
         .open-btn:disabled {
@@ -267,6 +304,7 @@
             z-index: 2000;
             align-items: center;
             justify-content: center;
+            backdrop-filter: blur(5px);
         }
 
         .modal.active {
@@ -274,18 +312,31 @@
         }
 
         .modal-content {
-            background: #1a1a1a;
+            background: linear-gradient(135deg, #1a1a1a, #222);
             padding: 40px;
             border-radius: 30px;
             width: 90%;
             max-width: 400px;
             border: 2px solid #5865F2;
+            animation: modalPop 0.3s;
+        }
+
+        @keyframes modalPop {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         .modal h2 {
             text-align: center;
             margin-bottom: 30px;
             color: #5865F2;
+            font-size: 2em;
         }
 
         .modal input {
@@ -293,9 +344,15 @@
             padding: 15px;
             margin: 10px 0;
             background: #0a0a0a;
-            border: 1px solid #333;
+            border: 2px solid #333;
             color: white;
-            border-radius: 10px;
+            border-radius: 15px;
+            font-size: 16px;
+        }
+
+        .modal input:focus {
+            outline: none;
+            border-color: #5865F2;
         }
 
         .modal-btn {
@@ -305,32 +362,63 @@
             background: #5865F2;
             color: white;
             border: none;
-            border-radius: 10px;
-            cursor: pointer;
+            border-radius: 15px;
+            font-size: 16px;
             font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .modal-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 15px #5865F2;
         }
 
         .modal-btn.secondary {
             background: transparent;
-            border: 1px solid #5865F2;
+            border: 2px solid #5865F2;
+        }
+
+        .modal-btn.secondary:hover {
+            background: rgba(88, 101, 242, 0.1);
+        }
+
+        .error-message {
+            color: #ff4757;
+            font-size: 14px;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        /* Админ кнопка */
+        .admin-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #2a2a2a, #333);
+            border: 2px solid #ff4757;
+            border-radius: 50%;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            z-index: 1000;
+            transition: 0.3s;
+            box-shadow: 0 0 20px rgba(255, 71, 87, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admin-btn:hover {
+            transform: rotate(90deg) scale(1.1);
+            background: #ff4757;
+            border-color: white;
+            box-shadow: 0 0 30px #ff4757;
         }
 
         /* Админ панель */
-        .admin-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            background: #333;
-            border: none;
-            border-radius: 50%;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            z-index: 100;
-        }
-
         .admin-panel {
             display: none;
             position: fixed;
@@ -338,9 +426,10 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.98);
+            background: rgba(0, 0, 0, 0.98);
             z-index: 3000;
             overflow-y: auto;
+            backdrop-filter: blur(10px);
         }
 
         .admin-panel.active {
@@ -351,58 +440,101 @@
             max-width: 1200px;
             margin: 40px auto;
             padding: 20px;
+            position: relative;
+        }
+
+        .admin-close {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: #ff4757;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 3100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+            box-shadow: 0 0 20px rgba(255, 71, 87, 0.5);
+        }
+
+        .admin-close:hover {
+            transform: rotate(90deg);
+            background: #ff6b81;
         }
 
         .admin-header {
             text-align: center;
             margin-bottom: 40px;
+            padding-top: 20px;
         }
 
         .admin-header h2 {
             color: #ff4757;
-            font-size: 2.5em;
+            font-size: 3em;
             margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(255, 71, 87, 0.5);
+        }
+
+        .admin-header p {
+            color: #888;
+            font-size: 1.2em;
         }
 
         .admin-stats {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
+            gap: 25px;
             margin-bottom: 40px;
         }
 
         .stat-card {
-            background: #1a1a1a;
-            padding: 25px;
-            border-radius: 20px;
+            background: linear-gradient(135deg, #1a1a1a, #222);
+            padding: 30px 20px;
+            border-radius: 25px;
             text-align: center;
             border: 1px solid #333;
+            transition: 0.3s;
+        }
+
+        .stat-card:hover {
+            border-color: #ff4757;
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(255, 71, 87, 0.2);
         }
 
         .stat-value {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: bold;
             color: #ff4757;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
         }
 
         .stat-label {
-            color: #888;
-            font-size: 14px;
+            color: #aaa;
+            font-size: 16px;
+            letter-spacing: 0.5px;
         }
 
         .admin-section {
-            background: #1a1a1a;
+            background: linear-gradient(135deg, #1a1a1a, #222);
             padding: 30px;
-            border-radius: 20px;
+            border-radius: 25px;
             margin-bottom: 30px;
             border: 1px solid #333;
         }
 
         .admin-section h3 {
             color: #ff4757;
-            margin-bottom: 20px;
-            font-size: 1.3em;
+            margin-bottom: 25px;
+            font-size: 1.5em;
+            border-left: 4px solid #ff4757;
+            padding-left: 15px;
         }
 
         .admin-grid {
@@ -413,36 +545,50 @@
 
         .admin-select, .admin-input {
             background: #0a0a0a;
-            border: 1px solid #333;
+            border: 2px solid #333;
             color: white;
-            padding: 12px;
-            border-radius: 10px;
+            padding: 15px;
+            border-radius: 15px;
             width: 100%;
-            margin: 5px 0;
+            font-size: 15px;
+        }
+
+        .admin-select:focus, .admin-input:focus {
+            outline: none;
+            border-color: #ff4757;
         }
 
         .admin-btn {
             background: #ff4757;
             color: white;
             border: none;
-            padding: 12px 25px;
-            border-radius: 10px;
+            padding: 15px 30px;
+            border-radius: 15px;
             cursor: pointer;
-            margin: 5px;
             font-weight: bold;
+            font-size: 16px;
+            transition: 0.2s;
+            display: inline-block;
+        }
+
+        .admin-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #ff4757;
         }
 
         .admin-btn.small {
             padding: 8px 15px;
             font-size: 13px;
+            margin: 2px;
         }
 
         .keys-list, .users-list {
             background: #0a0a0a;
-            border-radius: 10px;
+            border-radius: 15px;
             padding: 15px;
             max-height: 300px;
             overflow-y: auto;
+            border: 1px solid #333;
         }
 
         .key-item, .user-item {
@@ -451,6 +597,11 @@
             align-items: center;
             padding: 12px;
             border-bottom: 1px solid #222;
+            transition: 0.2s;
+        }
+
+        .key-item:hover, .user-item:hover {
+            background: #111;
         }
 
         .key-item:last-child, .user-item:last-child {
@@ -459,46 +610,70 @@
 
         .key-used {
             color: #ff4757;
+            font-weight: bold;
         }
 
         .key-available {
             color: #00ffcc;
+            font-weight: bold;
         }
 
         .user-balance {
             color: #ffd700;
             font-weight: bold;
+            margin-right: 10px;
         }
 
-        .close-admin {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #ff4757;
-            color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            font-size: 20px;
-            cursor: pointer;
-            z-index: 1000;
+        .user-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        #newKeyDisplay {
+            margin-top: 20px;
+            padding: 20px;
+            background: #0a0a0a;
+            border-radius: 15px;
+            border: 2px solid #00ffcc;
+        }
+
+        #newKeyText {
+            font-family: monospace;
+            font-size: 18px;
+            word-break: break-all;
+            color: #00ffcc;
+            margin-bottom: 15px;
         }
 
         .notification {
             position: fixed;
             top: 100px;
-            right: 20px;
+            right: 30px;
             padding: 15px 30px;
-            background: #5865F2;
-            color: white;
-            border-radius: 10px;
+            border-radius: 15px;
             display: none;
             z-index: 4000;
+            animation: slideIn 0.3s;
+            font-weight: bold;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
         @media (max-width: 1024px) {
             .cases-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .admin-stats {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
@@ -507,13 +682,21 @@
             .cases-grid {
                 grid-template-columns: 1fr;
             }
-            
             .admin-stats {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: 1fr;
             }
-            
             .admin-grid {
                 grid-template-columns: 1fr;
+            }
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .key-section {
+                width: 100%;
+            }
+            .key-input {
+                flex: 1;
             }
         }
     </style>
@@ -597,7 +780,7 @@
             <h2>🔐 ВХОД</h2>
             <input type="text" id="loginUsername" placeholder="Логин">
             <input type="password" id="loginPassword" placeholder="Пароль">
-            <div style="color: #ff4757; margin: 10px 0; display: none;" id="loginError"></div>
+            <div class="error-message" id="loginError" style="display: none;"></div>
             <button class="modal-btn" onclick="login()">Войти</button>
             <button class="modal-btn secondary" onclick="closeModals()">Закрыть</button>
         </div>
@@ -610,7 +793,7 @@
             <input type="text" id="regUsername" placeholder="Логин">
             <input type="password" id="regPassword" placeholder="Пароль">
             <input type="password" id="regConfirm" placeholder="Повторите пароль">
-            <div style="color: #ff4757; margin: 10px 0; display: none;" id="registerError"></div>
+            <div class="error-message" id="registerError" style="display: none;"></div>
             <button class="modal-btn" onclick="register()">Зарегистрироваться</button>
             <button class="modal-btn secondary" onclick="closeModals()">Закрыть</button>
         </div>
@@ -623,7 +806,7 @@
             <input type="text" id="changeUsername" readonly style="background: #1a1a1a;">
             <input type="password" id="newPassword" placeholder="Новый пароль">
             <input type="password" id="confirmNew" placeholder="Подтвердите">
-            <div style="color: #ff4757; margin: 10px 0; display: none;" id="passwordError"></div>
+            <div class="error-message" id="passwordError" style="display: none;"></div>
             <button class="modal-btn" onclick="changePassword()">Сменить</button>
             <button class="modal-btn secondary" onclick="closeModals()">Закрыть</button>
         </div>
@@ -631,21 +814,21 @@
 
     <!-- Админ панель -->
     <div class="admin-panel" id="adminPanel">
-        <button class="close-admin" onclick="closeAdmin()">✕</button>
+        <button class="admin-close" onclick="closeAdmin()">✕</button>
         <div class="admin-container">
             <div class="admin-header">
                 <h2>⚡ ADMIN PANEL</h2>
-                <p>Управление системой</p>
+                <p>Управление системой Clan Case</p>
             </div>
 
-            <div id="adminLogin">
-                <div class="admin-section">
-                    <h3>🔐 ВХОД АДМИНИСТРАТОРА</h3>
-                    <input type="password" class="admin-input" id="adminPass" placeholder="Пароль" style="max-width: 300px; margin: 0 auto; display: block;">
-                    <button class="admin-btn" onclick="adminLogin()" style="display: block; margin: 20px auto;">ВОЙТИ</button>
-                </div>
+            <!-- Вход в админку -->
+            <div id="adminLogin" class="admin-section" style="max-width: 400px; margin: 0 auto;">
+                <h3 style="text-align: center;">🔐 ВХОД АДМИНИСТРАТОРА</h3>
+                <input type="password" class="admin-input" id="adminPass" placeholder="Пароль">
+                <button class="admin-btn" onclick="adminLogin()" style="width: 100%;">ВОЙТИ</button>
             </div>
 
+            <!-- Управление (после входа) -->
             <div id="adminControls" style="display: none;">
                 <!-- Статистика -->
                 <div class="admin-stats">
@@ -669,7 +852,7 @@
 
                 <!-- Создание ключей -->
                 <div class="admin-section">
-                    <h3>🔑 СОЗДАТЬ КЛЮЧ</h3>
+                    <h3>🔑 СОЗДАНИЕ КЛЮЧА</h3>
                     <div class="admin-grid">
                         <div>
                             <select class="admin-select" id="keyType">
@@ -677,52 +860,67 @@
                                 <option value="winter">❄️ На зимний кейс</option>
                                 <option value="role">🎲 На ролевой кейс</option>
                             </select>
-                            <div id="balanceInput">
+                            <div id="balanceInput" style="margin-top: 10px;">
                                 <input type="number" class="admin-input" id="keyValue" placeholder="Сумма" value="1000">
                             </div>
                         </div>
                         <div>
-                            <button class="admin-btn" onclick="createKey()">СОЗДАТЬ</button>
+                            <button class="admin-btn" onclick="createKey()" style="height: 100%;">СОЗДАТЬ КЛЮЧ</button>
                         </div>
                     </div>
-                    <div id="newKeyDisplay" style="display: none; margin-top: 20px; background: #0a0a0a; padding: 15px; border-radius: 10px;">
-                        <div style="font-family: monospace; word-break: break-all;" id="newKeyText"></div>
-                        <button class="admin-btn small" onclick="copyKey()" style="margin-top: 10px;">КОПИРОВАТЬ</button>
+                    
+                    <!-- Отображение созданного ключа -->
+                    <div id="newKeyDisplay" style="display: none;">
+                        <p style="color: #00ffcc; margin-bottom: 10px;">✅ Новый ключ создан:</p>
+                        <div style="background: #0a0a0a; padding: 15px; border-radius: 10px; border: 1px solid #00ffcc;">
+                            <div style="font-family: monospace; font-size: 18px; word-break: break-all; color: #00ffcc; text-align: center;" id="newKeyText"></div>
+                        </div>
+                        <button class="admin-btn small" onclick="copyKey()" style="margin-top: 15px;">📋 КОПИРОВАТЬ</button>
                     </div>
                 </div>
 
                 <!-- Список ключей -->
                 <div class="admin-section">
                     <h3>📋 ВСЕ КЛЮЧИ</h3>
-                    <div class="keys-list" id="keysList"></div>
-                    <button class="admin-btn small" onclick="loadKeys()" style="margin-top: 10px;">ОБНОВИТЬ</button>
+                    <div class="keys-list" id="keysList">
+                        <div style="text-align: center; color: #666; padding: 20px;">Загрузка...</div>
+                    </div>
+                    <button class="admin-btn small" onclick="loadKeys()" style="margin-top: 15px;">🔄 ОБНОВИТЬ</button>
                 </div>
 
                 <!-- Пользователи -->
                 <div class="admin-section">
                     <h3>👥 ПОЛЬЗОВАТЕЛИ</h3>
-                    <div class="users-list" id="usersList"></div>
-                    <button class="admin-btn small" onclick="loadUsers()" style="margin-top: 10px;">ОБНОВИТЬ</button>
+                    <div class="users-list" id="usersList">
+                        <div style="text-align: center; color: #666; padding: 20px;">Загрузка...</div>
+                    </div>
+                    <button class="admin-btn small" onclick="loadUsers()" style="margin-top: 15px;">🔄 ОБНОВИТЬ</button>
                 </div>
 
-                <button class="admin-btn" onclick="logoutAdmin()" style="background: #ff4757; margin-top: 20px;">ВЫЙТИ</button>
+                <button class="admin-btn" onclick="logoutAdmin()" style="background: #ff4757; width: 200px; margin: 0 auto; display: block;">ВЫЙТИ</button>
             </div>
         </div>
     </div>
 
+    <!-- Кнопка админки -->
     <button class="admin-btn" onclick="openAdmin()">⚙️</button>
+
+    <!-- Уведомления -->
     <div class="notification" id="notification"></div>
 
     <script>
         const SERVER = 'http://localhost:5000';
+        const ADMIN_PASS = '34125';
         let currentUser = null;
         let balance = 0;
         let adminLoggedIn = false;
 
+        // Загрузка
         window.onload = () => {
             checkSession();
         };
 
+        // Проверка сессии
         async function checkSession() {
             const session = localStorage.getItem('session');
             if (session) {
@@ -735,6 +933,7 @@
             }
         }
 
+        // Загрузка баланса
         async function loadBalance() {
             try {
                 const res = await fetch(`${SERVER}/api/get_balance`, {
@@ -746,10 +945,11 @@
                 balance = data.balance;
                 document.getElementById('balance').innerText = balance.toLocaleString();
             } catch (e) {
-                showNotification('Ошибка загрузки', 'error');
+                showNotification('Ошибка загрузки баланса', 'error');
             }
         }
 
+        // UI для авторизованного
         function showUserContent() {
             document.getElementById('authButtons').style.display = 'none';
             document.getElementById('userInfo').style.display = 'flex';
@@ -757,27 +957,36 @@
             document.getElementById('mainContent').style.display = 'block';
         }
 
+        // UI для гостя
         function showGuestContent() {
             document.getElementById('authButtons').style.display = 'flex';
             document.getElementById('userInfo').style.display = 'none';
             document.getElementById('mainContent').style.display = 'none';
         }
 
+        // Показать модалку
         function showModal(type) {
-            document.getElementById('loginModal').classList.remove('active');
-            document.getElementById('registerModal').classList.remove('active');
+            closeModals();
             document.getElementById(type + 'Modal').classList.add('active');
         }
 
+        // Закрыть модалки
         function closeModals() {
             document.getElementById('loginModal').classList.remove('active');
             document.getElementById('registerModal').classList.remove('active');
             document.getElementById('passwordModal').classList.remove('active');
         }
 
+        // Вход
         async function login() {
             const username = document.getElementById('loginUsername').value;
             const password = document.getElementById('loginPassword').value;
+
+            if (!username || !password) {
+                document.getElementById('loginError').innerText = 'Заполните все поля';
+                document.getElementById('loginError').style.display = 'block';
+                return;
+            }
 
             try {
                 const res = await fetch(`${SERVER}/api/login`, {
@@ -804,10 +1013,17 @@
             }
         }
 
+        // Регистрация
         async function register() {
             const username = document.getElementById('regUsername').value;
             const password = document.getElementById('regPassword').value;
             const confirm = document.getElementById('regConfirm').value;
+
+            if (!username || !password || !confirm) {
+                document.getElementById('registerError').innerText = 'Заполните все поля';
+                document.getElementById('registerError').style.display = 'block';
+                return;
+            }
 
             if (password !== confirm) {
                 document.getElementById('registerError').innerText = 'Пароли не совпадают';
@@ -836,6 +1052,7 @@
             }
         }
 
+        // Выход
         function logout() {
             localStorage.removeItem('session');
             currentUser = null;
@@ -844,6 +1061,7 @@
             showNotification('👋 Вы вышли');
         }
 
+        // Использовать ключ
         async function useKey() {
             if (!currentUser) {
                 showNotification('❌ Сначала войдите', 'error');
@@ -851,7 +1069,10 @@
             }
 
             const key = document.getElementById('keyInput').value.trim().toUpperCase();
-            if (!key) return;
+            if (!key) {
+                showNotification('❌ Введите ключ', 'error');
+                return;
+            }
 
             try {
                 const res = await fetch(`${SERVER}/api/use_key`, {
@@ -880,12 +1101,14 @@
             }
         }
 
+        // Открыть зимний кейс
         function openWinterCase() {
             const items = ['NY Limited', 'HOLIDAY', 'WINTER', 'Snow Reaper'];
             const win = items[Math.floor(Math.random() * items.length)];
             showNotification(`🎉 Вы получили: ${win}!`);
         }
 
+        // Открыть весенний кейс
         async function openSpringCase() {
             if (!currentUser) return;
             if (balance < 55000) {
@@ -909,68 +1132,76 @@
             showNotification(`🎉 Вы получили: ${win}!`);
         }
 
+        // Открыть ролевой кейс
         function openRoleCase() {
             const items = ['Bloodbound', 'Shadow', 'Veteran', 'Eternal', 'Phantom', 'Chosen'];
             const win = items[Math.floor(Math.random() * items.length)];
             showNotification(`🎉 Вы получили: ${win}!`);
         }
 
+        // Открыть админ панель
         function openAdmin() {
             document.getElementById('adminPanel').classList.add('active');
             document.getElementById('adminLogin').style.display = 'block';
             document.getElementById('adminControls').style.display = 'none';
+            document.getElementById('adminPass').value = '';
         }
 
+        // Закрыть админ панель
         function closeAdmin() {
             document.getElementById('adminPanel').classList.remove('active');
             adminLoggedIn = false;
         }
 
+        // Вход в админку
         async function adminLogin() {
             const pass = document.getElementById('adminPass').value;
             
-            const res = await fetch(`${SERVER}/api/admin/login`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({password: pass})
-            });
-            const data = await res.json();
-
-            if (data.success) {
-                adminLoggedIn = true;
-                document.getElementById('adminLogin').style.display = 'none';
-                document.getElementById('adminControls').style.display = 'block';
-                loadAdminStats();
-                loadKeys();
-                loadUsers();
-                showNotification('✅ Добро пожаловать, Админ!');
-            } else {
+            if (pass !== ADMIN_PASS) {
                 showNotification('❌ Неверный пароль', 'error');
+                return;
             }
+
+            adminLoggedIn = true;
+            document.getElementById('adminLogin').style.display = 'none';
+            document.getElementById('adminControls').style.display = 'block';
+            
+            await loadAdminStats();
+            await loadKeys();
+            await loadUsers();
+            
+            showNotification('✅ Добро пожаловать, Админ!');
         }
 
+        // Выход из админки
         function logoutAdmin() {
             adminLoggedIn = false;
             document.getElementById('adminLogin').style.display = 'block';
             document.getElementById('adminControls').style.display = 'none';
         }
 
+        // Загрузка статистики
         async function loadAdminStats() {
-            const res = await fetch(`${SERVER}/api/admin/get_stats`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({password: ADMIN_PASS})
-            });
-            const data = await res.json();
+            try {
+                const res = await fetch(`${SERVER}/api/admin/get_stats`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({password: ADMIN_PASS})
+                });
+                const data = await res.json();
 
-            if (data.success) {
-                document.getElementById('totalUsers').innerText = data.users;
-                document.getElementById('totalKeys').innerText = data.total_keys;
-                document.getElementById('usedKeys').innerText = data.used_keys;
-                document.getElementById('availableKeys').innerText = data.available_keys;
+                if (data.success) {
+                    document.getElementById('totalUsers').innerText = data.users;
+                    document.getElementById('totalKeys').innerText = data.total_keys;
+                    document.getElementById('usedKeys').innerText = data.used_keys;
+                    document.getElementById('availableKeys').innerText = data.available_keys;
+                }
+            } catch (e) {
+                console.error('Error loading stats:', e);
             }
         }
 
+        // Создать ключ
         async function createKey() {
             const type = document.getElementById('keyType').value;
             const data = {password: ADMIN_PASS, key_type: type};
@@ -979,103 +1210,138 @@
                 data.value = parseInt(document.getElementById('keyValue').value) || 1000;
             }
 
-            const res = await fetch(`${SERVER}/api/admin/create_key`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(data)
-            });
-            const result = await res.json();
+            try {
+                const res = await fetch(`${SERVER}/api/admin/create_key`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
 
-            if (result.success) {
-                document.getElementById('newKeyText').innerText = result.key;
-                document.getElementById('newKeyDisplay').style.display = 'block';
-                showNotification('✅ Ключ создан!');
-                loadKeys();
-                loadAdminStats();
+                if (result.success) {
+                    document.getElementById('newKeyText').innerText = result.key;
+                    document.getElementById('newKeyDisplay').style.display = 'block';
+                    showNotification('✅ Ключ создан!');
+                    await loadKeys();
+                    await loadAdminStats();
+                }
+            } catch (e) {
+                showNotification('Ошибка создания ключа', 'error');
             }
         }
 
+        // Копировать ключ
         function copyKey() {
             const key = document.getElementById('newKeyText').innerText;
             navigator.clipboard.writeText(key);
             showNotification('✅ Ключ скопирован!');
         }
 
+        // Загрузка ключей
         async function loadKeys() {
-            const res = await fetch(`${SERVER}/api/admin/get_keys`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({password: ADMIN_PASS})
-            });
-            const data = await res.json();
-
-            if (data.success) {
-                const list = document.getElementById('keysList');
-                list.innerHTML = '';
-                data.keys.forEach(k => {
-                    list.innerHTML += `
-                        <div class="key-item">
-                            <span>${k.key}</span>
-                            <span class="${k.used ? 'key-used' : 'key-available'}">${k.used ? 'ИСПОЛЬЗОВАН' : 'ДОСТУПЕН'}</span>
-                        </div>
-                    `;
+            try {
+                const res = await fetch(`${SERVER}/api/admin/get_keys`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({password: ADMIN_PASS})
                 });
+                const data = await res.json();
+
+                if (data.success) {
+                    const list = document.getElementById('keysList');
+                    if (data.keys.length === 0) {
+                        list.innerHTML = '<div style="text-align: center; color: #666; padding: 20px;">Нет ключей</div>';
+                    } else {
+                        list.innerHTML = data.keys.map(k => `
+                            <div class="key-item">
+                                <span style="font-family: monospace;">${k.key}</span>
+                                <span class="${k.used ? 'key-used' : 'key-available'}">
+                                    ${k.used ? 'ИСПОЛЬЗОВАН' : 'ДОСТУПЕН'}
+                                </span>
+                            </div>
+                        `).join('');
+                    }
+                }
+            } catch (e) {
+                console.error('Error loading keys:', e);
             }
         }
 
+        // Загрузка пользователей
         async function loadUsers() {
-            const res = await fetch(`${SERVER}/api/admin/get_users`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({password: ADMIN_PASS})
-            });
-            const data = await res.json();
-
-            if (data.success) {
-                const list = document.getElementById('usersList');
-                list.innerHTML = '';
-                data.users.forEach(u => {
-                    list.innerHTML += `
-                        <div class="user-item">
-                            <span>${u.username}</span>
-                            <span>
-                                <span class="user-balance">💰 ${u.balance}</span>
-                                <button class="admin-btn small" onclick="addBalance('${u.username}')">➕</button>
-                                <button class="admin-btn small" onclick="openPasswordModal('${u.username}')">🔑</button>
-                                <button class="admin-btn small" onclick="deleteUser('${u.username}')">❌</button>
-                            </span>
-                        </div>
-                    `;
+            try {
+                const res = await fetch(`${SERVER}/api/admin/get_users`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({password: ADMIN_PASS})
                 });
+                const data = await res.json();
+
+                if (data.success) {
+                    const list = document.getElementById('usersList');
+                    if (data.users.length === 0) {
+                        list.innerHTML = '<div style="text-align: center; color: #666; padding: 20px;">Нет пользователей</div>';
+                    } else {
+                        list.innerHTML = data.users.map(u => `
+                            <div class="user-item">
+                                <span style="font-weight: bold;">${u.username}</span>
+                                <span>
+                                    <span class="user-balance">💰 ${u.balance.toLocaleString()}</span>
+                                    <button class="admin-btn small" onclick="addBalance('${u.username}')">➕</button>
+                                    <button class="admin-btn small" onclick="openPasswordModal('${u.username}')">🔑</button>
+                                    <button class="admin-btn small" onclick="deleteUser('${u.username}')">❌</button>
+                                </span>
+                            </div>
+                        `).join('');
+                    }
+                }
+            } catch (e) {
+                console.error('Error loading users:', e);
             }
         }
 
+        // Добавить баланс
         async function addBalance(username) {
-            const amount = prompt('Сколько добавить?', '1000');
-            if (!amount) return;
+            const amount = prompt(`Сколько добавить ${username}?`, '1000');
+            if (!amount || isNaN(amount) || parseInt(amount) <= 0) return;
 
-            await fetch(`${SERVER}/api/admin/add_balance`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({password: ADMIN_PASS, username, amount: parseInt(amount)})
-            });
+            try {
+                await fetch(`${SERVER}/api/admin/add_balance`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({password: ADMIN_PASS, username, amount: parseInt(amount)})
+                });
 
-            loadUsers();
-            if (username === currentUser) {
-                await loadBalance();
+                await loadUsers();
+                if (username === currentUser) {
+                    await loadBalance();
+                }
+                showNotification(`✅ Добавлено ${amount} монет`);
+            } catch (e) {
+                showNotification('Ошибка', 'error');
             }
-            showNotification(`✅ Добавлено ${amount} монет`);
         }
 
+        // Открыть модалку смены пароля
         function openPasswordModal(username) {
             document.getElementById('changeUsername').value = username;
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmNew').value = '';
+            document.getElementById('passwordError').style.display = 'none';
             document.getElementById('passwordModal').classList.add('active');
         }
 
+        // Смена пароля
         async function changePassword() {
             const username = document.getElementById('changeUsername').value;
             const newPass = document.getElementById('newPassword').value;
             const confirm = document.getElementById('confirmNew').value;
+
+            if (!newPass || !confirm) {
+                document.getElementById('passwordError').innerText = 'Заполните все поля';
+                document.getElementById('passwordError').style.display = 'block';
+                return;
+            }
 
             if (newPass !== confirm) {
                 document.getElementById('passwordError').innerText = 'Пароли не совпадают';
@@ -1083,40 +1349,59 @@
                 return;
             }
 
-            await fetch(`${SERVER}/api/admin/change_password`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({password: ADMIN_PASS, username, new_password: newPass})
-            });
-
-            closeModals();
-            showNotification('✅ Пароль изменен');
-        }
-
-        async function deleteUser(username) {
-            if (!confirm(`Удалить ${username}?`)) return;
-
-            await fetch(`${SERVER}/api/admin/delete_user`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({password: ADMIN_PASS, username})
-            });
-
-            loadUsers();
-            if (username === currentUser) {
-                logout();
+            if (newPass.length < 4) {
+                document.getElementById('passwordError').innerText = 'Пароль минимум 4 символа';
+                document.getElementById('passwordError').style.display = 'block';
+                return;
             }
-            showNotification(`❌ Пользователь удален`);
+
+            try {
+                await fetch(`${SERVER}/api/admin/change_password`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({password: ADMIN_PASS, username, new_password: newPass})
+                });
+
+                closeModals();
+                showNotification('✅ Пароль изменен');
+            } catch (e) {
+                showNotification('Ошибка', 'error');
+            }
         }
 
+        // Удалить пользователя
+        async function deleteUser(username) {
+            if (!confirm(`Вы уверены, что хотите удалить пользователя ${username}?`)) return;
+
+            try {
+                await fetch(`${SERVER}/api/admin/delete_user`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({password: ADMIN_PASS, username})
+                });
+
+                await loadUsers();
+                if (username === currentUser) {
+                    logout();
+                }
+                showNotification(`❌ Пользователь удален`);
+            } catch (e) {
+                showNotification('Ошибка', 'error');
+            }
+        }
+
+        // Показать уведомление
         function showNotification(text, type = 'success') {
             const notif = document.getElementById('notification');
             notif.style.background = type === 'success' ? '#5865F2' : '#ff4757';
             notif.innerText = text;
             notif.style.display = 'block';
-            setTimeout(() => notif.style.display = 'none', 3000);
+            setTimeout(() => {
+                notif.style.display = 'none';
+            }, 3000);
         }
 
+        // Показывать поле суммы для ключа на баланс
         document.getElementById('keyType').addEventListener('change', function(e) {
             document.getElementById('balanceInput').style.display = e.target.value === 'balance' ? 'block' : 'none';
         });
