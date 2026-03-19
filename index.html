@@ -3,177 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLAN CASE | RACE CONDITION FIXED</title>
+    <title>CLAN CASE | СТАБИЛЬНАЯ ВЕРСИЯ</title>
     <style>
-        /* Стили такие же как в предыдущей версии */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        :root {
-            --main-color: #00ffcc;
-            --winter-color: #00d4ff;
-            --bg-dark: #0a0a0a;
-            --neon-glow: 0 0 10px rgba(0, 255, 204, 0.5);
-            --admin-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --warning-color: #ffaa00;
-            --danger-color: #ff4757;
-        }
-
         body {
-            background: linear-gradient(135deg, var(--bg-dark) 0%, #1a1a1a 100%);
+            background: #0a0a0a;
             color: white;
-            font-family: 'Segoe UI', 'Arial', sans-serif;
-            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        .particle {
-            position: fixed;
-            top: -10%;
-            pointer-events: none;
-            z-index: 1;
-            animation: fall linear infinite;
-            opacity: 0.3;
-            font-size: 20px;
-        }
-
-        @keyframes fall {
-            to {
-                transform: translateY(110vh) rotate(360deg);
-            }
         }
 
         .header {
             width: 100%;
-            max-width: 1200px;
+            padding: 20px;
+            background: #111;
+            border-bottom: 1px solid #333;
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            z-index: 100;
-            background: rgba(10, 10, 10, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid #333;
-            position: sticky;
-            top: 0;
         }
 
         .user-profile {
             display: flex;
             align-items: center;
-            gap: 12px;
-            background: #111;
-            padding: 8px 20px;
-            border-radius: 50px;
-            border: 1px solid #333;
-            transition: 0.3s;
+            gap: 10px;
+            background: #1a1a1a;
+            padding: 8px 15px;
+            border-radius: 30px;
             cursor: pointer;
         }
 
-        .user-profile:hover {
-            border-color: var(--main-color);
-            box-shadow: var(--neon-glow);
-        }
-
         .avatar {
-            width: 35px;
-            height: 35px;
-            background: var(--main-color);
+            width: 30px;
+            height: 30px;
+            background: #00ffcc;
             border-radius: 50%;
-            color: black;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: black;
             font-weight: bold;
-            font-size: 18px;
-        }
-
-        .session-timer {
-            font-size: 12px;
-            color: var(--warning-color);
-            margin-left: 10px;
-            display: none;
-        }
-
-        .server-status {
-            font-size: 12px;
-            padding: 5px 10px;
-            border-radius: 15px;
-            background: #1a1a1a;
-            border: 1px solid #333;
-        }
-
-        .server-status.online {
-            border-color: #00ff00;
-            color: #00ff00;
-        }
-
-        .server-status.offline {
-            border-color: #ff0000;
-            color: #ff0000;
-        }
-
-        .server-status.warning {
-            border-color: var(--warning-color);
-            color: var(--warning-color);
         }
 
         .case-selector {
             display: flex;
             gap: 30px;
-            margin-top: 80px;
-            z-index: 100;
-            flex-wrap: wrap;
-            justify-content: center;
-            padding: 20px;
+            margin-top: 100px;
         }
 
         .case-card {
             background: #111;
             padding: 30px;
-            border-radius: 30px;
+            border-radius: 20px;
             border: 2px solid #333;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: 0.3s;
             width: 250px;
             text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .case-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.03), transparent);
-            transform: rotate(45deg);
-            transition: 0.5s;
-        }
-
-        .case-card:hover::before {
-            animation: shine 1s;
-        }
-
-        @keyframes shine {
-            0% { transform: translateX(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) rotate(45deg); }
         }
 
         .case-card:hover {
-            transform: translateY(-15px);
-            border-color: var(--main-color);
-            box-shadow: 0 0 30px rgba(0, 255, 204, 0.3);
+            border-color: #00ffcc;
+            transform: translateY(-10px);
         }
 
         .case-card img {
@@ -181,93 +79,65 @@
             height: 120px;
             border-radius: 50%;
             margin-bottom: 15px;
-            transition: 0.3s;
-        }
-
-        .case-card:hover img {
-            transform: scale(1.1);
         }
 
         .main-container {
-            text-align: center;
             display: none;
             width: 90%;
-            max-width: 700px;
+            max-width: 600px;
             margin-top: 30px;
-            z-index: 100;
-            background: rgba(17, 17, 17, 0.9);
-            backdrop-filter: blur(10px);
+            background: #111;
             padding: 30px;
-            border-radius: 30px;
-            border: 1px solid #333;
+            border-radius: 20px;
             position: relative;
         }
 
         .back-button {
             position: absolute;
-            top: 20px;
-            left: 20px;
+            top: 15px;
+            left: 15px;
             background: #1a1a1a;
             border: 1px solid #333;
             color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
+            padding: 5px 15px;
+            border-radius: 15px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: 0.3s;
             font-size: 14px;
         }
 
         .back-button:hover {
-            border-color: var(--main-color);
-            color: var(--main-color);
-            transform: translateX(-5px);
-        }
-
-        .back-button svg {
-            width: 16px;
-            height: 16px;
-            fill: currentColor;
+            border-color: #00ffcc;
         }
 
         input {
+            width: 100%;
+            padding: 15px;
             background: #1a1a1a;
             border: 2px solid #333;
             color: white;
-            padding: 15px 20px;
-            border-radius: 15px;
-            width: 100%;
-            box-sizing: border-box;
-            font-size: 16px;
+            border-radius: 10px;
+            font-size: 18px;
             text-align: center;
-            margin-bottom: 15px;
-            font-family: 'Courier New', monospace;
-            transition: 0.3s;
+            margin: 20px 0;
+            font-family: monospace;
         }
 
         input:focus {
             outline: none;
-            border-color: var(--main-color);
-            box-shadow: var(--neon-glow);
+            border-color: #00ffcc;
         }
 
         .btn {
-            background: var(--main-color);
+            width: 100%;
+            padding: 15px;
+            background: #00ffcc;
             color: black;
             border: none;
-            padding: 15px 30px;
-            width: 100%;
-            border-radius: 15px;
+            border-radius: 10px;
             font-weight: bold;
             font-size: 16px;
             cursor: pointer;
-            text-transform: uppercase;
             transition: 0.2s;
-            letter-spacing: 1px;
-            position: relative;
-            overflow: hidden;
         }
 
         .btn:active {
@@ -279,572 +149,196 @@
             cursor: not-allowed;
         }
 
-        .btn-danger {
-            background: var(--danger-color);
+        .status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 14px;
+            min-height: 40px;
         }
+
+        .status.error { background: #ff4757; color: white; }
+        .status.success { background: #00ffcc; color: black; }
+        .status.warning { background: #ffaa00; color: black; }
 
         .roulette-wrapper {
-            position: relative;
-            width: 100%;
-            height: 200px;
-            border: 2px solid #333;
-            background: #000;
-            overflow: hidden;
-            border-radius: 20px;
             display: none;
             margin-top: 20px;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
-        }
-
-        .roulette-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.5) 45%, rgba(0,0,0,0.5) 55%, transparent 100%);
-            pointer-events: none;
-            z-index: 5;
+            position: relative;
+            height: 160px;
+            overflow: hidden;
+            border: 2px solid #333;
+            border-radius: 10px;
+            background: #000;
         }
 
         .selector {
             position: absolute;
             left: 50%;
-            top: 0;
             width: 4px;
             height: 100%;
             background: #ff4757;
             z-index: 10;
             transform: translateX(-50%);
-            box-shadow: 0 0 20px #ff4757, 0 0 40px #ff4757;
-        }
-
-        .selector::before,
-        .selector::after {
-            content: '';
-            position: absolute;
-            left: -10px;
-            width: 0;
-            height: 0;
-            border-left: 12px solid transparent;
-            border-right: 12px solid transparent;
-            filter: drop-shadow(0 0 5px #ff4757);
-        }
-
-        .selector::before {
-            top: -5px;
-            border-top: 15px solid #ff4757;
-        }
-
-        .selector::after {
-            bottom: -5px;
-            border-bottom: 15px solid #ff4757;
+            box-shadow: 0 0 10px #ff4757;
         }
 
         .tape {
             display: flex;
             position: absolute;
             left: 50%;
-            top: 10px;
-            transform: translateX(0);
             transition: transform 8s cubic-bezier(0.1, 0.8, 0.2, 1);
-            will-change: transform;
         }
 
         .item {
-            width: 160px;
-            height: 180px;
+            width: 140px;
+            height: 140px;
             margin: 0 5px;
-            flex-shrink: 0;
+            background: #111;
+            border: 2px solid #333;
+            border-radius: 10px;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: #111;
-            border-radius: 15px;
-            border: 2px solid #222;
-            transition: 0.3s;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
         .item img {
-            width: 100px;
-            height: 100px;
+            width: 80px;
+            height: 80px;
             object-fit: contain;
-            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
-        }
-
-        .item span {
-            margin-top: 5px;
-            font-size: 12px;
-            color: #888;
         }
 
         #result {
             display: none;
-            margin-top: 30px;
-            padding: 30px;
-            border-radius: 25px;
+            margin-top: 20px;
+            padding: 20px;
             background: #1a1a1a;
-            border: 2px solid var(--main-color);
-            animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        @keyframes pop {
-            from {
-                transform: scale(0.8);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
+            border: 2px solid #00ffcc;
+            border-radius: 15px;
+            text-align: center;
         }
 
         .admin-gear {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            opacity: 0.3;
-            cursor: pointer;
+            background: none;
             border: none;
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
+            color: #333;
             font-size: 24px;
-            padding: 12px;
-            border-radius: 50%;
+            cursor: pointer;
+            opacity: 0.3;
             transition: 0.3s;
-            z-index: 1000;
-            backdrop-filter: blur(5px);
-            border: 1px solid #333;
         }
 
         .admin-gear:hover {
             opacity: 1;
-            transform: rotate(180deg) scale(1.1);
-            background: var(--admin-gradient);
-            border-color: transparent;
+            color: #00ffcc;
         }
 
         .admin-panel {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(10px);
+            background: rgba(0,0,0,0.9);
             z-index: 2000;
-            display: none;
             justify-content: center;
             align-items: center;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
         }
 
         .admin-container {
-            background: linear-gradient(135deg, #1e1e2f 0%, #2a2a40 100%);
-            border-radius: 40px;
-            padding: 40px;
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 20px;
             width: 90%;
-            max-width: 700px;
+            max-width: 400px;
             border: 2px solid #667eea;
-            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
-            position: relative;
-            animation: slideUp 0.4s ease;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        @keyframes slideUp {
-            from {
-                transform: translateY(50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .admin-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .admin-header h2 {
-            font-size: 2em;
-            background: var(--admin-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
-
-        .admin-header p {
-            color: #888;
-            font-size: 14px;
-        }
-
-        .admin-stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 15px;
-            border-radius: 15px;
-            text-align: center;
-            border: 1px solid #333;
-            transition: 0.3s;
-        }
-
-        .stat-card:hover {
-            border-color: #667eea;
-            transform: translateY(-5px);
-        }
-
-        .stat-value {
-            font-size: 1.8em;
-            font-weight: bold;
-            background: var(--admin-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .stat-label {
-            color: #888;
-            font-size: 11px;
-            margin-top: 5px;
-        }
-
-        .admin-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 20px;
         }
 
         .admin-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid #333;
-            color: white;
-            padding: 15px 20px;
-            border-radius: 15px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: 0.3s;
             width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            background: #333;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
         }
 
         .admin-btn:hover {
-            background: var(--admin-gradient);
-            border-color: transparent;
-            transform: translateX(10px);
-        }
-
-        .admin-btn i {
-            font-size: 20px;
-            min-width: 30px;
-        }
-
-        .key-display {
-            background: #1a1a1a;
-            padding: 20px;
-            border-radius: 15px;
-            margin: 20px 0;
-            border: 1px solid #667eea;
-            position: relative;
-            display: none;
-        }
-
-        .key-display.show {
-            display: block;
-            animation: glow 2s infinite;
-        }
-
-        @keyframes glow {
-            0% { box-shadow: 0 0 5px #667eea; }
-            50% { box-shadow: 0 0 20px #667eea; }
-            100% { box-shadow: 0 0 5px #667eea; }
-        }
-
-        .key-text {
-            font-family: 'Courier New', monospace;
-            font-size: 18px;
-            color: #667eea;
-            text-align: center;
-            word-break: break-all;
-        }
-
-        .copy-btn {
             background: #667eea;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 10px;
-            cursor: pointer;
+        }
+
+        .timer {
             font-size: 14px;
-            margin-top: 10px;
-            transition: 0.3s;
-        }
-
-        .copy-btn:hover {
-            background: #5a67d8;
-            transform: scale(1.05);
-        }
-
-        .close-admin {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: white;
-            font-size: 20px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .close-admin:hover {
-            background: #ff4757;
-            transform: rotate(90deg);
-        }
-
-        .key-status {
-            font-size: 12px;
-            margin-top: 5px;
-            min-height: 20px;
-            font-weight: bold;
-        }
-
-        .loader {
-            width: 20px;
-            height: 20px;
-            border: 2px solid #333;
-            border-top: 2px solid var(--main-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            display: inline-block;
+            color: #ffaa00;
             margin-left: 10px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .recent-keys, .top-users, .active-sessions {
-            margin-top: 20px;
-            background: rgba(255,255,255,0.05);
-            padding: 15px;
-            border-radius: 15px;
-        }
-
-        .recent-keys h4, .top-users h4, .active-sessions h4 {
-            color: #888;
-            margin-bottom: 10px;
-        }
-
-        .recent-item, .user-item, .session-item {
-            padding: 8px;
-            border-bottom: 1px solid #333;
-            font-size: 14px;
-        }
-
-        .warning-text {
-            color: var(--warning-color);
-        }
-
-        .danger-text {
-            color: var(--danger-color);
-        }
-
-        @media (max-width: 768px) {
-            .admin-stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .case-selector {
-                gap: 20px;
-            }
-            
-            .case-card {
-                width: 200px;
-                padding: 20px;
-            }
-            
-            .back-button {
-                top: 10px;
-                left: 10px;
-                padding: 5px 10px;
-                font-size: 12px;
-            }
         }
     </style>
 </head>
 <body>
-
-    <div id="particles"></div>
-
     <div class="header">
         <div class="user-profile" onclick="changeUsername()">
             <div class="avatar" id="avatar">?</div>
-            <span id="player-user">username</span>
-            <span class="session-timer" id="sessionTimer"></span>
+            <span id="username">username</span>
         </div>
-        <div class="server-status" id="serverStatus">🔄 Подключение...</div>
+        <div id="serverStatus">🔄</div>
     </div>
 
-    <div id="selector-screen">
-        <h1 style="text-align:center; margin-top:40px; letter-spacing: 2px; font-size: 2.5em; text-shadow: 0 0 10px var(--main-color);">
-            🎲 ВЫБЕРИТЕ КЕЙС
-        </h1>
+    <!-- Главное меню -->
+    <div id="mainMenu">
+        <h1 style="text-align:center; margin-top:50px;">ВЫБЕРИТЕ КЕЙС</h1>
         <div class="case-selector">
             <div class="case-card" onclick="selectCase('spring')">
-                <img src="https://cdn-icons-png.flaticon.com/512/2850/2850906.png" alt="Spring">
+                <img src="https://cdn-icons-png.flaticon.com/512/2850/2850906.png">
                 <h3>ВЕСЕННИЙ</h3>
-                <div style="font-size: 10px; color: var(--main-color);">[SPRG КЛЮЧИ]</div>
-                <div style="margin-top: 10px; font-size: 12px; color: #666;">🌱 4 предмета</div>
             </div>
-            <div class="case-card" style="border-color:var(--winter-color);" onclick="selectCase('winter')">
-                <img src="https://cdn-icons-png.flaticon.com/512/2322/2322731.png" alt="Winter">
-                <h3 style="color:var(--winter-color);">ЗИМНИЙ</h3>
-                <div style="font-size: 10px; color: var(--winter-color);">[WINT КЛЮЧИ]</div>
-                <div style="margin-top: 10px; font-size: 12px; color: #666;">❄️ 4 предмета</div>
+            <div class="case-card" onclick="selectCase('winter')">
+                <img src="https://cdn-icons-png.flaticon.com/512/2322/2322731.png">
+                <h3>ЗИМНИЙ</h3>
             </div>
         </div>
     </div>
 
-    <div class="main-container" id="case-screen">
-        <button class="back-button" onclick="goBack()">
-            <svg viewBox="0 0 24 24">
-                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-            </svg>
-            Назад
-        </button>
+    <!-- Экран кейса -->
+    <div class="main-container" id="caseScreen">
+        <button class="back-button" onclick="goBack()">← НАЗАД</button>
         
-        <h1 id="case-title" style="margin-bottom: 15px;">КЕЙС</h1>
-        <img src="" id="case-preview" style="width:120px; height:120px; border-radius:50%; border:3px solid var(--main-color); margin-bottom:20px; object-fit: cover;">
+        <h2 id="caseTitle" style="margin-top:20px;">КЕЙС</h2>
+        <img id="caseImage" style="width:100px; height:100px; border-radius:50%; margin:10px 0;">
         
-        <div id="setup">
-            <input type="text" id="id-key" placeholder="ВСТАВЬТЕ КЛЮЧ" autocomplete="off">
-            <div class="key-status" id="key-status"></div>
-            <button class="btn" id="main-btn" onclick="startSpin()">АКТИВИРОВАТЬ</button>
-        </div>
+        <input type="text" id="keyInput" placeholder="ВВЕДИТЕ КЛЮЧ" autocomplete="off">
+        
+        <div class="status" id="status"></div>
+        
+        <button class="btn" id="mainBtn" onclick="startSpin()">АКТИВИРОВАТЬ</button>
 
-        <div class="roulette-wrapper" id="roulette-box">
-            <div class="roulette-overlay"></div>
+        <div class="roulette-wrapper" id="roulette">
             <div class="selector"></div>
             <div class="tape" id="tape"></div>
         </div>
 
         <div id="result">
-            <h2 id="win-name" style="margin-bottom: 10px;"></h2>
-            <p id="win-rarity" style="font-size: 1.2em;"></p>
-            <button class="btn" onclick="resetToMenu()" style="width:auto; padding:10px 40px; margin-top: 15px;">ЗАВЕРШИТЬ</button>
+            <h2 id="winName"></h2>
+            <p id="winRarity"></p>
+            <button class="btn" onclick="resetToMenu()" style="margin-top:15px;">ЗАВЕРШИТЬ</button>
         </div>
     </div>
 
-    <button class="admin-gear" onclick="openAdminPanel()">⚙️</button>
+    <button class="admin-gear" onclick="openAdmin()">⚙️</button>
 
     <div class="admin-panel" id="adminPanel">
         <div class="admin-container">
-            <button class="close-admin" onclick="closeAdminPanel()">✕</button>
-            
-            <div class="admin-header">
-                <h2>⚡ ADMIN PANEL</h2>
-                <p>Race Condition Protection • Active Sessions Tracking</p>
-            </div>
-
-            <div class="admin-stats">
-                <div class="stat-card">
-                    <div class="stat-value" id="totalKeys">0</div>
-                    <div class="stat-label">Всего ключей</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="usedKeys">0</div>
-                    <div class="stat-label">Использовано</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="availableKeys">0</div>
-                    <div class="stat-label">Доступно</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="activeSessions">0</div>
-                    <div class="stat-label">Активных</div>
-                </div>
-            </div>
-
-            <div class="admin-stats">
-                <div class="stat-card">
-                    <div class="stat-value" id="springUsed">0</div>
-                    <div class="stat-label">🌱 Весенних</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="winterUsed">0</div>
-                    <div class="stat-label">❄️ Зимних</div>
-                </div>
-            </div>
-
-            <div class="admin-actions">
-                <button class="admin-btn" onclick="adminGenerateKey('spring', 1)">
-                    <i>🌱</i>
-                    Создать 1 весенний ключ
-                </button>
-                <button class="admin-btn" onclick="adminGenerateKey('winter', 1)">
-                    <i>❄️</i>
-                    Создать 1 зимний ключ
-                </button>
-                <button class="admin-btn" onclick="adminGenerateKey('spring', 5)">
-                    <i>🌱🌱🌱</i>
-                    Создать 5 весенних ключей
-                </button>
-                <button class="admin-btn" onclick="adminGenerateKey('winter', 5)">
-                    <i>❄️❄️❄️</i>
-                    Создать 5 зимних ключей
-                </button>
-                <button class="admin-btn" onclick="loadAdminStats()">
-                    <i>📊</i>
-                    Обновить статистику
-                </button>
-            </div>
-
-            <div class="key-display" id="keyDisplay">
-                <div class="key-text" id="generatedKey"></div>
-                <button class="copy-btn" onclick="copyGeneratedKey()">📋 Копировать все</button>
-            </div>
-
-            <div id="activeSessionsList" class="active-sessions">
-                <h4>🔒 Активные сессии</h4>
-                <div id="activeSessionsContent"></div>
-            </div>
-
-            <div id="recentKeys" class="recent-keys">
-                <h4>📋 Последние использования</h4>
-                <div id="recentKeysList"></div>
-            </div>
-
-            <div id="topUsers" class="top-users">
-                <h4>🏆 Топ пользователей</h4>
-                <div id="topUsersList"></div>
-            </div>
+            <h2 style="text-align:center; margin-bottom:20px;">ADMIN PANEL</h2>
+            <button class="admin-btn" onclick="createKey('spring')">🌱 СОЗДАТЬ ВЕСЕННИЙ КЛЮЧ</button>
+            <button class="admin-btn" onclick="createKey('winter')">❄️ СОЗДАТЬ ЗИМНИЙ КЛЮЧ</button>
+            <div id="newKey" style="margin-top:15px; padding:10px; background:#111; border-radius:5px; word-break:break-all;"></div>
+            <button class="admin-btn" onclick="closeAdmin()" style="margin-top:15px; background:#ff4757;">ЗАКРЫТЬ</button>
         </div>
     </div>
 
@@ -852,14 +346,12 @@
         const API_URL = 'http://localhost:5000';
         const ADMIN_PASS = "1337";
         
-        let selectedType = "";
-        let usernameDiscord = localStorage.getItem('discordUser') || "гость";
+        let username = localStorage.getItem('username') || 'гость';
+        let caseType = '';
         let isSpinning = false;
-        let currentGeneratedKeys = [];
-        let currentSessionId = null;
-        let currentKey = null;
-        let sessionTimer = null;
-        let sessionEndTime = null;
+        let currentKey = '';
+        let pendingTimer = null;
+        let spinTimer = null;
 
         const items = {
             spring: [
@@ -876,409 +368,269 @@
             ]
         };
 
+        // Инициализация
         window.onload = () => {
-            createParticles();
-            
-            if (!localStorage.getItem('discordUser')) {
-                let n = prompt("Твой Username в Discord (без @):");
-                usernameDiscord = n ? n.toLowerCase().trim() : "гость";
-                localStorage.setItem('discordUser', usernameDiscord);
-            }
-            
-            updateUserDisplay();
-            checkServerStatus();
-            
-            // Очистка сессии при закрытии вкладки
-            window.addEventListener('beforeunload', releaseKey);
+            document.getElementById('avatar').innerText = username[0].toUpperCase();
+            document.getElementById('username').innerText = '@' + username;
+            checkServer();
         };
 
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            for (let i = 0; i < 30; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
-                particle.style.animationDelay = Math.random() * -20 + 's';
-                particle.innerHTML = ['✨', '❄️', '⭐', '🌟', '💫'][Math.floor(Math.random() * 5)];
-                particlesContainer.appendChild(particle);
-            }
-        }
-
-        async function checkServerStatus() {
-            const statusEl = document.getElementById('serverStatus');
-            try {
-                const response = await fetch(`${API_URL}/api/stats`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ admin_pass: ADMIN_PASS })
-                });
-                
-                if (response.ok) {
-                    statusEl.innerHTML = '✅ Сервер ONLINE';
-                    statusEl.className = 'server-status online';
-                } else {
-                    statusEl.innerHTML = '⚠️ Сервер ERROR';
-                    statusEl.className = 'server-status warning';
-                }
-            } catch (e) {
-                statusEl.innerHTML = '❌ Сервер OFFLINE';
-                statusEl.className = 'server-status offline';
-            }
-        }
-
-        function updateUserDisplay() {
-            document.getElementById('player-user').innerText = "@" + usernameDiscord;
-            document.getElementById('avatar').innerText = usernameDiscord[0].toUpperCase();
-        }
-
         function changeUsername() {
-            let n = prompt("Новый Username в Discord (без @):");
-            if (n) {
-                usernameDiscord = n.toLowerCase().trim();
-                localStorage.setItem('discordUser', usernameDiscord);
-                updateUserDisplay();
+            let newName = prompt('Введите ваш Discord username (без @):');
+            if (newName) {
+                username = newName.toLowerCase().trim();
+                localStorage.setItem('username', username);
+                document.getElementById('avatar').innerText = username[0].toUpperCase();
+                document.getElementById('username').innerText = '@' + username;
+            }
+        }
+
+        async function checkServer() {
+            try {
+                await fetch(`${API_URL}/api/cleanup_pending`, { method: 'POST' });
+                document.getElementById('serverStatus').innerHTML = '✅ ONLINE';
+                document.getElementById('serverStatus').style.color = '#00ff00';
+            } catch {
+                document.getElementById('serverStatus').innerHTML = '❌ OFFLINE';
+                document.getElementById('serverStatus').style.color = '#ff4757';
             }
         }
 
         function selectCase(type) {
-            selectedType = type;
-            document.getElementById('selector-screen').style.display = 'none';
-            document.getElementById('case-screen').style.display = 'block';
+            caseType = type;
+            document.getElementById('mainMenu').style.display = 'none';
+            document.getElementById('caseScreen').style.display = 'block';
             
-            if(type === 'winter') {
-                document.getElementById('case-title').innerText = "❄️ WINTER FROST";
-                document.getElementById('case-preview').src = "https://cdn-icons-png.flaticon.com/512/2322/2322731.png";
-                document.documentElement.style.setProperty('--main-color', '#00d4ff');
+            if (type === 'winter') {
+                document.getElementById('caseTitle').innerText = '❄️ ЗИМНИЙ КЕЙС';
+                document.getElementById('caseImage').src = 'https://cdn-icons-png.flaticon.com/512/2322/2322731.png';
             } else {
-                document.getElementById('case-title').innerText = "🌱 SPRING DROP";
-                document.getElementById('case-preview').src = "https://cdn-icons-png.flaticon.com/512/2850/2850906.png";
-                document.documentElement.style.setProperty('--main-color', '#00ffcc');
+                document.getElementById('caseTitle').innerText = '🌱 ВЕСЕННИЙ КЕЙС';
+                document.getElementById('caseImage').src = 'https://cdn-icons-png.flaticon.com/512/2850/2850906.png';
             }
             
-            document.getElementById('id-key').value = '';
-            document.getElementById('key-status').innerHTML = '';
-            document.getElementById('id-key').focus();
+            document.getElementById('keyInput').value = '';
+            document.getElementById('status').innerHTML = '';
+            document.getElementById('status').className = 'status';
         }
 
         function goBack() {
             if (isSpinning) {
-                if (!confirm('Спин в процессе! Вернуться в меню?')) return;
+                if (!confirm('Открытие в процессе. Прервать?')) return;
+                clearTimers();
             }
-            releaseKey(); // Освобождаем ключ если был заблокирован
-            resetSpin();
-            document.getElementById('selector-screen').style.display = 'block';
-            document.getElementById('case-screen').style.display = 'none';
+            releaseKey();
+            resetUI();
+            document.getElementById('mainMenu').style.display = 'block';
+            document.getElementById('caseScreen').style.display = 'none';
         }
 
         function resetToMenu() {
+            clearTimers();
             releaseKey();
-            resetSpin();
-            document.getElementById('selector-screen').style.display = 'block';
-            document.getElementById('case-screen').style.display = 'none';
+            resetUI();
+            document.getElementById('mainMenu').style.display = 'block';
+            document.getElementById('caseScreen').style.display = 'none';
         }
 
-        function resetSpin() {
+        function resetUI() {
             isSpinning = false;
-            document.getElementById('setup').style.display = 'block';
-            document.getElementById('roulette-box').style.display = 'none';
+            document.getElementById('roulette').style.display = 'none';
             document.getElementById('result').style.display = 'none';
-            document.getElementById('main-btn').disabled = false;
-            document.getElementById('id-key').value = '';
-            document.getElementById('sessionTimer').style.display = 'none';
-            
-            if (sessionTimer) {
-                clearInterval(sessionTimer);
-                sessionTimer = null;
-            }
-            
-            const tape = document.getElementById('tape');
-            if (tape) {
-                tape.style.transform = 'translateX(0)';
-            }
+            document.getElementById('mainBtn').disabled = false;
+            document.getElementById('keyInput').disabled = false;
         }
 
-        function startSessionTimer(seconds) {
-            sessionEndTime = Date.now() + seconds * 1000;
-            document.getElementById('sessionTimer').style.display = 'inline-block';
-            
-            if (sessionTimer) clearInterval(sessionTimer);
-            
-            sessionTimer = setInterval(() => {
-                const remaining = Math.round((sessionEndTime - Date.now()) / 1000);
-                if (remaining <= 0) {
-                    document.getElementById('sessionTimer').style.display = 'none';
-                    clearInterval(sessionTimer);
-                    sessionTimer = null;
-                } else {
-                    document.getElementById('sessionTimer').innerHTML = `⏳ ${remaining}с`;
-                }
-            }, 1000);
+        function clearTimers() {
+            if (pendingTimer) {
+                clearInterval(pendingTimer);
+                pendingTimer = null;
+            }
+            if (spinTimer) {
+                clearTimeout(spinTimer);
+                spinTimer = null;
+            }
         }
 
         async function releaseKey() {
-            if (currentKey && currentSessionId) {
+            if (currentKey) {
                 try {
                     await fetch(`${API_URL}/api/release_key`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            key: currentKey,
-                            session_id: currentSessionId
-                        })
+                        body: JSON.stringify({ key: currentKey })
                     });
-                } catch (e) {
-                    console.error('Release failed:', e);
-                }
-                currentKey = null;
-                currentSessionId = null;
+                } catch {}
+                currentKey = '';
             }
         }
 
-        async function checkKeyWithServer(key) {
-            currentSessionId = Math.random().toString(36).substr(2, 16) + Date.now();
+        // ОСНОВНАЯ ФУНКЦИЯ
+        async function startSpin() {
+            if (isSpinning) return;
             
+            const key = document.getElementById('keyInput').value.trim().toUpperCase();
+            if (!key) {
+                showStatus('Введите ключ', 'error');
+                return;
+            }
+
+            // Блокируем интерфейс
+            isSpinning = true;
+            document.getElementById('mainBtn').disabled = true;
+            document.getElementById('keyInput').disabled = true;
+            showStatus('Проверка ключа...', 'warning');
+
             try {
+                // Проверяем ключ на сервере
                 const response = await fetch(`${API_URL}/api/check_key`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         key: key,
-                        username: usernameDiscord,
-                        session_id: currentSessionId
+                        username: username
                     })
                 });
                 
                 const data = await response.json();
                 
-                if (data.valid) {
-                    currentKey = key;
-                    startSessionTimer(25); // 25 секунд на открытие
+                if (!data.valid) {
+                    showStatus(data.reason || 'Ошибка', 'error');
+                    isSpinning = false;
+                    document.getElementById('mainBtn').disabled = false;
+                    document.getElementById('keyInput').disabled = false;
+                    return;
                 }
-                
-                return data;
-            } catch (e) {
-                console.error('Server check failed:', e);
-                return { 
-                    valid: false, 
-                    reason: '❌ Ошибка подключения к серверу' 
-                };
+
+                // Ключ заблокирован, запоминаем его
+                currentKey = key;
+                showStatus('✅ Ключ принят! Запуск...', 'success');
+
+                // Запускаем рулетку
+                startRoulette(key);
+
+            } catch (error) {
+                showStatus('Ошибка соединения с сервером', 'error');
+                isSpinning = false;
+                document.getElementById('mainBtn').disabled = false;
+                document.getElementById('keyInput').disabled = false;
             }
         }
 
-        async function activateKeyOnServer(key, winItem, winRarity) {
-            try {
-                await fetch(`${API_URL}/api/activate_key`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        key: key,
-                        username: usernameDiscord,
-                        session_id: currentSessionId,
-                        win_item: winItem,
-                        win_rarity: winRarity
-                    })
-                });
-                currentKey = null;
-                currentSessionId = null;
-                document.getElementById('sessionTimer').style.display = 'none';
-            } catch (e) {
-                console.error('Activation failed:', e);
-            }
-        }
-
-        async function startSpin() {
-            if (isSpinning) return;
-            
-            const inputKey = document.getElementById('id-key').value.trim().toUpperCase();
-            
-            // Базовая проверка формата
-            const prefix = selectedType === 'winter' ? 'WINT' : 'SPRG';
-            const keyRegex = new RegExp(`^${prefix}-[A-Z0-9]{8}-L$`);
-            
-            if (!keyRegex.test(inputKey)) {
-                document.getElementById('key-status').innerHTML = '❌ Неверный формат ключа';
-                document.getElementById('key-status').style.color = '#ff4757';
-                return;
-            }
-
-            // Проверка на сервере с блокировкой
-            document.getElementById('key-status').innerHTML = '⏳ Блокировка ключа на сервере...';
-            document.getElementById('key-status').style.color = '#ffaa00';
-            document.getElementById('main-btn').disabled = true;
-
-            const serverCheck = await checkKeyWithServer(inputKey);
-            
-            if (!serverCheck.valid) {
-                document.getElementById('key-status').innerHTML = serverCheck.reason;
-                document.getElementById('key-status').style.color = '#ff4757';
-                document.getElementById('main-btn').disabled = false;
-                return;
-            }
-
-            // Ключ заблокирован для всех остальных
-            isSpinning = true;
-            document.getElementById('key-status').innerHTML = '✅ Ключ заблокирован! Открывайте...';
+        function startRoulette(key) {
+            // Скрываем поле ввода
             document.getElementById('setup').style.display = 'none';
-            document.getElementById('roulette-box').style.display = 'block';
+            document.getElementById('roulette').style.display = 'block';
 
-            // Запуск рулетки
-            const pool = items[selectedType];
+            // Создаем ленту
+            const pool = items[caseType];
             const tape = document.getElementById('tape');
-            tape.innerHTML = "";
+            tape.innerHTML = '';
             
-            for(let i = 0; i < 30; i++) {
-                for(let j = 0; j < pool.length; j++) {
+            for (let i = 0; i < 30; i++) {
+                for (let j = 0; j < pool.length; j++) {
                     let it = pool[j];
-                    tape.innerHTML += `<div class="item" style="border-color:${it.color}"><img src="${it.img}"><span>${it.name}</span></div>`;
+                    tape.innerHTML += `<div class="item" style="border-color:${it.color}"><img src="${it.img}"></div>`;
                 }
             }
 
-            // Выбор выигрыша
+            // Выбираем выигрыш
             let r = Math.random() * 100;
-            let cumulativeChance = 0;
+            let cumulative = 0;
             let winItem = pool[0];
             
             for (let item of pool) {
-                cumulativeChance += item.chance;
-                if (r <= cumulativeChance) {
+                cumulative += item.chance;
+                if (r <= cumulative) {
                     winItem = item;
                     break;
                 }
             }
-            
+
+            // Подменяем выигрышный элемент
             const blocks = tape.getElementsByClassName('item');
-            const winPosition = 45;
-            
-            if (blocks[winPosition]) {
-                blocks[winPosition].innerHTML = `<img src="${winItem.img}"><span>${winItem.name} ★</span>`;
-                blocks[winPosition].style.borderColor = winItem.color;
-                blocks[winPosition].style.background = 'rgba(255,215,0,0.1)';
+            const winPos = 45;
+            if (blocks[winPos]) {
+                blocks[winPos].innerHTML = `<img src="${winItem.img}">`;
+                blocks[winPos].style.borderColor = winItem.color;
+                blocks[winPos].style.background = 'rgba(255,215,0,0.2)';
             }
 
+            // Запускаем анимацию
             setTimeout(() => {
-                const containerWidth = document.querySelector('.roulette-wrapper').offsetWidth;
-                const itemWidth = 170;
-                const targetPosition = (winPosition * itemWidth) - (containerWidth / 2) + 80;
-                tape.style.transform = `translateX(-${targetPosition}px)`;
+                const container = document.querySelector('.roulette-wrapper');
+                const itemWidth = 150;
+                const target = (winPos * itemWidth) - (container.offsetWidth / 2) + 75;
+                tape.style.transform = `translateX(-${target}px)`;
             }, 200);
 
-            setTimeout(async () => {
-                document.getElementById('win-name').innerText = winItem.name;
-                document.getElementById('win-rarity').innerText = winItem.rarity;
-                document.getElementById('win-rarity').style.color = winItem.color;
+            // Показываем результат
+            spinTimer = setTimeout(async () => {
+                document.getElementById('winName').innerText = winItem.name;
+                document.getElementById('winRarity').innerText = winItem.rarity;
+                document.getElementById('winRarity').style.color = winItem.color;
                 document.getElementById('result').style.display = 'block';
 
-                // Финальная активация на сервере
-                await activateKeyOnServer(inputKey, winItem.name, winItem.rarity);
+                // Активируем ключ на сервере
+                try {
+                    await fetch(`${API_URL}/api/activate_key`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            key: key,
+                            username: username,
+                            win_item: winItem.name
+                        })
+                    });
+                } catch {}
 
+                currentKey = '';
                 isSpinning = false;
             }, 8500);
         }
 
+        function showStatus(text, type) {
+            const status = document.getElementById('status');
+            status.innerHTML = text;
+            status.className = 'status ' + type;
+        }
+
         // Админ функции
-        async function openAdminPanel() {
-            const pass = prompt("🔐 Введите пароль администратора:");
+        async function openAdmin() {
+            const pass = prompt('Пароль админа:');
             if (pass === ADMIN_PASS) {
                 document.getElementById('adminPanel').style.display = 'flex';
-                await loadAdminStats();
-            } else if (pass !== null) {
-                alert("❌ Неверный пароль!");
             }
         }
 
-        function closeAdminPanel() {
+        function closeAdmin() {
             document.getElementById('adminPanel').style.display = 'none';
         }
 
-        async function loadAdminStats() {
-            try {
-                const response = await fetch(`${API_URL}/api/stats`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ admin_pass: ADMIN_PASS })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    document.getElementById('totalKeys').innerText = data.stats.total_keys;
-                    document.getElementById('usedKeys').innerText = data.stats.used_keys;
-                    document.getElementById('availableKeys').innerText = data.stats.available_keys;
-                    document.getElementById('springUsed').innerText = data.stats.spring_used;
-                    document.getElementById('winterUsed').innerText = data.stats.winter_used;
-                    document.getElementById('activeSessions').innerText = data.stats.active_sessions || 0;
-                    
-                    // Последние ключи
-                    let recentHtml = '';
-                    data.stats.recent.forEach(item => {
-                        recentHtml += `<div class="recent-item">🔑 ${item.key} - ${item.user} - ${item.item}</div>`;
-                    });
-                    document.getElementById('recentKeysList').innerHTML = recentHtml || '<div class="recent-item">Нет данных</div>';
-                    
-                    // Топ пользователей
-                    let topHtml = '';
-                    data.stats.top_users.forEach(user => {
-                        topHtml += `<div class="user-item">👤 ${user.user} - ${user.count} ключей</div>`;
-                    });
-                    document.getElementById('topUsersList').innerHTML = topHtml || '<div class="user-item">Нет данных</div>';
-                }
-            } catch (e) {
-                console.error('Failed to load stats:', e);
-            }
-        }
-
-        async function adminGenerateKey(type, count = 1) {
+        async function createKey(type) {
             try {
                 const response = await fetch(`${API_URL}/api/create_key`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         admin_pass: ADMIN_PASS,
-                        key_type: type,
-                        admin_user: usernameDiscord,
-                        count: count
+                        key_type: type
                     })
                 });
                 
                 const data = await response.json();
-                
                 if (data.success) {
-                    currentGeneratedKeys = data.keys;
-                    document.getElementById('generatedKey').innerHTML = data.keys.join('<br>');
-                    document.getElementById('keyDisplay').classList.add('show');
-                    
-                    // Копируем все ключи в буфер обмена
-                    const keysText = data.keys.join('\n');
-                    navigator.clipboard?.writeText(keysText).catch(() => {});
-                    
-                    await loadAdminStats();
+                    document.getElementById('newKey').innerHTML = 
+                        `✅ Новый ключ:<br><strong>${data.key}</strong>`;
                 }
-            } catch (e) {
-                console.error('Failed to generate key:', e);
-                alert('❌ Ошибка генерации ключа');
-            }
+            } catch {}
         }
 
-        function copyGeneratedKey() {
-            const keysText = currentGeneratedKeys.join('\n');
-            navigator.clipboard?.writeText(keysText).then(() => {
-                alert(`✅ ${currentGeneratedKeys.length} ключей скопировано!`);
-            }).catch(() => {
-                alert('📋 Ключи:\n' + keysText);
-            });
-        }
-
-        // Обработка Enter
-        document.getElementById('id-key')?.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && !isSpinning) {
-                startSpin();
-            }
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && document.getElementById('adminPanel').style.display === 'flex') {
-                closeAdminPanel();
+        // Освобождаем ключ при закрытии вкладки
+        window.addEventListener('beforeunload', () => {
+            if (currentKey) {
+                navigator.sendBeacon(`${API_URL}/api/release_key`, 
+                    JSON.stringify({ key: currentKey }));
             }
         });
     </script>
