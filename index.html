@@ -791,7 +791,6 @@
             box-shadow: 0 0 30px rgba(88,101,242,0.3);
         }
 
-        /* Чекбокс "Запомнить меня" */
         .remember-me {
             display: flex;
             align-items: center;
@@ -852,6 +851,7 @@
             margin: 10px 0;
             text-align: center;
             text-shadow: 0 0 10px #ff4757;
+            display: none;
         }
 
         /* Админ кнопка */
@@ -1021,13 +1021,13 @@
             <input type="text" id="loginUsername" placeholder="Логин">
             <input type="password" id="loginPassword" placeholder="Пароль">
             
-            <!-- Чекбокс "Запомнить меня" -->
             <label class="remember-me">
                 <input type="checkbox" id="rememberMe" checked>
                 <span>Запомнить меня</span>
             </label>
 
-            <div class="error-message" id="loginError" style="display: none;"></div>
+            <div class="error-message" id="loginError"></div>
+            
             <button class="modal-btn" onclick="login()">Войти</button>
             <button class="modal-btn secondary" onclick="closeModals()">Закрыть</button>
         </div>
@@ -1040,7 +1040,7 @@
             <input type="text" id="regUsername" placeholder="Логин">
             <input type="password" id="regPassword" placeholder="Пароль">
             <input type="password" id="regConfirm" placeholder="Повторите пароль">
-            <div class="error-message" id="registerError" style="display: none;"></div>
+            <div class="error-message" id="registerError"></div>
             <button class="modal-btn" onclick="register()">Зарегистрироваться</button>
             <button class="modal-btn secondary" onclick="closeModals()">Закрыть</button>
         </div>
@@ -1067,80 +1067,48 @@
     <div class="notification" id="notification"></div>
 
     <script>
+        // ============ НАСТРОЙКИ ============
         const SERVER = 'http://192.168.1.100:5000'; // ЗАМЕНИТЕ НА ВАШ IP
         const ADMIN_PASS = '34125';
         let currentUser = null;
         let balance = 0;
-        let rememberMe = true;
 
-        window.onload = () => {
+        // ============ ЗАГРУЗКА ============
+        window.onload = function() {
             // Загружаем сохраненные данные
             loadSavedData();
-            checkSession();
-        };
-
-        // Загрузка сохраненных данных
-        function loadSavedData() {
-            const savedUser = localStorage.getItem('savedUser');
-            if (savedUser) {
-                document.getElementById('loginUsername').value = savedUser;
-            }
             
-            const savedRemember = localStorage.getItem('rememberMe');
-            if (savedRemember !== null) {
-                document.getElementById('rememberMe').checked = savedRemember === 'true';
-            }
-        }
-
-        async function checkSession() {
-            const session = localStorage.getItem('session');
+            // Проверяем активную сессию
+            const session = localStorage.getItem('clanSession');
             if (session) {
                 try {
                     const data = JSON.parse(session);
                     currentUser = data.username;
-                    await loadBalance();
-                    showUserContent();
+                    balance = data.balance;
+                    
+                    document.getElementById('authButtons').style.display = 'none';
+                    document.getElementById('userInfo').style.display = 'flex';
+                    document.getElementById('username').innerText = currentUser;
+                    document.getElementById('balance').innerText = balance;
+                    document.getElementById('mainContent').style.display = 'block';
                 } catch (e) {
-                    // Если сессия битая - очищаем
-                    localStorage.removeItem('session');
+                    localStorage.removeItem('clanSession');
                 }
             }
-        }
+        };
 
-        async function loadBalance() {
-            try {
-                const res = await fetch(`${SERVER}/api/get_balance`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({username: currentUser})
-                });
-                const data = await res.json();
-                balance = data.balance;
-                document.getElementById('balance').innerText = balance.toLocaleString();
-            } catch (e) {
-                showNotification('Ошибка загрузки баланса', 'error');
+        // Загрузка сохраненных данных для формы входа
+        function loadSavedData() {
+            const savedLogin = localStorage.getItem('savedLogin');
+            if (savedLogin) {
+                document.getElementById('loginUsername').value = savedLogin;
             }
         }
 
-        function showUserContent() {
-            document.getElementById('authButtons').style.display = 'none';
-            document.getElementById('userInfo').style.display = 'flex';
-            document.getElementById('username').innerText = currentUser;
-            document.getElementById('mainContent').style.display = 'block';
-        }
-
+        // ============ МОДАЛЬНЫЕ ОКНА ============
         function showModal(type) {
             closeModals();
             document.getElementById(type + 'Modal').classList.add('active');
-            
-            // Если это модалка входа и есть сохраненный пользователь
-            if (type === 'login') {
-                const savedUser = localStorage.getItem('savedUser');
-                if (savedUser) {
-                    document.getElementById('loginUsername').value = savedUser;
-                    document.getElementById('loginPassword').focus();
-                }
-            }
         }
 
         function closeModals() {
@@ -1148,11 +1116,13 @@
             document.getElementById('registerModal').classList.remove('active');
         }
 
+        // ============ АВТОРИЗАЦИЯ ============
         async function login() {
             const username = document.getElementById('loginUsername').value.trim();
             const password = document.getElementById('loginPassword').value;
-            rememberMe = document.getElementById('rememberMe').checked;
+            const remember = document.getElementById('rememberMe').checked;
 
+            // Валидация
             if (!username || !password) {
                 document.getElementById('loginError').innerText = 'Заполните все поля';
                 document.getElementById('loginError').style.display = 'block';
@@ -1165,33 +1135,41 @@
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({username, password})
                 });
+                
                 const data = await res.json();
 
                 if (data.success) {
                     currentUser = username;
                     balance = data.balance;
-                    
-                    // Сохраняем данные
-                    localStorage.setItem('session', JSON.stringify({username}));
-                    
-                    if (rememberMe) {
-                        localStorage.setItem('savedUser', username);
-                        localStorage.setItem('rememberMe', 'true');
+
+                    // Сохраняем сессию
+                    localStorage.setItem('clanSession', JSON.stringify({
+                        username: currentUser,
+                        balance: balance
+                    }));
+
+                    // Сохраняем логин если нужно
+                    if (remember) {
+                        localStorage.setItem('savedLogin', username);
                     } else {
-                        localStorage.removeItem('savedUser');
-                        localStorage.setItem('rememberMe', 'false');
+                        localStorage.removeItem('savedLogin');
                     }
-                    
+
+                    // Обновляем интерфейс
+                    document.getElementById('authButtons').style.display = 'none';
+                    document.getElementById('userInfo').style.display = 'flex';
+                    document.getElementById('username').innerText = currentUser;
+                    document.getElementById('balance').innerText = balance;
+                    document.getElementById('mainContent').style.display = 'block';
+
                     closeModals();
-                    showUserContent();
-                    document.getElementById('balance').innerText = balance.toLocaleString();
                     showNotification('✅ Успешный вход!');
                 } else {
-                    document.getElementById('loginError').innerText = data.message;
+                    document.getElementById('loginError').innerText = data.message || 'Ошибка входа';
                     document.getElementById('loginError').style.display = 'block';
                 }
-            } catch (e) {
-                showNotification('Ошибка сервера', 'error');
+            } catch (error) {
+                showNotification('❌ Ошибка соединения с сервером', 'error');
             }
         }
 
@@ -1230,6 +1208,7 @@
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({username, password})
                 });
+                
                 const data = await res.json();
 
                 if (data.success) {
@@ -1237,23 +1216,27 @@
                     closeModals();
                     showModal('login');
                 } else {
-                    document.getElementById('registerError').innerText = data.message;
+                    document.getElementById('registerError').innerText = data.message || 'Ошибка регистрации';
                     document.getElementById('registerError').style.display = 'block';
                 }
-            } catch (e) {
-                showNotification('Ошибка сервера', 'error');
+            } catch (error) {
+                showNotification('❌ Ошибка соединения с сервером', 'error');
             }
         }
 
         function logout() {
-            localStorage.removeItem('session');
-            // Не удаляем savedUser если включен rememberMe
-            if (!rememberMe) {
-                localStorage.removeItem('savedUser');
-            }
-            location.reload();
+            localStorage.removeItem('clanSession');
+            currentUser = null;
+            balance = 0;
+            
+            document.getElementById('authButtons').style.display = 'flex';
+            document.getElementById('userInfo').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'none';
+            
+            showNotification('👋 Вы вышли из системы');
         }
 
+        // ============ КЛЮЧИ ============
         async function useKey() {
             if (!currentUser) {
                 showNotification('❌ Сначала войдите', 'error');
@@ -1261,7 +1244,10 @@
             }
 
             const key = document.getElementById('keyInput').value.trim().toUpperCase();
-            if (!key) return;
+            if (!key) {
+                showNotification('❌ Введите ключ', 'error');
+                return;
+            }
 
             try {
                 const res = await fetch(`${SERVER}/api/use_key`, {
@@ -1269,24 +1255,74 @@
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({key, username: currentUser})
                 });
+                
                 const data = await res.json();
 
                 if (data.success) {
                     if (data.type === 'balance') {
                         balance = data.balance;
-                        document.getElementById('balance').innerText = balance.toLocaleString();
+                        document.getElementById('balance').innerText = balance;
+                        
+                        // Обновляем сессию
+                        const session = JSON.parse(localStorage.getItem('clanSession'));
+                        session.balance = balance;
+                        localStorage.setItem('clanSession', JSON.stringify(session));
+                        
                         showNotification(`✅ +${data.value} монет!`);
                     } else if (data.type === 'winter') {
                         openWinterCase();
                     } else if (data.type === 'role') {
                         openRoleCase();
                     }
+                    
                     document.getElementById('keyInput').value = '';
                 } else {
-                    showNotification(data.message, 'error');
+                    showNotification(data.message || '❌ Ошибка активации ключа', 'error');
                 }
-            } catch (e) {
-                showNotification('Ошибка сервера', 'error');
+            } catch (error) {
+                showNotification('❌ Ошибка соединения с сервером', 'error');
+            }
+        }
+
+        // ============ ОТКРЫТИЕ КЕЙСОВ ============
+        async function openSpringCase() {
+            if (!currentUser) {
+                showNotification('❌ Сначала войдите', 'error');
+                return;
+            }
+
+            if (balance < 55000) {
+                showNotification('❌ Недостаточно монет! Нужно 55,000', 'error');
+                return;
+            }
+
+            const newBalance = balance - 55000;
+            
+            try {
+                await fetch(`${SERVER}/api/update_balance`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({username: currentUser, balance: newBalance})
+                });
+
+                balance = newBalance;
+                document.getElementById('balance').innerText = balance;
+                
+                // Обновляем сессию
+                const session = JSON.parse(localStorage.getItem('clanSession'));
+                session.balance = balance;
+                localStorage.setItem('clanSession', JSON.stringify(session));
+
+                const items = [
+                    { name: 'FrostBolt', rarity: 'LEGENDARY', icon: '❄️⚡' },
+                    { name: 'NeonCloud', rarity: 'LEGENDARY', icon: '☁️' },
+                    { name: 'AbyssalThunder', rarity: 'LEGENDARY', icon: '🌩️' }
+                ];
+                
+                const winItem = items[Math.floor(Math.random() * items.length)];
+                startAnimation(items, winItem, '#00ffcc', '🌸 ВЕСЕННИЙ КЕЙС');
+            } catch (error) {
+                showNotification('❌ Ошибка при открытии кейса', 'error');
             }
         }
 
@@ -1300,34 +1336,6 @@
             
             const winItem = items[Math.floor(Math.random() * items.length)];
             startAnimation(items, winItem, '#00d4ff', '❄️ ЗИМНИЙ КЕЙС');
-        }
-
-        async function openSpringCase() {
-            if (!currentUser) return;
-            if (balance < 55000) {
-                showNotification('❌ Нужно 55,000 монет', 'error');
-                return;
-            }
-
-            const newBalance = balance - 55000;
-            
-            await fetch(`${SERVER}/api/update_balance`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({username: currentUser, balance: newBalance})
-            });
-
-            balance = newBalance;
-            document.getElementById('balance').innerText = balance.toLocaleString();
-
-            const items = [
-                { name: 'FrostBolt', rarity: 'LEGENDARY', icon: '❄️⚡' },
-                { name: 'NeonCloud', rarity: 'LEGENDARY', icon: '☁️' },
-                { name: 'AbyssalThunder', rarity: 'LEGENDARY', icon: '🌩️' }
-            ];
-            
-            const winItem = items[Math.floor(Math.random() * items.length)];
-            startAnimation(items, winItem, '#00ffcc', '🌸 ВЕСЕННИЙ КЕЙС');
         }
 
         function openRoleCase() {
@@ -1400,30 +1408,49 @@
             }, 9000);
         }
 
+        // ============ АДМИН ПАНЕЛЬ ============
         function openAdmin() {
-            const pass = prompt('Пароль админа:');
+            const pass = prompt('🔐 Введите пароль администратора:');
+            
             if (pass === ADMIN_PASS) {
-                let action = prompt('1 - Ключ на баланс\n2 - Ключ на зимний кейс\n3 - Ключ на ролевой кейс');
-                
+                const action = prompt(
+                    'Выберите действие:\n' +
+                    '1 - Ключ на баланс\n' +
+                    '2 - Ключ на зимний кейс\n' +
+                    '3 - Ключ на ролевой кейс'
+                );
+
                 if (action === '1') {
-                    let amount = prompt('Сумма:', '1000');
-                    alert(`✅ BAL-${amount}-${Math.floor(Math.random()*9000+1000)}`);
+                    const amount = prompt('Введите сумму:', '1000');
+                    if (amount) {
+                        const key = `BAL-${amount}-${Math.floor(Math.random() * 9000 + 1000)}`;
+                        showNotification(`✅ Ключ создан: ${key}`);
+                        navigator.clipboard.writeText(key);
+                    }
                 } else if (action === '2') {
-                    alert(`✅ WINTER-${Math.floor(Math.random()*9000+1000)}`);
+                    const key = `WINTER-${Math.floor(Math.random() * 9000 + 1000)}`;
+                    showNotification(`✅ Ключ создан: ${key}`);
+                    navigator.clipboard.writeText(key);
                 } else if (action === '3') {
-                    alert(`✅ ROLE-${Math.floor(Math.random()*9000+1000)}`);
+                    const key = `ROLE-${Math.floor(Math.random() * 9000 + 1000)}`;
+                    showNotification(`✅ Ключ создан: ${key}`);
+                    navigator.clipboard.writeText(key);
                 }
             } else {
                 showNotification('❌ Неверный пароль', 'error');
             }
         }
 
+        // ============ УВЕДОМЛЕНИЯ ============
         function showNotification(text, type = 'success') {
             const notif = document.getElementById('notification');
             notif.style.background = type === 'success' ? 'linear-gradient(135deg, #5865F2, #4752c4)' : 'linear-gradient(135deg, #ff4757, #ff6b81)';
             notif.innerText = text;
             notif.style.display = 'block';
-            setTimeout(() => notif.style.display = 'none', 3000);
+            
+            setTimeout(() => {
+                notif.style.display = 'none';
+            }, 3000);
         }
     </script>
 </body>
