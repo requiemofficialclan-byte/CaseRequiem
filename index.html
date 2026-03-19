@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLAN CASE | СЕРВЕРНАЯ ВЕРСИЯ</title>
+    <title>CLAN CASE | ПРЕМИУМ КЕЙСЫ</title>
     <style>
         * {
             margin: 0;
@@ -13,125 +13,498 @@
         }
 
         body {
-            background: #0a0a0a;
-            color: white;
+            background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
+        /* Анимированный фон */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-animation span {
+            position: absolute;
+            display: block;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            animation: animate 25s linear infinite;
+            bottom: -150px;
+        }
+
+        .bg-animation span:nth-child(1) {
+            left: 25%;
+            width: 80px;
+            height: 80px;
+            animation-delay: 0s;
+        }
+
+        .bg-animation span:nth-child(2) {
+            left: 10%;
+            width: 30px;
+            height: 30px;
+            animation-delay: 2s;
+            animation-duration: 12s;
+        }
+
+        .bg-animation span:nth-child(3) {
+            left: 70%;
+            width: 50px;
+            height: 50px;
+            animation-delay: 4s;
+        }
+
+        .bg-animation span:nth-child(4) {
+            left: 40%;
+            width: 60px;
+            height: 60px;
+            animation-delay: 0s;
+            animation-duration: 18s;
+        }
+
+        .bg-animation span:nth-child(5) {
+            left: 65%;
+            width: 40px;
+            height: 40px;
+            animation-delay: 0s;
+        }
+
+        @keyframes animate {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+                border-radius: 0;
+            }
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+                opacity: 0;
+                border-radius: 50%;
+            }
+        }
+
+        /* Шапка */
         .header {
-            background: #111;
-            padding: 20px;
-            border-bottom: 1px solid #333;
+            background: rgba(20, 20, 20, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 20px 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
         }
 
         .balance {
-            background: #1a1a1a;
-            padding: 10px 30px;
+            background: linear-gradient(135deg, #232323, #2a2a2a);
+            padding: 12px 35px;
             border-radius: 40px;
-            border: 2px solid gold;
+            border: 2px solid #ffd700;
             font-size: 24px;
-            color: gold;
+            font-weight: bold;
+            color: #ffd700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            animation: glow 2s infinite;
         }
 
-        .user-section {
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.6); }
+        }
+
+        .balance::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,215,0,0.1), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .user-info {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
+            background: rgba(35, 35, 35, 0.8);
+            padding: 8px 25px;
+            border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        .username {
+            font-size: 16px;
+            font-weight: 500;
+            background: linear-gradient(45deg, #fff, #aaa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logout-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 6px 15px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #ff4757;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
         }
 
         .auth-btn {
-            background: #5865F2;
+            background: linear-gradient(135deg, #5865F2, #4752c4);
             color: white;
             border: none;
             padding: 10px 25px;
-            border-radius: 30px;
+            border-radius: 40px;
             cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .auth-btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .key-section {
-            display: flex;
-            gap: 10px;
-            background: #1a1a1a;
+            background: rgba(35, 35, 35, 0.8);
             padding: 10px 20px;
             border-radius: 40px;
+            display: flex;
+            gap: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(5px);
         }
 
         .key-input {
-            background: #0a0a0a;
-            border: 1px solid #333;
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(255,255,255,0.1);
             color: white;
             padding: 10px 20px;
             border-radius: 30px;
             width: 250px;
+            font-family: monospace;
+            transition: all 0.3s;
+        }
+
+        .key-input:focus {
+            outline: none;
+            border-color: #5865F2;
+            box-shadow: 0 0 20px rgba(88,101,242,0.3);
         }
 
         .key-btn {
-            background: #5865F2;
+            background: linear-gradient(135deg, #5865F2, #4752c4);
             color: white;
             border: none;
             padding: 10px 25px;
             border-radius: 30px;
+            font-weight: bold;
             cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .key-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(88,101,242,0.5);
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 40px auto;
             padding: 0 20px;
         }
 
         h1 {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
+            font-size: 3.5em;
+            background: linear-gradient(45deg, #5865F2, #ffd700, #5865F2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: titleGradient 5s ease infinite;
+            background-size: 300% 300%;
         }
 
-        .cases {
+        @keyframes titleGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 50px;
+            font-size: 1.2em;
+            animation: fadeInUp 1s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Кейсы */
+        .cases-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 30px;
+            margin-top: 30px;
         }
 
-        .case {
-            background: #111;
-            border: 2px solid #333;
-            border-radius: 20px;
-            padding: 25px;
+        .case-card {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.9), rgba(34, 34, 34, 0.9));
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 30px;
+            padding: 30px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            animation: cardAppear 0.6s ease;
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .case-card:nth-child(1) { animation-delay: 0.1s; }
+        .case-card:nth-child(2) { animation-delay: 0.2s; }
+        .case-card:nth-child(3) { animation-delay: 0.3s; }
+
+        .case-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.03), transparent);
+            transform: rotate(45deg);
+            transition: 0.5s;
+            animation: cardShine 6s infinite;
+        }
+
+        @keyframes cardShine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            20% { transform: translateX(100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .case-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            border-color: var(--case-color);
+            box-shadow: 0 0 40px var(--case-color);
+        }
+
+        .case-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 10;
+            animation: badgePulse 2s infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .badge-key {
+            background: linear-gradient(135deg, #ff4757, #ff6b81);
+            color: white;
+            box-shadow: 0 0 20px #ff4757;
+        }
+
+        .badge-money {
+            background: linear-gradient(135deg, #00ffcc, #00d4ff);
+            color: black;
+            box-shadow: 0 0 20px #00ffcc;
+        }
+
+        .case-icon {
+            font-size: 80px;
             text-align: center;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 20px var(--case-color));
+            animation: iconFloat 3s infinite;
         }
 
-        .case h3 {
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .case-name {
+            font-size: 26px;
+            font-weight: bold;
+            text-align: center;
+            color: var(--case-color);
             margin-bottom: 15px;
-            color: var(--color);
+            text-shadow: 0 0 10px var(--case-color);
         }
 
-        .price {
-            color: gold;
-            font-size: 20px;
-            margin: 15px 0;
+        .case-price {
+            text-align: center;
+            font-size: 24px;
+            color: #ffd700;
+            margin: 20px 0;
+            font-weight: bold;
+            animation: priceGlow 2s infinite;
         }
 
-        .items {
+        @keyframes priceGlow {
+            0%, 100% { text-shadow: 0 0 10px #ffd700; }
+            50% { text-shadow: 0 0 20px #ffd700; }
+        }
+
+        .items-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
             margin: 20px 0;
         }
 
         .item {
-            background: #1a1a1a;
-            padding: 8px;
-            margin: 5px 0;
-            border-radius: 8px;
+            background: rgba(30, 30, 30, 0.8);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
         }
 
+        .item:hover {
+            border-color: var(--case-color);
+            transform: translateX(5px);
+            box-shadow: 0 0 15px var(--case-color);
+        }
+
+        .item-name {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .item-rarity {
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(0,0,0,0.5);
+            font-weight: bold;
+        }
+
+        .rarity-legendary { color: #ffae00; text-shadow: 0 0 5px #ffae00; }
+        .rarity-epic { color: #9c27b0; text-shadow: 0 0 5px #9c27b0; }
+        .rarity-rare { color: #2196f3; text-shadow: 0 0 5px #2196f3; }
+
         .open-btn {
-            background: var(--color);
+            background: var(--case-color);
             color: black;
             border: none;
-            padding: 12px;
+            padding: 15px;
             border-radius: 30px;
-            width: 100%;
             font-weight: bold;
+            font-size: 16px;
             cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .open-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .open-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .open-btn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px var(--case-color);
         }
 
         .open-btn:disabled {
@@ -139,20 +512,219 @@
             cursor: not-allowed;
         }
 
-        .admin-btn {
+        /* CS2 СТИЛЬ АНИМАЦИИ */
+        .case-opening-overlay {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            background: #333;
-            border: none;
-            border-radius: 50%;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.98);
+            z-index: 10000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            animation: overlayFade 0.3s ease;
         }
 
+        @keyframes overlayFade {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .case-opening-overlay.active {
+            display: flex;
+        }
+
+        .case-opening-container {
+            width: 90%;
+            max-width: 1100px;
+            background: linear-gradient(135deg, #111, #1a1a1a);
+            border: 3px solid var(--case-color);
+            border-radius: 50px;
+            padding: 40px;
+            box-shadow: 0 0 100px var(--case-color);
+            animation: containerPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes containerPop {
+            from {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .case-opening-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .case-opening-header h2 {
+            font-size: 40px;
+            color: var(--case-color);
+            text-shadow: 0 0 30px var(--case-color);
+            animation: titlePulse 2s infinite;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { text-shadow: 0 0 30px var(--case-color); }
+            50% { text-shadow: 0 0 60px var(--case-color); }
+        }
+
+        .case-opening-roulette {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            border: 3px solid var(--case-color);
+            border-radius: 30px;
+            background: #0a0a0a;
+            margin-bottom: 40px;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.8);
+        }
+
+        .case-opening-roulette::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(to bottom, #ff4757, #ff6b81);
+            transform: translateX(-50%);
+            z-index: 10;
+            box-shadow: 0 0 30px #ff4757;
+            animation: selectorPulse 1s infinite;
+        }
+
+        @keyframes selectorPulse {
+            0%, 100% { box-shadow: 0 0 30px #ff4757; }
+            50% { box-shadow: 0 0 60px #ff4757; }
+        }
+
+        .case-opening-items {
+            display: flex;
+            position: absolute;
+            left: 50%;
+            transform: translateX(0);
+            transition: transform 6s cubic-bezier(0.1, 0.9, 0.3, 1);
+            gap: 10px;
+            padding: 0 20px;
+        }
+
+        .case-opening-item {
+            width: 180px;
+            height: 180px;
+            background: linear-gradient(135deg, #1a1a1a, #222);
+            border: 3px solid var(--case-color);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            animation: itemGlow 2s infinite;
+        }
+
+        @keyframes itemGlow {
+            0%, 100% { box-shadow: 0 0 20px var(--case-color); }
+            50% { box-shadow: 0 0 40px var(--case-color); }
+        }
+
+        .case-opening-item-icon {
+            font-size: 70px;
+            margin-bottom: 10px;
+            animation: itemFloat 3s infinite;
+        }
+
+        @keyframes itemFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .case-opening-item-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            padding: 0 10px;
+        }
+
+        .case-opening-item-rarity {
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(0,0,0,0.5);
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        .case-opening-result {
+            text-align: center;
+            padding: 50px;
+            background: linear-gradient(135deg, #1a1a1a, #222);
+            border-radius: 40px;
+            border: 3px solid var(--case-color);
+            opacity: 0;
+            transition: opacity 0.5s;
+            transform: scale(0.9);
+        }
+
+        .case-opening-result.show {
+            opacity: 1;
+            transform: scale(1);
+            animation: resultPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes resultPop {
+            from {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .case-opening-result-icon {
+            font-size: 120px;
+            margin-bottom: 30px;
+            animation: winSpin 3s infinite;
+        }
+
+        @keyframes winSpin {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(10deg) scale(1.1); }
+            100% { transform: rotate(0deg) scale(1); }
+        }
+
+        .case-opening-result-name {
+            font-size: 48px;
+            font-weight: bold;
+            color: var(--case-color);
+            margin-bottom: 15px;
+            text-shadow: 0 0 30px var(--case-color);
+            animation: nameGlow 2s infinite;
+        }
+
+        @keyframes nameGlow {
+            0%, 100% { text-shadow: 0 0 30px var(--case-color); }
+            50% { text-shadow: 0 0 60px var(--case-color); }
+        }
+
+        .case-opening-result-rarity {
+            font-size: 24px;
+            color: #888;
+        }
+
+        /* Модальные окна */
         .modal {
             display: none;
             position: fixed;
@@ -160,9 +732,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.98);
+            z-index: 2000;
             align-items: center;
             justify-content: center;
+            backdrop-filter: blur(10px);
         }
 
         .modal.active {
@@ -170,59 +744,198 @@
         }
 
         .modal-content {
-            background: #111;
-            padding: 40px;
-            border-radius: 20px;
+            background: linear-gradient(135deg, #1a1a1a, #222);
+            padding: 50px;
+            border-radius: 50px;
             width: 90%;
-            max-width: 400px;
+            max-width: 450px;
+            border: 3px solid #5865F2;
+            animation: modalSlide 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 50px #5865F2;
+        }
+
+        @keyframes modalSlide {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #5865F2;
+            font-size: 2.5em;
+            text-shadow: 0 0 20px #5865F2;
         }
 
         .modal input {
             width: 100%;
-            padding: 12px;
+            padding: 15px 20px;
             margin: 10px 0;
-            background: #1a1a1a;
-            border: 1px solid #333;
+            background: rgba(10, 10, 10, 0.8);
+            border: 2px solid rgba(255,255,255,0.1);
             color: white;
-            border-radius: 10px;
+            border-radius: 20px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .modal input:focus {
+            outline: none;
+            border-color: #5865F2;
+            box-shadow: 0 0 30px rgba(88,101,242,0.3);
         }
 
         .modal-btn {
             width: 100%;
-            padding: 12px;
+            padding: 15px;
             margin: 10px 0;
-            background: #5865F2;
+            background: linear-gradient(135deg, #5865F2, #4752c4);
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
         }
 
+        .modal-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .modal-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .modal-btn.secondary {
+            background: linear-gradient(135deg, #333, #444);
+        }
+
+        .error-message {
+            color: #ff4757;
+            font-size: 14px;
+            margin: 10px 0;
+            text-align: center;
+            text-shadow: 0 0 10px #ff4757;
+        }
+
+        /* Админ кнопка */
+        .admin-open-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #ff4757, #ff6b81);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 32px;
+            cursor: pointer;
+            z-index: 9999;
+            box-shadow: 0 0 30px rgba(255, 71, 87, 0.5);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: adminBtnPulse 2s infinite;
+        }
+
+        @keyframes adminBtnPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(255,71,87,0.5); }
+            50% { transform: scale(1.1); box-shadow: 0 0 60px rgba(255,71,87,0.8); }
+        }
+
+        .admin-open-btn:hover {
+            transform: rotate(180deg) scale(1.2);
+            background: linear-gradient(135deg, #ff6b81, #ff4757);
+        }
+
+        /* Уведомления */
         .notification {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: 100px;
+            right: 30px;
             padding: 15px 30px;
-            background: #5865F2;
-            color: white;
-            border-radius: 10px;
+            border-radius: 50px;
             display: none;
+            z-index: 20000;
+            animation: notificationSlide 0.3s;
+            font-weight: bold;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+
+        @keyframes notificationSlide {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .cases-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cases-grid {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                flex-direction: column;
+            }
+            .key-section {
+                width: 100%;
+            }
+            .key-input {
+                flex: 1;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="bg-animation">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
     <div class="header">
         <div class="balance">💰 <span id="balance">0</span></div>
         
-        <div class="user-section">
-            <div id="authButtons">
-                <button class="auth-btn" onclick="showModal('login')">Войти</button>
-                <button class="auth-btn" onclick="showModal('register')">Регистрация</button>
-            </div>
-            <div id="userInfo" style="display: none;">
-                <span id="username"></span>
-                <button class="auth-btn" onclick="logout()" style="background: #ff4757;">Выйти</button>
-            </div>
+        <div class="user-info" id="userInfo" style="display: none;">
+            <span class="username" id="username"></span>
+            <button class="logout-btn" onclick="logout()">Выйти</button>
+        </div>
+
+        <div class="auth-buttons" id="authButtons">
+            <button class="auth-btn" onclick="showModal('login')">Войти</button>
+            <button class="auth-btn" onclick="showModal('register')">Регистрация</button>
         </div>
 
         <div class="key-section">
@@ -232,45 +945,52 @@
     </div>
 
     <div class="container" id="mainContent" style="display: none;">
-        <h1>🎲 КЕЙСЫ CLAN CASE</h1>
+        <h1>🎲 CLAN CASE</h1>
+        <div class="subtitle">❄️ ЗИМНИЙ • 🌱 ВЕСЕННИЙ • 🎲 РОЛЕВОЙ</div>
         
-        <div class="cases">
+        <div class="cases-grid">
             <!-- Зимний кейс -->
-            <div class="case" style="--color: #00d4ff">
-                <h3>❄️ ЗИМНИЙ КЕЙС</h3>
-                <div class="price">🔑 ПО КЛЮЧУ</div>
-                <div class="items">
-                    <div class="item">NY Limited</div>
-                    <div class="item">HOLIDAY</div>
-                    <div class="item">WINTER</div>
-                    <div class="item">Snow Reaper</div>
+            <div class="case-card" style="--case-color: #00d4ff">
+                <div class="case-badge badge-key">🔑 ПО КЛЮЧУ</div>
+                <div class="case-icon">❄️</div>
+                <div class="case-name">❄️ ЗИМНИЙ КЕЙС</div>
+                <div class="case-price">🔑 ТОЛЬКО ПО КЛЮЧУ</div>
+                <div class="items-list">
+                    <div class="item"><span class="item-name">NY Limited</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
+                    <div class="item"><span class="item-name">HOLIDAY</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
+                    <div class="item"><span class="item-name">WINTER</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
+                    <div class="item"><span class="item-name">Snow Reaper</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
                 </div>
                 <button class="open-btn" style="background: #00d4ff" disabled>ТОЛЬКО ПО КЛЮЧУ</button>
             </div>
 
             <!-- Весенний кейс -->
-            <div class="case" style="--color: #00ffcc">
-                <h3>🌸 ВЕСЕННИЙ КЕЙС</h3>
-                <div class="price">💰 55,000</div>
-                <div class="items">
-                    <div class="item">FrostBolt</div>
-                    <div class="item">NeonCloud</div>
-                    <div class="item">AbyssalThunder</div>
+            <div class="case-card" style="--case-color: #00ffcc">
+                <div class="case-badge badge-money">💰 ЗА МОНЕТЫ</div>
+                <div class="case-icon">🌸</div>
+                <div class="case-name">🌱 ВЕСЕННИЙ КЕЙС</div>
+                <div class="case-price">💰 55,000</div>
+                <div class="items-list">
+                    <div class="item"><span class="item-name">FrostBolt</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
+                    <div class="item"><span class="item-name">NeonCloud</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
+                    <div class="item"><span class="item-name">AbyssalThunder</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
                 </div>
                 <button class="open-btn" style="background: #00ffcc" onclick="openSpringCase()">ОТКРЫТЬ</button>
             </div>
 
             <!-- Ролевой кейс -->
-            <div class="case" style="--color: #ff4757">
-                <h3>🎲 РОЛЕВОЙ КЕЙС</h3>
-                <div class="price">🔑 ПО КЛЮЧУ</div>
-                <div class="items">
-                    <div class="item">Bloodbound</div>
-                    <div class="item">Shadow</div>
-                    <div class="item">Veteran</div>
-                    <div class="item">Eternal</div>
-                    <div class="item">Phantom</div>
-                    <div class="item">Chosen</div>
+            <div class="case-card" style="--case-color: #ff4757">
+                <div class="case-badge badge-key">🔑 ПО КЛЮЧУ</div>
+                <div class="case-icon">🎲</div>
+                <div class="case-name">🎲 РОЛЕВОЙ КЕЙС</div>
+                <div class="case-price">🔑 ТОЛЬКО ПО КЛЮЧУ</div>
+                <div class="items-list">
+                    <div class="item"><span class="item-name">Bloodbound</span><span class="item-rarity rarity-legendary">23% XP</span></div>
+                    <div class="item"><span class="item-name">Shadow</span><span class="item-rarity rarity-epic">12% XP / 25% Money</span></div>
+                    <div class="item"><span class="item-name">Veteran</span><span class="item-rarity rarity-rare">7% XP / 12% Money</span></div>
+                    <div class="item"><span class="item-name">Eternal</span><span class="item-rarity rarity-rare">3% XP / 6% Money</span></div>
+                    <div class="item"><span class="item-name">Phantom</span><span class="item-rarity rarity-rare">3% XP / 4% Money</span></div>
+                    <div class="item"><span class="item-name">Chosen</span><span class="item-rarity rarity-legendary">2% Money</span></div>
                 </div>
                 <button class="open-btn" style="background: #ff4757" disabled>ТОЛЬКО ПО КЛЮЧУ</button>
             </div>
@@ -280,39 +1000,54 @@
     <!-- Модалка входа -->
     <div class="modal" id="loginModal">
         <div class="modal-content">
-            <h2 style="text-align: center;">🔐 ВХОД</h2>
+            <h2>🔐 ВХОД</h2>
             <input type="text" id="loginUsername" placeholder="Логин">
             <input type="password" id="loginPassword" placeholder="Пароль">
-            <div id="loginError" style="color: #ff4757; margin: 10px 0; display: none;"></div>
+            <div class="error-message" id="loginError"></div>
             <button class="modal-btn" onclick="login()">Войти</button>
-            <button class="modal-btn" style="background: #333;" onclick="closeModals()">Закрыть</button>
+            <button class="modal-btn secondary" onclick="closeModals()">Закрыть</button>
         </div>
     </div>
 
     <!-- Модалка регистрации -->
     <div class="modal" id="registerModal">
         <div class="modal-content">
-            <h2 style="text-align: center;">📝 РЕГИСТРАЦИЯ</h2>
+            <h2>📝 РЕГИСТРАЦИЯ</h2>
             <input type="text" id="regUsername" placeholder="Логин">
             <input type="password" id="regPassword" placeholder="Пароль">
             <input type="password" id="regConfirm" placeholder="Повторите пароль">
-            <div id="registerError" style="color: #ff4757; margin: 10px 0; display: none;"></div>
+            <div class="error-message" id="registerError"></div>
             <button class="modal-btn" onclick="register()">Зарегистрироваться</button>
-            <button class="modal-btn" style="background: #333;" onclick="closeModals()">Закрыть</button>
+            <button class="modal-btn secondary" onclick="closeModals()">Закрыть</button>
         </div>
     </div>
 
-    <button class="admin-btn" onclick="openAdmin()">⚙️</button>
+    <!-- CS2 СТИЛЬ АНИМАЦИИ -->
+    <div class="case-opening-overlay" id="caseOpening">
+        <div class="case-opening-container" id="caseOpeningContainer">
+            <div class="case-opening-header">
+                <h2 id="openingTitle">ОТКРЫТИЕ КЕЙСА</h2>
+            </div>
+            <div class="case-opening-roulette">
+                <div class="case-opening-items" id="rouletteItems"></div>
+            </div>
+            <div class="case-opening-result" id="openingResult">
+                <div class="case-opening-result-icon" id="resultIcon">🎁</div>
+                <div class="case-opening-result-name" id="resultName"></div>
+                <div class="case-opening-result-rarity" id="resultRarity"></div>
+            </div>
+        </div>
+    </div>
+
+    <button class="admin-open-btn" onclick="openAdmin()">⚙️</button>
     <div class="notification" id="notification"></div>
 
     <script>
-        // ============ НАСТРОЙКИ ============
-        const SERVER = 'http://localhost:5000';  // ЗАМЕНИТЕ НА ВАШ IP
+        const SERVER = 'http://192.168.1.100:5000'; // ЗАМЕНИТЕ НА ВАШ IP
         const ADMIN_PASS = '34125';
         let currentUser = null;
         let balance = 0;
 
-        // ============ ЗАГРУЗКА ============
         window.onload = () => {
             checkSession();
         };
@@ -338,7 +1073,7 @@
                 balance = data.balance;
                 document.getElementById('balance').innerText = balance.toLocaleString();
             } catch (e) {
-                showNotification('Ошибка загрузки', 'error');
+                showNotification('Ошибка загрузки баланса', 'error');
             }
         }
 
@@ -349,7 +1084,6 @@
             document.getElementById('mainContent').style.display = 'block';
         }
 
-        // ============ АВТОРИЗАЦИЯ ============
         function showModal(type) {
             closeModals();
             document.getElementById(type + 'Modal').classList.add('active');
@@ -423,11 +1157,9 @@
 
         function logout() {
             localStorage.removeItem('session');
-            currentUser = null;
             location.reload();
         }
 
-        // ============ КЛЮЧИ ============
         async function useKey() {
             if (!currentUser) {
                 showNotification('❌ Сначала войдите', 'error');
@@ -464,11 +1196,16 @@
             }
         }
 
-        // ============ ОТКРЫТИЕ КЕЙСОВ ============
         function openWinterCase() {
-            const items = ['NY Limited', 'HOLIDAY', 'WINTER', 'Snow Reaper'];
-            const win = items[Math.floor(Math.random() * items.length)];
-            showNotification(`🎉 Вы получили: ${win}!`);
+            const items = [
+                { name: 'NY Limited', rarity: 'LEGENDARY', icon: '❄️' },
+                { name: 'HOLIDAY', rarity: 'LEGENDARY', icon: '🎁' },
+                { name: 'WINTER', rarity: 'LEGENDARY', icon: '🎄' },
+                { name: 'Snow Reaper', rarity: 'LEGENDARY', icon: '🌨️' }
+            ];
+            
+            const winItem = items[Math.floor(Math.random() * items.length)];
+            startAnimation(items, winItem, '#00d4ff', '❄️ ЗИМНИЙ КЕЙС');
         }
 
         async function openSpringCase() {
@@ -489,39 +1226,107 @@
             balance = newBalance;
             document.getElementById('balance').innerText = balance.toLocaleString();
 
-            const items = ['FrostBolt', 'NeonCloud', 'AbyssalThunder'];
-            const win = items[Math.floor(Math.random() * items.length)];
-            showNotification(`🎉 Вы получили: ${win}!`);
+            const items = [
+                { name: 'FrostBolt', rarity: 'LEGENDARY', icon: '❄️⚡' },
+                { name: 'NeonCloud', rarity: 'LEGENDARY', icon: '☁️' },
+                { name: 'AbyssalThunder', rarity: 'LEGENDARY', icon: '🌩️' }
+            ];
+            
+            const winItem = items[Math.floor(Math.random() * items.length)];
+            startAnimation(items, winItem, '#00ffcc', '🌸 ВЕСЕННИЙ КЕЙС');
         }
 
         function openRoleCase() {
-            const items = ['Bloodbound', 'Shadow', 'Veteran', 'Eternal', 'Phantom', 'Chosen'];
-            const win = items[Math.floor(Math.random() * items.length)];
-            showNotification(`🎉 Вы получили: ${win}!`);
+            const items = [
+                { name: 'Bloodbound', rarity: 'LEGENDARY', icon: '🩸' },
+                { name: 'Shadow', rarity: 'EPIC', icon: '👤' },
+                { name: 'Veteran', rarity: 'RARE', icon: '⚔️' },
+                { name: 'Eternal', rarity: 'RARE', icon: '∞' },
+                { name: 'Phantom', rarity: 'RARE', icon: '👻' },
+                { name: 'Chosen', rarity: 'LEGENDARY', icon: '⭐' }
+            ];
+            
+            const winItem = items[Math.floor(Math.random() * items.length)];
+            startAnimation(items, winItem, '#ff4757', '🎲 РОЛЕВОЙ КЕЙС');
         }
 
-        // ============ АДМИН ============
+        function startAnimation(items, winItem, color, title) {
+            const overlay = document.getElementById('caseOpening');
+            const container = document.getElementById('caseOpeningContainer');
+            const roulette = document.getElementById('rouletteItems');
+            const result = document.getElementById('openingResult');
+            const resultIcon = document.getElementById('resultIcon');
+            const resultName = document.getElementById('resultName');
+            const resultRarity = document.getElementById('resultRarity');
+            const titleEl = document.getElementById('openingTitle');
+
+            container.style.setProperty('--case-color', color);
+            titleEl.style.color = color;
+            titleEl.innerText = title;
+
+            roulette.innerHTML = '';
+            for (let i = 0; i < 50; i++) {
+                const randomItem = items[Math.floor(Math.random() * items.length)];
+                roulette.innerHTML += `
+                    <div class="case-opening-item">
+                        <div class="case-opening-item-icon">${randomItem.icon}</div>
+                        <div class="case-opening-item-name">${randomItem.name}</div>
+                        <div class="case-opening-item-rarity">${randomItem.rarity}</div>
+                    </div>
+                `;
+            }
+
+            const centerIndex = 25;
+            const items_collection = roulette.children;
+            if (items_collection[centerIndex]) {
+                items_collection[centerIndex].innerHTML = `
+                    <div class="case-opening-item-icon">${winItem.icon}</div>
+                    <div class="case-opening-item-name">${winItem.name}</div>
+                    <div class="case-opening-item-rarity">${winItem.rarity}</div>
+                `;
+            }
+
+            overlay.classList.add('active');
+            result.style.opacity = '0';
+
+            setTimeout(() => {
+                roulette.style.transform = `translateX(-${centerIndex * 200}px)`;
+            }, 100);
+
+            setTimeout(() => {
+                resultIcon.innerText = winItem.icon;
+                resultName.innerText = winItem.name;
+                resultRarity.innerText = winItem.rarity;
+                result.style.opacity = '1';
+            }, 6000);
+
+            setTimeout(() => {
+                overlay.classList.remove('active');
+                roulette.style.transform = 'translateX(0)';
+            }, 9000);
+        }
+
         function openAdmin() {
             const pass = prompt('Пароль админа:');
             if (pass === ADMIN_PASS) {
-                let action = prompt('1 - Создать ключ на баланс\n2 - Создать ключ на кейс');
+                let action = prompt('1 - Ключ на баланс\n2 - Ключ на зимний кейс\n3 - Ключ на ролевой кейс');
                 
                 if (action === '1') {
                     let amount = prompt('Сумма:', '1000');
-                    alert(`✅ Ключ создан: BAL-${amount}-${Math.floor(Math.random()*9000+1000)}`);
+                    alert(`✅ BAL-${amount}-${Math.floor(Math.random()*9000+1000)}`);
                 } else if (action === '2') {
-                    let type = prompt('Тип кейса (winter/role):', 'winter');
-                    alert(`✅ Ключ создан: ${type.toUpperCase()}-${Math.floor(Math.random()*9000+1000)}`);
+                    alert(`✅ WINTER-${Math.floor(Math.random()*9000+1000)}`);
+                } else if (action === '3') {
+                    alert(`✅ ROLE-${Math.floor(Math.random()*9000+1000)}`);
                 }
             } else {
                 showNotification('❌ Неверный пароль', 'error');
             }
         }
 
-        // ============ УВЕДОМЛЕНИЯ ============
         function showNotification(text, type = 'success') {
             const notif = document.getElementById('notification');
-            notif.style.background = type === 'success' ? '#5865F2' : '#ff4757';
+            notif.style.background = type === 'success' ? 'linear-gradient(135deg, #5865F2, #4752c4)' : 'linear-gradient(135deg, #ff4757, #ff6b81)';
             notif.innerText = text;
             notif.style.display = 'block';
             setTimeout(() => notif.style.display = 'none', 3000);
