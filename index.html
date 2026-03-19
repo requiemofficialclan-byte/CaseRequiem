@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLAN CASES | БАЛАНС</title>
+    <title>CLAN CASE | БАЛАНС + КЛЮЧИ</title>
     <style>
         * {
             margin: 0;
@@ -16,127 +16,154 @@
             background: #0a0a0a;
             color: white;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
 
-        /* Шапка с балансом */
+        /* Шапка */
         .header {
-            width: 100%;
             background: #111;
-            padding: 15px 20px;
+            padding: 20px;
+            border-bottom: 1px solid #333;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #333;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
-        .balance {
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .balance-card {
             background: #1a1a1a;
-            padding: 10px 20px;
-            border-radius: 30px;
-            border: 1px solid #00ffcc;
+            padding: 10px 25px;
+            border-radius: 40px;
+            border: 2px solid #ffd700;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
         .balance-icon {
-            color: #ffd700;
-            font-size: 20px;
+            font-size: 24px;
         }
 
         .balance-amount {
-            font-size: 20px;
+            font-size: 28px;
             font-weight: bold;
-            color: #00ffcc;
+            color: #ffd700;
         }
 
-        .user {
+        .profile {
             display: flex;
             align-items: center;
             gap: 10px;
             background: #1a1a1a;
-            padding: 8px 15px;
-            border-radius: 30px;
+            padding: 8px 20px;
+            border-radius: 40px;
             cursor: pointer;
         }
 
         .avatar {
-            width: 35px;
-            height: 35px;
+            width: 40px;
+            height: 40px;
             background: #00ffcc;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: black;
             font-weight: bold;
+            color: black;
         }
 
-        /* Главный экран */
+        /* Ввод ключа */
+        .key-section {
+            background: #1a1a1a;
+            padding: 15px 25px;
+            border-radius: 50px;
+            display: flex;
+            gap: 10px;
+            min-width: 300px;
+        }
+
+        .key-input {
+            background: #0a0a0a;
+            border: 2px solid #333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            width: 250px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        .key-input:focus {
+            outline: none;
+            border-color: #00ffcc;
+        }
+
+        .use-key-btn {
+            background: #00ffcc;
+            color: black;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .use-key-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Контейнер */
         .container {
-            width: 90%;
             max-width: 1200px;
-            margin-top: 40px;
+            margin: 40px auto;
+            padding: 0 20px;
         }
 
-        h1 {
+        h2 {
+            margin-bottom: 30px;
+            font-size: 2em;
             text-align: center;
-            margin-bottom: 40px;
-            font-size: 2.5em;
-            text-shadow: 0 0 10px #00ffcc;
         }
 
+        /* Кейсы */
         .cases-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
-            padding: 20px;
+            margin-top: 30px;
         }
 
         .case-card {
             background: #111;
             border: 2px solid #333;
-            border-radius: 20px;
-            padding: 25px;
+            border-radius: 30px;
+            padding: 30px;
             text-align: center;
             transition: 0.3s;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
         }
 
         .case-card:hover {
             transform: translateY(-10px);
             border-color: #00ffcc;
-            box-shadow: 0 0 30px rgba(0, 255, 204, 0.3);
-        }
-
-        .case-card.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .case-card.disabled:hover {
-            transform: none;
-            border-color: #333;
         }
 
         .case-icon {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 20px;
+            width: 120px;
+            height: 120px;
             background: #1a1a1a;
             border-radius: 50%;
+            margin: 0 auto 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
+            font-size: 50px;
             border: 3px solid #00ffcc;
         }
 
@@ -147,34 +174,31 @@
 
         .case-price {
             background: #1a1a1a;
-            padding: 8px 15px;
+            padding: 10px;
             border-radius: 20px;
             display: inline-block;
             margin: 15px 0;
             color: #ffd700;
+        }
+
+        .open-case-btn {
+            background: #00ffcc;
+            color: black;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
             font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            font-size: 18px;
         }
 
-        .case-items {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 15px;
+        .open-case-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
-        .item-preview {
-            width: 40px;
-            height: 40px;
-            background: #1a1a1a;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            border: 1px solid #333;
-        }
-
-        /* Модальное окно кейса */
+        /* Модалка */
         .modal {
             display: none;
             position: fixed;
@@ -182,7 +206,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0,0,0,0.95);
             z-index: 1000;
             align-items: center;
             justify-content: center;
@@ -194,48 +218,15 @@
 
         .modal-content {
             background: #111;
-            border-radius: 30px;
             padding: 30px;
+            border-radius: 30px;
             width: 90%;
             max-width: 600px;
             border: 2px solid #00ffcc;
+        }
+
+        .roulette {
             position: relative;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: none;
-            border: none;
-            color: #666;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        .close-btn:hover {
-            color: white;
-        }
-
-        .case-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .case-header h2 {
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-
-        .case-header .price {
-            color: #ffd700;
-            font-size: 20px;
-        }
-
-        /* Рулетка */
-        .roulette-container {
-            position: relative;
-            width: 100%;
             height: 150px;
             overflow: hidden;
             border: 2px solid #333;
@@ -248,8 +239,7 @@
             display: flex;
             position: absolute;
             left: 50%;
-            transform: translateX(0);
-            transition: transform 5s cubic-bezier(0.1, 0.8, 0.3, 1);
+            transition: transform 5s cubic-bezier(0.1, 0.8, 0.2, 1);
         }
 
         .roulette-item {
@@ -275,65 +265,17 @@
             background: #ff4757;
             transform: translateX(-50%);
             z-index: 10;
-            box-shadow: 0 0 10px #ff4757;
         }
 
-        /* Кнопки */
-        .btn {
-            background: #00ffcc;
-            color: black;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 15px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            transition: 0.2s;
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .btn-secondary {
-            background: #333;
-            color: white;
-            margin-top: 15px;
-        }
-
-        /* Результат */
         .result {
-            display: none;
             text-align: center;
-            margin-top: 20px;
             padding: 20px;
             background: #1a1a1a;
             border-radius: 15px;
-            border: 2px solid #00ffcc;
+            margin-top: 20px;
         }
 
-        .win-item {
-            font-size: 30px;
-            margin-bottom: 10px;
-        }
-
-        .win-name {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-
-        .win-rarity {
-            font-size: 18px;
-            margin-bottom: 15px;
-        }
-
-        /* Админ панель */
+        /* Админка */
         .admin-btn {
             position: fixed;
             bottom: 20px;
@@ -347,14 +289,12 @@
             font-size: 24px;
             cursor: pointer;
             opacity: 0.3;
-            transition: 0.3s;
             z-index: 100;
         }
 
         .admin-btn:hover {
             opacity: 1;
-            background: #00ffcc;
-            color: black;
+            background: #ff4757;
         }
 
         .admin-panel {
@@ -364,7 +304,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.95);
+            background: rgba(0,0,0,0.95);
             z-index: 2000;
             align-items: center;
             justify-content: center;
@@ -379,153 +319,147 @@
             padding: 30px;
             border-radius: 20px;
             width: 90%;
-            max-width: 400px;
-            border: 2px solid #ff4757;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
         }
 
-        .admin-content h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #ff4757;
-        }
-
-        .admin-content input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
+        .admin-section {
             background: #1a1a1a;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .admin-input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background: #0a0a0a;
             border: 1px solid #333;
             color: white;
             border-radius: 10px;
         }
 
-        .users-list {
-            max-height: 200px;
-            overflow-y: auto;
-            margin: 15px 0;
-        }
-
-        .user-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            background: #1a1a1a;
-            margin: 5px 0;
-            border-radius: 10px;
-        }
-
-        .user-name {
-            font-weight: bold;
-        }
-
-        .user-balance {
-            color: #ffd700;
-        }
-
-        .add-balance {
+        .admin-btn-small {
             background: #00ffcc;
             color: black;
             border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
+            padding: 10px;
+            border-radius: 10px;
             cursor: pointer;
-            margin-left: 10px;
+            margin: 5px;
+        }
+
+        .key-display {
+            background: #0a0a0a;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: monospace;
+            word-break: break-all;
+            margin: 10px 0;
         }
 
         .notification {
             position: fixed;
-            top: 80px;
+            top: 100px;
             right: 20px;
-            background: #00ffcc;
-            color: black;
             padding: 15px 25px;
             border-radius: 10px;
             animation: slideIn 0.3s;
-            z-index: 1000;
+            z-index: 3000;
             display: none;
         }
 
         @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
     </style>
 </head>
 <body>
     <!-- Шапка -->
     <div class="header">
-        <div class="balance">
-            <span class="balance-icon">💰</span>
-            <span class="balance-amount" id="balance">0</span>
+        <div class="user-info">
+            <div class="balance-card">
+                <span class="balance-icon">💰</span>
+                <span class="balance-amount" id="balance">0</span>
+            </div>
+            <div class="profile" onclick="changeUser()">
+                <div class="avatar" id="avatar">?</div>
+                <span id="username">гость</span>
+            </div>
         </div>
-        <div class="user" onclick="changeUser()">
-            <div class="avatar" id="avatar">?</div>
-            <span id="username">гость</span>
+        
+        <!-- Ввод ключа -->
+        <div class="key-section">
+            <input type="text" class="key-input" id="keyInput" placeholder="ВВЕДИТЕ КЛЮЧ" autocomplete="off">
+            <button class="use-key-btn" onclick="useKey()">Активировать</button>
         </div>
     </div>
 
-    <!-- Главный экран -->
+    <!-- Кейсы -->
     <div class="container">
-        <h1>🎲 ВЫБЕРИТЕ КЕЙС</h1>
+        <h2>🎲 ДОСТУПНЫЕ КЕЙСЫ</h2>
         <div class="cases-grid" id="casesGrid"></div>
     </div>
 
     <!-- Модалка кейса -->
     <div class="modal" id="caseModal">
         <div class="modal-content">
-            <button class="close-btn" onclick="closeCase()">✕</button>
+            <h2 id="modalCaseName" style="text-align: center;"></h2>
             
-            <div class="case-header">
-                <h2 id="modalCaseName">Название кейса</h2>
-                <div class="price" id="modalCasePrice">💰 2</div>
-            </div>
-
-            <div class="roulette-container">
+            <div class="roulette">
                 <div class="selector"></div>
                 <div class="roulette-items" id="rouletteItems"></div>
             </div>
 
-            <button class="btn" id="openBtn" onclick="openCase()">ОТКРЫТЬ (2 💰)</button>
-            <button class="btn btn-secondary" onclick="closeCase()">НАЗАД</button>
+            <button class="open-case-btn" id="openCaseBtn" onclick="openCase()">Открыть за 2 💰</button>
+            <button class="open-case-btn" onclick="closeModal()" style="background: #333; color: white; margin-top: 10px;">Закрыть</button>
 
-            <div class="result" id="result">
-                <div class="win-item" id="winIcon">🎁</div>
-                <div class="win-name" id="winName"></div>
-                <div class="win-rarity" id="winRarity"></div>
-                <button class="btn" onclick="closeResult()">ПРОДОЛЖИТЬ</button>
+            <div class="result" id="result" style="display: none;">
+                <div style="font-size: 50px;" id="winIcon">🎁</div>
+                <h3 id="winName"></h3>
+                <p id="winRarity"></p>
+                <button class="open-case-btn" onclick="closeResult()">Продолжить</button>
             </div>
         </div>
     </div>
 
-    <!-- Админ панель -->
+    <!-- Админка -->
     <button class="admin-btn" onclick="openAdmin()">⚙️</button>
 
     <div class="admin-panel" id="adminPanel">
         <div class="admin-content">
-            <h2>⚡ ADMIN PANEL</h2>
+            <h2 style="text-align: center; margin-bottom: 20px;">⚡ ADMIN PANEL</h2>
             
-            <input type="password" id="adminPass" placeholder="Пароль">
-            <button class="btn" onclick="loginAdmin()" style="margin-bottom: 20px;">ВОЙТИ</button>
-
-            <div id="adminControls" style="display: none;">
-                <h3 style="margin: 20px 0;">Пользователи:</h3>
-                <div class="users-list" id="usersList"></div>
-                
-                <h3 style="margin: 20px 0;">Создать пользователя:</h3>
-                <input type="text" id="newUserName" placeholder="Username">
-                <input type="number" id="newUserBalance" placeholder="Начальный баланс" value="10">
-                <button class="btn" onclick="createUser()">СОЗДАТЬ</button>
-                
-                <button class="btn" onclick="saveData()" style="margin-top: 20px; background: #00ffcc;">СОХРАНИТЬ</button>
-                <button class="btn" onclick="closeAdmin()" style="margin-top: 10px; background: #ff4757;">ЗАКРЫТЬ</button>
+            <div class="admin-section">
+                <h3>🔑 Ключ на баланс</h3>
+                <input type="number" class="admin-input" id="balanceValue" placeholder="Сумма" value="10">
+                <button class="admin-btn-small" onclick="createBalanceKey()">Создать ключ</button>
             </div>
+
+            <div class="admin-section">
+                <h3>🎲 Ключ на кейс</h3>
+                <select class="admin-input" id="caseType">
+                    <option value="spring">🌱 Весенний</option>
+                    <option value="winter">❄️ Зимний</option>
+                </select>
+                <button class="admin-btn-small" onclick="createCaseKey()">Создать ключ</button>
+            </div>
+
+            <div class="admin-section" id="keyDisplay" style="display: none;">
+                <h3>✅ Новый ключ:</h3>
+                <div class="key-display" id="newKey"></div>
+                <button class="admin-btn-small" onclick="copyKey()">Копировать</button>
+            </div>
+
+            <div class="admin-section">
+                <h3>📊 Статистика</h3>
+                <div id="stats"></div>
+            </div>
+
+            <button class="admin-btn-small" onclick="closeAdmin()" style="background: #ff4757; width: 100%;">Закрыть</button>
         </div>
     </div>
 
@@ -533,30 +467,31 @@
     <div class="notification" id="notification"></div>
 
     <script>
-        // ============ ДАННЫЕ ============
-        const ADMIN_PASSWORD = '1337';
+        // ============ КОНФИГ ============
+        const SERVER = 'http://localhost:5000';
+        const ADMIN_PASS = '1337';
         
         // Кейсы
         const cases = [
             {
-                id: 1,
+                id: 'spring',
                 name: '🌱 ВЕСЕННИЙ КЕЙС',
                 icon: '🌸',
                 price: 2,
                 items: [
-                    { name: 'Буря', rarity: 'Легендарный', icon: '⚡', chance: 1 },
+                    { name: 'Шторм', rarity: 'Легендарный', icon: '⚡', chance: 1 },
                     { name: 'Трава', rarity: 'Обычный', icon: '🌿', chance: 49 },
                     { name: 'Цветок', rarity: 'Редкий', icon: '🌺', chance: 30 },
                     { name: 'Бабочка', rarity: 'Эпический', icon: '🦋', chance: 20 }
                 ]
             },
             {
-                id: 2,
+                id: 'winter',
                 name: '❄️ ЗИМНИЙ КЕЙС',
                 icon: '⛄',
                 price: 2,
                 items: [
-                    { name: 'Ледяной меч', rarity: 'Легендарный', icon: '🗡️', chance: 1 },
+                    { name: 'Ледяной меч', rarity: 'Легендарный', icon: '⚔️', chance: 1 },
                     { name: 'Снежок', rarity: 'Обычный', icon: '⚪', chance: 49 },
                     { name: 'Морозный плащ', rarity: 'Редкий', icon: '🧥', chance: 30 },
                     { name: 'Рога', rarity: 'Эпический', icon: '🦌', chance: 20 }
@@ -564,49 +499,89 @@
             }
         ];
 
-        // Пользователи (сохраняем в localStorage)
-        let users = JSON.parse(localStorage.getItem('users')) || {
-            'гость': { balance: 10, password: '' }
-        };
-
-        let currentUser = localStorage.getItem('currentUser') || 'гость';
+        let currentUser = localStorage.getItem('username') || 'гость';
+        let balance = 0;
         let currentCase = null;
         let isSpinning = false;
-        let adminLoggedIn = false;
+        let lastCreatedKey = '';
 
-        // ============ ИНИЦИАЛИЗАЦИЯ ============
+        // ============ ЗАГРУЗКА ============
         window.onload = () => {
             updateUserDisplay();
             renderCases();
-            checkFirstUser();
+            loadUserBalance();
         };
 
-        function checkFirstUser() {
-            if (currentUser === 'гость' && !users['гость']) {
-                users['гость'] = { balance: 10, password: '' };
-                saveUsers();
+        async function loadUserBalance() {
+            try {
+                const response = await fetch(`${SERVER}/api/user/get`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: currentUser })
+                });
+                const data = await response.json();
+                balance = data.balance;
+                document.getElementById('balance').innerText = balance;
+            } catch (e) {
+                showNotif('❌ Сервер не доступен', 'error');
             }
         }
 
-        // ============ ПОЛЬЗОВАТЕЛИ ============
+        // ============ ПОЛЬЗОВАТЕЛЬ ============
         function changeUser() {
             let name = prompt('Введите ваш username:');
             if (name) {
-                name = name.toLowerCase().trim();
-                if (!users[name]) {
-                    users[name] = { balance: 0, password: '' };
-                }
-                currentUser = name;
-                localStorage.setItem('currentUser', currentUser);
+                currentUser = name.toLowerCase().trim();
+                localStorage.setItem('username', currentUser);
                 updateUserDisplay();
-                showNotif(`✅ Добро пожаловать, ${name}!`);
+                loadUserBalance();
             }
         }
 
         function updateUserDisplay() {
             document.getElementById('username').innerText = currentUser;
             document.getElementById('avatar').innerText = currentUser[0].toUpperCase();
-            document.getElementById('balance').innerText = users[currentUser]?.balance || 0;
+        }
+
+        // ============ КЛЮЧИ ============
+        async function useKey() {
+            const key = document.getElementById('keyInput').value.trim().toUpperCase();
+            if (!key) {
+                showNotif('❌ Введите ключ', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${SERVER}/api/key/use`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        key: key,
+                        username: currentUser
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showNotif(data.message, 'success');
+                    
+                    if (data.type === 'balance') {
+                        // Ключ на баланс
+                        balance += data.value;
+                        document.getElementById('balance').innerText = balance;
+                    } else if (data.type === 'case') {
+                        // Ключ на кейс - открываем сразу
+                        openCaseWithKey(data.case_type);
+                    }
+                    
+                    document.getElementById('keyInput').value = '';
+                } else {
+                    showNotif(data.message, 'error');
+                }
+            } catch (e) {
+                showNotif('❌ Ошибка сервера', 'error');
+            }
         }
 
         // ============ КЕЙСЫ ============
@@ -617,62 +592,51 @@
             cases.forEach(c => {
                 const card = document.createElement('div');
                 card.className = 'case-card';
-                card.onclick = () => openCaseModal(c);
-                
                 card.innerHTML = `
                     <div class="case-icon">${c.icon}</div>
                     <div class="case-name">${c.name}</div>
                     <div class="case-price">💰 ${c.price}</div>
-                    <div class="case-items">
-                        ${c.items.map(item => `<div class="item-preview" title="${item.name}">${item.icon}</div>`).join('')}
-                    </div>
+                    <button class="open-case-btn" onclick="openCaseModal('${c.id}')">ОТКРЫТЬ</button>
                 `;
-                
                 grid.appendChild(card);
             });
         }
 
-        function openCaseModal(c) {
-            if (users[currentUser]?.balance < c.price) {
-                showNotif('❌ Недостаточно средств!', 'error');
+        function openCaseModal(caseId) {
+            if (balance < 2) {
+                showNotif('❌ Недостаточно монет! Используйте ключ на баланс', 'error');
                 return;
             }
             
-            currentCase = c;
-            document.getElementById('modalCaseName').innerText = c.name;
-            document.getElementById('modalCasePrice').innerHTML = `💰 ${c.price}`;
+            currentCase = cases.find(c => c.id === caseId);
+            document.getElementById('modalCaseName').innerText = currentCase.name;
             document.getElementById('caseModal').classList.add('active');
-            document.getElementById('openBtn').disabled = false;
         }
 
-        function closeCase() {
-            document.getElementById('caseModal').classList.remove('active');
-            document.getElementById('result').style.display = 'none';
-            document.getElementById('rouletteItems').innerHTML = '';
-            currentCase = null;
+        function openCaseWithKey(caseType) {
+            currentCase = cases.find(c => c.id === caseType);
+            document.getElementById('modalCaseName').innerText = currentCase.name;
+            document.getElementById('caseModal').classList.add('active');
+            setTimeout(() => openCase(true), 500);
         }
 
-        // ============ ОТКРЫТИЕ КЕЙСА ============
-        async function openCase() {
+        async function openCase(isFromKey = false) {
             if (isSpinning) return;
-            
-            const balance = users[currentUser]?.balance || 0;
-            if (balance < currentCase.price) {
-                showNotif('❌ Недостаточно средств!', 'error');
-                closeCase();
-                return;
+
+            if (!isFromKey) {
+                if (balance < 2) {
+                    showNotif('❌ Недостаточно монет', 'error');
+                    closeModal();
+                    return;
+                }
+                balance -= 2;
+                document.getElementById('balance').innerText = balance;
             }
 
-            // Списываем баланс
-            users[currentUser].balance -= currentCase.price;
-            updateUserDisplay();
-            saveUsers();
-
-            // Блокируем кнопку
             isSpinning = true;
-            document.getElementById('openBtn').disabled = true;
+            document.getElementById('openCaseBtn').disabled = true;
 
-            // Создаем ленту
+            // Создаем рулетку
             const roulette = document.getElementById('rouletteItems');
             roulette.innerHTML = '';
             
@@ -696,119 +660,111 @@
                 }
             }
 
-            // Запускаем анимацию
+            // Анимация
             setTimeout(() => {
                 roulette.style.transform = `translateX(-${45 * 130}px)`;
             }, 100);
 
-            // Показываем результат
+            // Результат
             setTimeout(() => {
                 document.getElementById('winIcon').innerText = winItem.icon;
                 document.getElementById('winName').innerText = winItem.name;
                 document.getElementById('winRarity').innerText = winItem.rarity;
-                document.getElementById('winRarity').style.color = 
-                    winItem.rarity === 'Легендарный' ? '#ffae00' :
-                    winItem.rarity === 'Эпический' ? '#9c27b0' :
-                    winItem.rarity === 'Редкий' ? '#2196f3' : '#aaa';
-                
                 document.getElementById('result').style.display = 'block';
+                
                 isSpinning = false;
-                
-                // Логируем в консоль (для истории)
-                console.log(`${currentUser} открыл ${currentCase.name} и получил ${winItem.name}`);
-                
             }, 5100);
+        }
+
+        function closeModal() {
+            document.getElementById('caseModal').classList.remove('active');
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('rouletteItems').innerHTML = '';
+            document.getElementById('openCaseBtn').disabled = false;
         }
 
         function closeResult() {
             document.getElementById('result').style.display = 'none';
-            closeCase();
+            closeModal();
         }
 
-        // ============ АДМИН ПАНЕЛЬ ============
+        // ============ АДМИНКА ============
         function openAdmin() {
             document.getElementById('adminPanel').classList.add('active');
-            document.getElementById('adminPass').value = '';
-            document.getElementById('adminControls').style.display = 'none';
+            loadStats();
         }
 
         function closeAdmin() {
             document.getElementById('adminPanel').classList.remove('active');
-            adminLoggedIn = false;
+            document.getElementById('keyDisplay').style.display = 'none';
         }
 
-        function loginAdmin() {
-            const pass = document.getElementById('adminPass').value;
-            if (pass === ADMIN_PASSWORD) {
-                adminLoggedIn = true;
-                document.getElementById('adminControls').style.display = 'block';
-                renderUsersList();
-            } else {
-                alert('Неверный пароль!');
-            }
-        }
-
-        function renderUsersList() {
-            const list = document.getElementById('usersList');
-            list.innerHTML = '';
+        async function createBalanceKey() {
+            const value = document.getElementById('balanceValue').value;
             
-            Object.keys(users).forEach(name => {
-                const div = document.createElement('div');
-                div.className = 'user-item';
-                div.innerHTML = `
-                    <span class="user-name">${name}</span>
-                    <span>
-                        <span class="user-balance">💰 ${users[name].balance}</span>
-                        <button class="add-balance" onclick="addBalance('${name}')">+</button>
-                    </span>
-                `;
-                list.appendChild(div);
+            const response = await fetch(`${SERVER}/api/admin/create_key`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    password: ADMIN_PASS,
+                    key_type: 'balance',
+                    value: parseInt(value)
+                })
             });
-        }
 
-        function addBalance(username) {
-            const amount = prompt(`Сколько добавить ${username}?`, '10');
-            if (amount && !isNaN(amount)) {
-                users[username].balance += parseInt(amount);
-                saveUsers();
-                renderUsersList();
-                if (username === currentUser) {
-                    updateUserDisplay();
-                }
-                showNotif(`✅ Добавлено ${amount} 💰 ${username}`);
+            const data = await response.json();
+            if (data.success) {
+                lastCreatedKey = data.key;
+                document.getElementById('newKey').innerText = data.key;
+                document.getElementById('keyDisplay').style.display = 'block';
+                showNotif(data.message, 'success');
+                loadStats();
             }
         }
 
-        function createUser() {
-            const name = document.getElementById('newUserName').value.toLowerCase().trim();
-            const balance = parseInt(document.getElementById('newUserBalance').value) || 0;
+        async function createCaseKey() {
+            const caseType = document.getElementById('caseType').value;
             
-            if (!name) {
-                alert('Введите имя!');
-                return;
+            const response = await fetch(`${SERVER}/api/admin/create_key`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    password: ADMIN_PASS,
+                    key_type: 'case',
+                    case_type: caseType
+                })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                lastCreatedKey = data.key;
+                document.getElementById('newKey').innerText = data.key;
+                document.getElementById('keyDisplay').style.display = 'block';
+                showNotif(data.message, 'success');
+                loadStats();
             }
-            
-            if (users[name]) {
-                alert('Пользователь уже существует!');
-                return;
-            }
-            
-            users[name] = { balance: balance, password: '' };
-            saveUsers();
-            renderUsersList();
-            document.getElementById('newUserName').value = '';
-            showNotif(`✅ Создан пользователь ${name}`);
         }
 
-        // ============ СОХРАНЕНИЕ ============
-        function saveUsers() {
-            localStorage.setItem('users', JSON.stringify(users));
+        async function loadStats() {
+            const response = await fetch(`${SERVER}/api/admin/stats`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password: ADMIN_PASS })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                document.getElementById('stats').innerHTML = `
+                    <p>📊 Доступно ключей: ${data.available}</p>
+                    <p>📊 Использовано: ${data.used}</p>
+                    <p>👥 Всего пользователей: ${data.top_users.length}</p>
+                `;
+            }
         }
 
-        function saveData() {
-            saveUsers();
-            updateUserDisplay();
-            showNotif('✅ Данные сохранены!');
+        function copyKey() {
+            navigator.clipboard.writeText(lastCreatedKey);
+            showNotif('✅ Ключ скопирован!');
         }
 
         // ============ УВЕДОМЛЕНИЯ ============
