@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLAN CASE | ULTIMATE</title>
+    <title>CLAN CASE | ПРЕМИУМ КЕЙСЫ</title>
     <style>
         * {
             margin: 0;
@@ -13,68 +13,61 @@
         }
 
         body {
-            background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
-            color: white;
+            background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+            color: #fff;
             min-height: 100vh;
         }
 
         /* Шапка */
         .header {
-            background: rgba(17, 17, 17, 0.95);
+            background: rgba(20, 20, 20, 0.95);
             backdrop-filter: blur(10px);
-            padding: 20px;
+            padding: 20px 30px;
             border-bottom: 1px solid #333;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 20px;
             position: sticky;
             top: 0;
             z-index: 100;
         }
 
         .balance {
-            background: linear-gradient(135deg, #1a1a1a, #222);
-            padding: 12px 30px;
-            border-radius: 50px;
+            background: linear-gradient(135deg, #232323, #2a2a2a);
+            padding: 12px 35px;
+            border-radius: 40px;
             border: 2px solid #ffd700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
             font-size: 24px;
-            color: #ffd700;
             font-weight: bold;
+            color: #ffd700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
         }
 
         .user-info {
             display: flex;
             align-items: center;
             gap: 15px;
+            background: #232323;
+            padding: 8px 25px;
+            border-radius: 40px;
+            border: 1px solid #444;
         }
 
         .username {
-            background: #1a1a1a;
-            padding: 10px 20px;
-            border-radius: 30px;
-            border: 1px solid #333;
             font-size: 16px;
+            font-weight: 500;
         }
 
         .logout-btn {
             background: #ff4757;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 6px 15px;
             border-radius: 30px;
             cursor: pointer;
             font-weight: bold;
-            transition: 0.2s;
-        }
-
-        .logout-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px #ff4757;
         }
 
         .auth-buttons {
@@ -87,35 +80,28 @@
             color: white;
             border: none;
             padding: 10px 25px;
-            border-radius: 30px;
+            border-radius: 40px;
             cursor: pointer;
             font-weight: bold;
-            transition: 0.2s;
-        }
-
-        .auth-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px #5865F2;
         }
 
         .key-section {
-            background: #1a1a1a;
-            padding: 15px 25px;
-            border-radius: 50px;
+            background: #232323;
+            padding: 10px 20px;
+            border-radius: 40px;
             display: flex;
             gap: 10px;
-            border: 1px solid #333;
+            border: 1px solid #444;
         }
 
         .key-input {
             background: #0a0a0a;
-            border: 2px solid #333;
+            border: 1px solid #444;
             color: white;
             padding: 10px 20px;
             border-radius: 30px;
             width: 250px;
             font-family: monospace;
-            font-size: 14px;
         }
 
         .key-input:focus {
@@ -131,12 +117,6 @@
             border-radius: 30px;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .key-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px #5865F2;
         }
 
         .container {
@@ -156,71 +136,62 @@
 
         .subtitle {
             text-align: center;
-            color: #666;
+            color: #888;
             margin-bottom: 50px;
             font-size: 1.2em;
         }
 
+        /* Кейсы */
         .cases-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 30px;
+            margin-top: 30px;
         }
 
         .case-card {
-            background: linear-gradient(135deg, #111, #1a1a1a);
+            background: linear-gradient(135deg, #1a1a1a, #222);
             border: 2px solid #333;
             border-radius: 30px;
             padding: 30px;
             transition: 0.3s;
             position: relative;
-            overflow: hidden;
         }
 
         .case-card:hover {
             transform: translateY(-10px);
             border-color: var(--case-color);
-            box-shadow: 0 0 40px var(--case-color);
+            box-shadow: 0 0 30px var(--case-color);
         }
 
         .case-badge {
             position: absolute;
             top: 20px;
             right: 20px;
-            padding: 8px 20px;
-            border-radius: 30px;
-            font-size: 14px;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
             font-weight: bold;
-            z-index: 10;
         }
 
         .badge-key {
             background: #ff4757;
             color: white;
-            box-shadow: 0 0 15px #ff4757;
         }
 
-        .badge-balance {
+        .badge-money {
             background: #00ffcc;
             color: black;
-            box-shadow: 0 0 15px #00ffcc;
         }
 
         .case-icon {
-            font-size: 80px;
+            font-size: 70px;
             text-align: center;
             margin-bottom: 20px;
-            filter: drop-shadow(0 0 20px var(--case-color));
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
         }
 
         .case-name {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: bold;
             text-align: center;
             color: var(--case-color);
@@ -229,7 +200,7 @@
 
         .case-price {
             text-align: center;
-            font-size: 24px;
+            font-size: 22px;
             color: #ffd700;
             margin: 20px 0;
             font-weight: bold;
@@ -238,37 +209,28 @@
         .items-list {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            margin: 25px 0;
+            gap: 8px;
+            margin: 20px 0;
         }
 
         .item {
-            background: #1a1a1a;
+            background: #1e1e1e;
             border: 1px solid #333;
-            border-radius: 15px;
+            border-radius: 12px;
             padding: 12px 15px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            transition: 0.2s;
-        }
-
-        .item:hover {
-            border-color: var(--case-color);
-            transform: translateX(5px);
         }
 
         .item-name {
-            font-size: 16px;
-            font-weight: 500;
+            font-size: 15px;
         }
 
         .item-rarity {
             font-size: 12px;
-            padding: 4px 12px;
-            border-radius: 20px;
+            padding: 2px 10px;
+            border-radius: 15px;
             background: #333;
-            font-weight: bold;
         }
 
         .rarity-legendary { color: #ffae00; }
@@ -279,20 +241,13 @@
             background: var(--case-color);
             color: black;
             border: none;
-            padding: 18px;
-            border-radius: 40px;
+            padding: 15px;
+            border-radius: 30px;
             font-weight: bold;
-            font-size: 18px;
+            font-size: 16px;
             cursor: pointer;
             width: 100%;
-            transition: 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .open-btn:hover:not(:disabled) {
-            transform: scale(1.02);
-            box-shadow: 0 0 30px var(--case-color);
+            margin-top: 15px;
         }
 
         .open-btn:disabled {
@@ -308,11 +263,10 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0,0,0,0.95);
             z-index: 2000;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(5px);
         }
 
         .modal.active {
@@ -320,41 +274,28 @@
         }
 
         .modal-content {
-            background: linear-gradient(135deg, #111, #1a1a1a);
+            background: #1a1a1a;
             padding: 40px;
-            border-radius: 40px;
+            border-radius: 30px;
             width: 90%;
-            max-width: 450px;
+            max-width: 400px;
             border: 2px solid #5865F2;
-            animation: modalPop 0.3s;
-        }
-
-        @keyframes modalPop {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
         }
 
         .modal h2 {
             text-align: center;
             margin-bottom: 30px;
             color: #5865F2;
-            font-size: 2em;
         }
 
-        .modal input, .modal select {
+        .modal input {
             width: 100%;
             padding: 15px;
             margin: 10px 0;
             background: #0a0a0a;
-            border: 2px solid #333;
+            border: 1px solid #333;
             color: white;
-            border-radius: 15px;
-            font-size: 16px;
-        }
-
-        .modal input:focus, .modal select:focus {
-            outline: none;
-            border-color: #5865F2;
+            border-radius: 10px;
         }
 
         .modal-btn {
@@ -364,37 +305,14 @@
             background: #5865F2;
             color: white;
             border: none;
-            border-radius: 15px;
-            font-size: 16px;
-            font-weight: bold;
+            border-radius: 10px;
             cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .modal-btn:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 15px #5865F2;
+            font-weight: bold;
         }
 
         .modal-btn.secondary {
             background: transparent;
-            border: 2px solid #5865F2;
-        }
-
-        .modal-btn.danger {
-            background: #ff4757;
-        }
-
-        .modal-btn.danger:hover {
-            box-shadow: 0 0 15px #ff4757;
-        }
-
-        .error-message {
-            color: #ff4757;
-            font-size: 14px;
-            margin-top: 5px;
-            display: none;
-            text-align: center;
+            border: 1px solid #5865F2;
         }
 
         /* Админ панель */
@@ -402,25 +320,15 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #333, #444);
+            width: 50px;
+            height: 50px;
+            background: #333;
             border: none;
             border-radius: 50%;
             color: white;
-            font-size: 28px;
+            font-size: 24px;
             cursor: pointer;
-            opacity: 0.5;
             z-index: 100;
-            transition: 0.3s;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-        }
-
-        .admin-btn:hover {
-            opacity: 1;
-            background: linear-gradient(135deg, #ff4757, #ff6b81);
-            transform: rotate(90deg) scale(1.1);
-            box-shadow: 0 0 30px #ff4757;
         }
 
         .admin-panel {
@@ -430,32 +338,24 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.95);
+            background: rgba(0,0,0,0.98);
             z-index: 3000;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(10px);
+            overflow-y: auto;
         }
 
         .admin-panel.active {
-            display: flex;
+            display: block;
         }
 
-        .admin-content {
-            background: linear-gradient(135deg, #111, #1a1a1a);
-            padding: 40px;
-            border-radius: 40px;
-            width: 90%;
-            max-width: 600px;
-            max-height: 80vh;
-            overflow-y: auto;
-            border: 2px solid #ff4757;
-            animation: modalPop 0.3s;
+        .admin-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
         }
 
         .admin-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
         }
 
         .admin-header h2 {
@@ -464,47 +364,39 @@
             margin-bottom: 10px;
         }
 
-        .admin-header p {
-            color: #666;
-            font-size: 14px;
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
         }
 
-        .admin-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            border-bottom: 1px solid #333;
-            padding-bottom: 15px;
-        }
-
-        .admin-tab {
-            flex: 1;
-            padding: 12px;
-            background: transparent;
-            border: none;
-            color: #666;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 10px;
-            transition: 0.2s;
-        }
-
-        .admin-tab:hover {
+        .stat-card {
             background: #1a1a1a;
-            color: white;
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid #333;
         }
 
-        .admin-tab.active {
-            background: #ff4757;
-            color: white;
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #ff4757;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 14px;
         }
 
         .admin-section {
             background: #1a1a1a;
-            padding: 25px;
+            padding: 30px;
             border-radius: 20px;
-            margin: 20px 0;
+            margin-bottom: 30px;
+            border: 1px solid #333;
         }
 
         .admin-section h3 {
@@ -513,49 +405,51 @@
             font-size: 1.3em;
         }
 
-        .admin-stats {
+        .admin-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
         }
 
-        .stat-card {
+        .admin-select, .admin-input {
             background: #0a0a0a;
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
             border: 1px solid #333;
+            color: white;
+            padding: 12px;
+            border-radius: 10px;
+            width: 100%;
+            margin: 5px 0;
         }
 
-        .stat-value {
-            font-size: 28px;
+        .admin-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 5px;
             font-weight: bold;
-            color: #ff4757;
-            margin-bottom: 5px;
         }
 
-        .stat-label {
-            font-size: 12px;
-            color: #888;
+        .admin-btn.small {
+            padding: 8px 15px;
+            font-size: 13px;
         }
 
         .keys-list, .users-list {
-            max-height: 250px;
-            overflow-y: auto;
-            margin: 15px 0;
-            border: 1px solid #333;
+            background: #0a0a0a;
             border-radius: 10px;
+            padding: 15px;
+            max-height: 300px;
+            overflow-y: auto;
         }
 
         .key-item, .user-item {
-            background: #0a0a0a;
-            padding: 15px;
-            margin: 2px 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-family: monospace;
+            padding: 12px;
             border-bottom: 1px solid #222;
         }
 
@@ -563,21 +457,12 @@
             border-bottom: none;
         }
 
-        .key-status {
-            font-size: 12px;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-weight: bold;
+        .key-used {
+            color: #ff4757;
         }
 
-        .status-available {
-            background: #00ffcc;
-            color: black;
-        }
-
-        .status-used {
-            background: #ff4757;
-            color: white;
+        .key-available {
+            color: #00ffcc;
         }
 
         .user-balance {
@@ -585,110 +470,19 @@
             font-weight: bold;
         }
 
-        .user-actions {
-            display: flex;
-            gap: 5px;
-        }
-
-        .user-btn {
-            background: #333;
+        .close-admin {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ff4757;
             color: white;
             border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 20px;
             cursor: pointer;
-            font-size: 12px;
-            transition: 0.2s;
-        }
-
-        .user-btn:hover {
-            background: #5865F2;
-        }
-
-        .user-btn.danger:hover {
-            background: #ff4757;
-        }
-
-        .webhook-section {
-            background: #1a1a1a;
-            padding: 25px;
-            border-radius: 20px;
-            margin: 20px 0;
-        }
-
-        .webhook-status {
-            display: inline-block;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            margin-bottom: 15px;
-        }
-
-        .webhook-online {
-            background: #00ffcc;
-            color: black;
-        }
-
-        .webhook-offline {
-            background: #ff4757;
-            color: white;
-        }
-
-        /* Анимация открытия */
-        .opening-animation {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.98);
-            z-index: 4000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-        }
-
-        .opening-animation.active {
-            display: flex;
-        }
-
-        .slot-machine {
-            display: flex;
-            gap: 20px;
-            perspective: 1000px;
-        }
-
-        .slot {
-            width: 120px;
-            height: 120px;
-            background: #1a1a1a;
-            border: 3px solid var(--case-color);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 50px;
-            animation: slotSpin 0.2s infinite;
-            box-shadow: 0 0 30px var(--case-color);
-        }
-
-        @keyframes slotSpin {
-            0% { transform: rotateX(0deg); }
-            100% { transform: rotateX(360deg); }
-        }
-
-        .slot:nth-child(1) { animation-duration: 0.1s; }
-        .slot:nth-child(2) { animation-duration: 0.15s; }
-        .slot:nth-child(3) { animation-duration: 0.2s; }
-
-        .opening-result {
-            margin-top: 40px;
-            font-size: 32px;
-            font-weight: bold;
-            color: var(--case-color);
-            text-shadow: 0 0 20px var(--case-color);
-            display: none;
+            z-index: 1000;
         }
 
         .notification {
@@ -696,41 +490,30 @@
             top: 100px;
             right: 20px;
             padding: 15px 30px;
-            border-radius: 15px;
+            background: #5865F2;
+            color: white;
+            border-radius: 10px;
             display: none;
-            z-index: 5000;
-            animation: slideIn 0.3s;
-            font-weight: bold;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            z-index: 4000;
         }
 
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        @media (max-width: 1024px) {
+            .cases-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .key-section {
-                width: 100%;
-            }
-            
-            .key-input {
-                flex: 1;
-            }
-            
             .cases-grid {
                 grid-template-columns: 1fr;
             }
             
-            .slot {
-                width: 80px;
-                height: 80px;
-                font-size: 30px;
+            .admin-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .admin-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -739,14 +522,14 @@
     <div class="header">
         <div class="balance">💰 <span id="balance">0</span></div>
         
-        <div class="user-info" id="userInfo" style="display: none;">
+        <div id="userInfo" style="display: none;" class="user-info">
             <span class="username" id="username"></span>
             <button class="logout-btn" onclick="logout()">Выйти</button>
         </div>
 
         <div class="auth-buttons" id="authButtons">
-            <button class="auth-btn" onclick="showLoginModal()">Войти</button>
-            <button class="auth-btn" onclick="showRegisterModal()">Регистрация</button>
+            <button class="auth-btn" onclick="showModal('login')">Войти</button>
+            <button class="auth-btn" onclick="showModal('register')">Регистрация</button>
         </div>
 
         <div class="key-section">
@@ -757,65 +540,53 @@
 
     <div class="container" id="mainContent" style="display: none;">
         <h1>🎲 КЕЙСЫ CLAN CASE</h1>
-        <div class="subtitle">❄️ ЗИМНИЙ КЕЙС (ТОЛЬКО ПО КЛЮЧАМ) • 🌱 ВЕСЕННИЙ КЕЙС (ЗА МОНЕТЫ)</div>
+        <div class="subtitle">❄️ ЗИМНИЙ • 🌱 ВЕСЕННИЙ • 🎲 РОЛЕВОЙ</div>
         
         <div class="cases-grid">
-            <!-- Зимний кейс (только по ключам) -->
+            <!-- Зимний кейс -->
             <div class="case-card" style="--case-color: #00d4ff">
-                <div class="case-badge badge-key">🔑 ТОЛЬКО ПО КЛЮЧУ</div>
+                <div class="case-badge badge-key">🔑 ПО КЛЮЧУ</div>
                 <div class="case-icon">❄️</div>
-                <div class="case-name">❄️ ЗИМНИЙ КЕЙС 2025</div>
-                <div class="case-price">🔑 ПО КЛЮЧУ</div>
-                
+                <div class="case-name">❄️ ЗИМНИЙ КЕЙС</div>
+                <div class="case-price">🔑 ТОЛЬКО ПО КЛЮЧУ</div>
                 <div class="items-list">
-                    <div class="item">
-                        <span class="item-name">NY Limited</span>
-                        <span class="item-rarity rarity-legendary">[LEGENDARY]</span>
-                    </div>
-                    <div class="item">
-                        <span class="item-name">HOLIDAY</span>
-                        <span class="item-rarity rarity-legendary">[LEGENDARY]</span>
-                    </div>
-                    <div class="item">
-                        <span class="item-name">WINTER</span>
-                        <span class="item-rarity rarity-legendary">[LEGENDARY]</span>
-                    </div>
-                    <div class="item">
-                        <span class="item-name">Snow Reaper</span>
-                        <span class="item-rarity rarity-legendary">[LEGENDARY]</span>
-                    </div>
+                    <div class="item"><span class="item-name">NY Limited</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
+                    <div class="item"><span class="item-name">HOLIDAY</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
+                    <div class="item"><span class="item-name">WINTER</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
+                    <div class="item"><span class="item-name">Snow Reaper</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
                 </div>
-
-                <button class="open-btn" style="background: #00d4ff" disabled>
-                    ТОЛЬКО ПО КЛЮЧУ
-                </button>
+                <button class="open-btn" style="background: #00d4ff" disabled>ТОЛЬКО ПО КЛЮЧУ</button>
             </div>
 
-            <!-- Весенний кейс (за монеты) -->
+            <!-- Весенний кейс -->
             <div class="case-card" style="--case-color: #00ffcc">
-                <div class="case-badge badge-balance">💰 ЗА МОНЕТЫ</div>
+                <div class="case-badge badge-money">💰 ЗА МОНЕТЫ</div>
                 <div class="case-icon">🌸</div>
-                <div class="case-name">🌱 ВЕСЕННИЙ КЕЙС 2026</div>
+                <div class="case-name">🌱 ВЕСЕННИЙ КЕЙС</div>
                 <div class="case-price">💰 55,000</div>
-                
                 <div class="items-list">
-                    <div class="item">
-                        <span class="item-name">FrostBolt</span>
-                        <span class="item-rarity rarity-legendary">[LEGENDARY]</span>
-                    </div>
-                    <div class="item">
-                        <span class="item-name">NeonCloud</span>
-                        <span class="item-rarity rarity-legendary">[LEGENDARY]</span>
-                    </div>
-                    <div class="item">
-                        <span class="item-name">AbyssalThunder</span>
-                        <span class="item-rarity rarity-legendary">[LEGENDARY]</span>
-                    </div>
+                    <div class="item"><span class="item-name">FrostBolt</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
+                    <div class="item"><span class="item-name">NeonCloud</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
+                    <div class="item"><span class="item-name">AbyssalThunder</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
                 </div>
+                <button class="open-btn" style="background: #00ffcc" onclick="openSpringCase()">ОТКРЫТЬ КЕЙС</button>
+            </div>
 
-                <button class="open-btn" style="background: #00ffcc" onclick="openSpringCase()">
-                    ОТКРЫТЬ КЕЙС
-                </button>
+            <!-- Ролевой кейс -->
+            <div class="case-card" style="--case-color: #ff4757">
+                <div class="case-badge badge-key">🔑 ПО КЛЮЧУ</div>
+                <div class="case-icon">🎲</div>
+                <div class="case-name">🎲 РОЛЕВОЙ КЕЙС</div>
+                <div class="case-price">🔑 ТОЛЬКО ПО КЛЮЧУ</div>
+                <div class="items-list">
+                    <div class="item"><span class="item-name">Bloodbound</span><span class="item-rarity rarity-legendary">23% XP</span></div>
+                    <div class="item"><span class="item-name">Shadow</span><span class="item-rarity rarity-epic">12% XP / 25% Money</span></div>
+                    <div class="item"><span class="item-name">Veteran</span><span class="item-rarity rarity-rare">7% XP / 12% Money</span></div>
+                    <div class="item"><span class="item-name">Eternal</span><span class="item-rarity rarity-rare">3% XP / 6% Money</span></div>
+                    <div class="item"><span class="item-name">Phantom</span><span class="item-rarity rarity-rare">3% XP / 4% Money</span></div>
+                    <div class="item"><span class="item-name">Chosen</span><span class="item-rarity rarity-legendary">2% Money</span></div>
+                </div>
+                <button class="open-btn" style="background: #ff4757" disabled>ТОЛЬКО ПО КЛЮЧУ</button>
             </div>
         </div>
     </div>
@@ -824,9 +595,9 @@
     <div class="modal" id="loginModal">
         <div class="modal-content">
             <h2>🔐 ВХОД</h2>
-            <input type="text" id="loginUsername" placeholder="Имя пользователя">
+            <input type="text" id="loginUsername" placeholder="Логин">
             <input type="password" id="loginPassword" placeholder="Пароль">
-            <div class="error-message" id="loginError"></div>
+            <div style="color: #ff4757; margin: 10px 0; display: none;" id="loginError"></div>
             <button class="modal-btn" onclick="login()">Войти</button>
             <button class="modal-btn secondary" onclick="closeModals()">Закрыть</button>
         </div>
@@ -836,248 +607,207 @@
     <div class="modal" id="registerModal">
         <div class="modal-content">
             <h2>📝 РЕГИСТРАЦИЯ</h2>
-            <input type="text" id="regUsername" placeholder="Имя пользователя">
+            <input type="text" id="regUsername" placeholder="Логин">
             <input type="password" id="regPassword" placeholder="Пароль">
-            <input type="password" id="regConfirmPassword" placeholder="Подтвердите пароль">
-            <div class="error-message" id="registerError"></div>
+            <input type="password" id="regConfirm" placeholder="Повторите пароль">
+            <div style="color: #ff4757; margin: 10px 0; display: none;" id="registerError"></div>
             <button class="modal-btn" onclick="register()">Зарегистрироваться</button>
             <button class="modal-btn secondary" onclick="closeModals()">Закрыть</button>
         </div>
     </div>
 
     <!-- Модалка смены пароля -->
-    <div class="modal" id="changePasswordModal">
+    <div class="modal" id="passwordModal">
         <div class="modal-content">
             <h2>🔑 СМЕНА ПАРОЛЯ</h2>
-            <input type="text" id="changeUsername" placeholder="Имя пользователя" readonly>
+            <input type="text" id="changeUsername" readonly style="background: #1a1a1a;">
             <input type="password" id="newPassword" placeholder="Новый пароль">
-            <input type="password" id="confirmNewPassword" placeholder="Подтвердите пароль">
-            <div class="error-message" id="changePasswordError"></div>
-            <button class="modal-btn" onclick="changePassword()">Сменить пароль</button>
-            <button class="modal-btn secondary" onclick="closeChangePasswordModal()">Закрыть</button>
+            <input type="password" id="confirmNew" placeholder="Подтвердите">
+            <div style="color: #ff4757; margin: 10px 0; display: none;" id="passwordError"></div>
+            <button class="modal-btn" onclick="changePassword()">Сменить</button>
+            <button class="modal-btn secondary" onclick="closeModals()">Закрыть</button>
         </div>
     </div>
 
     <!-- Админ панель -->
     <div class="admin-panel" id="adminPanel">
-        <div class="admin-content">
+        <button class="close-admin" onclick="closeAdmin()">✕</button>
+        <div class="admin-container">
             <div class="admin-header">
                 <h2>⚡ ADMIN PANEL</h2>
-                <p>Управление пользователями и ключами</p>
+                <p>Управление системой</p>
             </div>
 
-            <div class="admin-tabs">
-                <button class="admin-tab active" onclick="switchAdminTab('stats')">📊 Статистика</button>
-                <button class="admin-tab" onclick="switchAdminTab('keys')">🔑 Ключи</button>
-                <button class="admin-tab" onclick="switchAdminTab('users')">👥 Пользователи</button>
-                <button class="admin-tab" onclick="switchAdminTab('webhook')">🔔 Discord</button>
-            </div>
-
-            <!-- Вход в админку -->
-            <div id="adminLoginSection">
+            <div id="adminLogin">
                 <div class="admin-section">
                     <h3>🔐 ВХОД АДМИНИСТРАТОРА</h3>
-                    <input type="password" id="adminPass" placeholder="Пароль администратора">
-                    <button class="modal-btn" onclick="adminLogin()">ВОЙТИ</button>
+                    <input type="password" class="admin-input" id="adminPass" placeholder="Пароль" style="max-width: 300px; margin: 0 auto; display: block;">
+                    <button class="admin-btn" onclick="adminLogin()" style="display: block; margin: 20px auto;">ВОЙТИ</button>
                 </div>
             </div>
 
-            <!-- Управление (после входа) -->
             <div id="adminControls" style="display: none;">
                 <!-- Статистика -->
-                <div id="statsTab" class="admin-section">
-                    <h3>📊 СТАТИСТИКА</h3>
-                    <div class="admin-stats">
-                        <div class="stat-card">
-                            <div class="stat-value" id="totalUsers">0</div>
-                            <div class="stat-label">Пользователей</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value" id="totalKeys">0</div>
-                            <div class="stat-label">Всего ключей</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value" id="usedKeys">0</div>
-                            <div class="stat-label">Использовано</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value" id="availableKeys">0</div>
-                            <div class="stat-label">Доступно</div>
-                        </div>
+                <div class="admin-stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalUsers">0</div>
+                        <div class="stat-label">Пользователей</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalKeys">0</div>
+                        <div class="stat-label">Всего ключей</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="usedKeys">0</div>
+                        <div class="stat-label">Использовано</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="availableKeys">0</div>
+                        <div class="stat-label">Доступно</div>
                     </div>
                 </div>
 
-                <!-- Управление ключами -->
-                <div id="keysTab" class="admin-section" style="display: none;">
+                <!-- Создание ключей -->
+                <div class="admin-section">
                     <h3>🔑 СОЗДАТЬ КЛЮЧ</h3>
-                    <select id="keyType">
-                        <option value="balance">💰 На баланс</option>
-                        <option value="winter">❄️ На зимний кейс</option>
-                    </select>
-                    
-                    <div id="balanceInput">
-                        <input type="number" id="keyValue" placeholder="Сумма" value="1000">
+                    <div class="admin-grid">
+                        <div>
+                            <select class="admin-select" id="keyType">
+                                <option value="balance">💰 На баланс</option>
+                                <option value="winter">❄️ На зимний кейс</option>
+                                <option value="role">🎲 На ролевой кейс</option>
+                            </select>
+                            <div id="balanceInput">
+                                <input type="number" class="admin-input" id="keyValue" placeholder="Сумма" value="1000">
+                            </div>
+                        </div>
+                        <div>
+                            <button class="admin-btn" onclick="createKey()">СОЗДАТЬ</button>
+                        </div>
                     </div>
-                    
-                    <button class="modal-btn" onclick="createKey()">СОЗДАТЬ КЛЮЧ</button>
-                    
-                    <div id="newKeyDisplay" style="display: none; margin-top: 20px;">
-                        <h4>✅ Новый ключ:</h4>
-                        <div style="background: #0a0a0a; padding: 15px; border-radius: 10px; font-family: monospace; word-break: break-all; margin: 10px 0;" id="newKeyText"></div>
-                        <button class="modal-btn" onclick="copyKey()">КОПИРОВАТЬ</button>
+                    <div id="newKeyDisplay" style="display: none; margin-top: 20px; background: #0a0a0a; padding: 15px; border-radius: 10px;">
+                        <div style="font-family: monospace; word-break: break-all;" id="newKeyText"></div>
+                        <button class="admin-btn small" onclick="copyKey()" style="margin-top: 10px;">КОПИРОВАТЬ</button>
                     </div>
-
-                    <h3 style="margin-top: 30px;">📋 ВСЕ КЛЮЧИ</h3>
-                    <div class="keys-list" id="keysList"></div>
-                    <button class="modal-btn" onclick="loadKeys()">ОБНОВИТЬ</button>
                 </div>
 
-                <!-- Управление пользователями -->
-                <div id="usersTab" class="admin-section" style="display: none;">
+                <!-- Список ключей -->
+                <div class="admin-section">
+                    <h3>📋 ВСЕ КЛЮЧИ</h3>
+                    <div class="keys-list" id="keysList"></div>
+                    <button class="admin-btn small" onclick="loadKeys()" style="margin-top: 10px;">ОБНОВИТЬ</button>
+                </div>
+
+                <!-- Пользователи -->
+                <div class="admin-section">
                     <h3>👥 ПОЛЬЗОВАТЕЛИ</h3>
                     <div class="users-list" id="usersList"></div>
-                    <button class="modal-btn" onclick="loadUsers()">ОБНОВИТЬ</button>
+                    <button class="admin-btn small" onclick="loadUsers()" style="margin-top: 10px;">ОБНОВИТЬ</button>
                 </div>
 
-                <!-- Discord Webhook -->
-                <div id="webhookTab" class="admin-section" style="display: none;">
-                    <h3>🔔 DISCORD WEBHOOK</h3>
-                    <div class="webhook-status webhook-online" id="webhookStatus">✅ WEBHOOK ONLINE</div>
-                    <input type="url" id="webhookUrl" value="https://discord.com/api/webhooks/1483941280248496210/QHWJYcnhPD8Voht5mElw7KVNX-vr4yU5gHQrFoAwTE14vqB9MNnIISuTCjOfMYCEq0cA" placeholder="URL вебхука">
-                    <button class="modal-btn" onclick="testWebhook()">ТЕСТ</button>
-                    <button class="modal-btn" onclick="saveWebhook()">СОХРАНИТЬ</button>
-                    <p style="color: #666; font-size: 12px; margin-top: 10px;">Уведомления будут приходить в этот канал</p>
-                </div>
-
-                <button class="modal-btn danger" onclick="logoutAdmin()">ВЫЙТИ</button>
+                <button class="admin-btn" onclick="logoutAdmin()" style="background: #ff4757; margin-top: 20px;">ВЫЙТИ</button>
             </div>
-
-            <button class="modal-btn secondary" onclick="closeAdmin()" style="margin-top: 20px;">ЗАКРЫТЬ</button>
         </div>
-    </div>
-
-    <!-- Анимация открытия -->
-    <div class="opening-animation" id="openingAnimation">
-        <div class="slot-machine">
-            <div class="slot" id="slot1">❄️</div>
-            <div class="slot" id="slot2">🌸</div>
-            <div class="slot" id="slot3">🎲</div>
-        </div>
-        <div class="opening-result" id="openingResult"></div>
     </div>
 
     <button class="admin-btn" onclick="openAdmin()">⚙️</button>
     <div class="notification" id="notification"></div>
 
     <script>
-        // ============ НАСТРОЙКИ ============
-        const ADMIN_PASS = '34125';
+        const SERVER = 'http://localhost:5000';
         let currentUser = null;
         let balance = 0;
         let adminLoggedIn = false;
-        let users = JSON.parse(localStorage.getItem('users')) || {};
-        let keys = JSON.parse(localStorage.getItem('keys')) || [];
-        let webhookUrl = localStorage.getItem('webhookUrl') || 'https://discord.com/api/webhooks/1483941280248496210/QHWJYcnhPD8Voht5mElw7KVNX-vr4yU5gHQrFoAwTE14vqB9MNnIISuTCjOfMYCEq0cA';
 
-        // ============ ЗАГРУЗКА ============
         window.onload = () => {
             checkSession();
-            renderCases();
         };
 
-        function checkSession() {
+        async function checkSession() {
             const session = localStorage.getItem('session');
             if (session) {
                 const data = JSON.parse(session);
-                if (users[data.username]) {
-                    currentUser = data.username;
-                    balance = users[data.username].balance;
-                    updateUIForAuth();
-                } else {
-                    localStorage.removeItem('session');
-                    updateUIForGuest();
-                }
+                currentUser = data.username;
+                await loadBalance();
+                showUserContent();
             } else {
-                updateUIForGuest();
+                showGuestContent();
             }
         }
 
-        function updateUIForAuth() {
+        async function loadBalance() {
+            try {
+                const res = await fetch(`${SERVER}/api/get_balance`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({username: currentUser})
+                });
+                const data = await res.json();
+                balance = data.balance;
+                document.getElementById('balance').innerText = balance.toLocaleString();
+            } catch (e) {
+                showNotification('Ошибка загрузки', 'error');
+            }
+        }
+
+        function showUserContent() {
             document.getElementById('authButtons').style.display = 'none';
             document.getElementById('userInfo').style.display = 'flex';
             document.getElementById('username').innerText = currentUser;
-            document.getElementById('balance').innerText = balance.toLocaleString();
             document.getElementById('mainContent').style.display = 'block';
         }
 
-        function updateUIForGuest() {
+        function showGuestContent() {
             document.getElementById('authButtons').style.display = 'flex';
             document.getElementById('userInfo').style.display = 'none';
             document.getElementById('mainContent').style.display = 'none';
         }
 
-        function renderCases() {
-            // Уже в HTML
-        }
-
-        // ============ АВТОРИЗАЦИЯ ============
-        function showLoginModal() {
-            document.getElementById('loginModal').classList.add('active');
-            document.getElementById('loginUsername').value = '';
-            document.getElementById('loginPassword').value = '';
-            document.getElementById('loginError').style.display = 'none';
-        }
-
-        function showRegisterModal() {
-            document.getElementById('registerModal').classList.add('active');
-            document.getElementById('regUsername').value = '';
-            document.getElementById('regPassword').value = '';
-            document.getElementById('regConfirmPassword').value = '';
-            document.getElementById('registerError').style.display = 'none';
+        function showModal(type) {
+            document.getElementById('loginModal').classList.remove('active');
+            document.getElementById('registerModal').classList.remove('active');
+            document.getElementById(type + 'Modal').classList.add('active');
         }
 
         function closeModals() {
             document.getElementById('loginModal').classList.remove('active');
             document.getElementById('registerModal').classList.remove('active');
-            document.getElementById('changePasswordModal').classList.remove('active');
+            document.getElementById('passwordModal').classList.remove('active');
         }
 
-        function login() {
-            const username = document.getElementById('loginUsername').value.trim();
+        async function login() {
+            const username = document.getElementById('loginUsername').value;
             const password = document.getElementById('loginPassword').value;
 
-            if (!username || !password) {
-                document.getElementById('loginError').innerText = 'Заполните все поля';
-                document.getElementById('loginError').style.display = 'block';
-                return;
-            }
+            try {
+                const res = await fetch(`${SERVER}/api/login`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({username, password})
+                });
+                const data = await res.json();
 
-            if (users[username] && users[username].password === password) {
-                currentUser = username;
-                balance = users[username].balance;
-                
-                localStorage.setItem('session', JSON.stringify({ username }));
-                
-                closeModals();
-                updateUIForAuth();
-                sendWebhook('🔐 ВХОД', `**${username}** вошел в систему`);
-                showNotification('✅ Успешный вход!');
-            } else {
-                document.getElementById('loginError').innerText = 'Неверный логин или пароль';
-                document.getElementById('loginError').style.display = 'block';
+                if (data.success) {
+                    currentUser = username;
+                    balance = data.balance;
+                    localStorage.setItem('session', JSON.stringify({username}));
+                    closeModals();
+                    showUserContent();
+                    document.getElementById('balance').innerText = balance.toLocaleString();
+                    showNotification('✅ Успешный вход!');
+                } else {
+                    document.getElementById('loginError').innerText = data.message;
+                    document.getElementById('loginError').style.display = 'block';
+                }
+            } catch (e) {
+                showNotification('Ошибка сервера', 'error');
             }
         }
 
-        function register() {
-            const username = document.getElementById('regUsername').value.trim();
+        async function register() {
+            const username = document.getElementById('regUsername').value;
             const password = document.getElementById('regPassword').value;
-            const confirm = document.getElementById('regConfirmPassword').value;
-
-            if (!username || !password || !confirm) {
-                document.getElementById('registerError').innerText = 'Заполните все поля';
-                document.getElementById('registerError').style.display = 'block';
-                return;
-            }
+            const confirm = document.getElementById('regConfirm').value;
 
             if (password !== confirm) {
                 document.getElementById('registerError').innerText = 'Пароли не совпадают';
@@ -1085,158 +815,110 @@
                 return;
             }
 
-            if (username.length < 3) {
-                document.getElementById('registerError').innerText = 'Имя должно быть минимум 3 символа';
-                document.getElementById('registerError').style.display = 'block';
-                return;
-            }
+            try {
+                const res = await fetch(`${SERVER}/api/register`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({username, password})
+                });
+                const data = await res.json();
 
-            if (password.length < 4) {
-                document.getElementById('registerError').innerText = 'Пароль должен быть минимум 4 символа';
-                document.getElementById('registerError').style.display = 'block';
-                return;
+                if (data.success) {
+                    showNotification('✅ Регистрация успешна! Войдите');
+                    closeModals();
+                    showModal('login');
+                } else {
+                    document.getElementById('registerError').innerText = data.message;
+                    document.getElementById('registerError').style.display = 'block';
+                }
+            } catch (e) {
+                showNotification('Ошибка сервера', 'error');
             }
-
-            if (users[username]) {
-                document.getElementById('registerError').innerText = 'Пользователь уже существует';
-                document.getElementById('registerError').style.display = 'block';
-                return;
-            }
-
-            users[username] = {
-                password: password,
-                balance: 0
-            };
-            
-            localStorage.setItem('users', JSON.stringify(users));
-            
-            sendWebhook('📝 РЕГИСТРАЦИЯ', `**${username}** зарегистрировался`);
-            showNotification('✅ Регистрация успешна! Теперь войдите');
-            closeModals();
-            showLoginModal();
         }
 
         function logout() {
             localStorage.removeItem('session');
             currentUser = null;
             balance = 0;
-            updateUIForGuest();
+            showGuestContent();
             showNotification('👋 Вы вышли');
         }
 
-        // ============ КЛЮЧИ ============
-        function useKey() {
+        async function useKey() {
             if (!currentUser) {
                 showNotification('❌ Сначала войдите', 'error');
                 return;
             }
 
-            const keyText = document.getElementById('keyInput').value.trim().toUpperCase();
-            if (!keyText) {
-                showNotification('❌ Введите ключ', 'error');
-                return;
+            const key = document.getElementById('keyInput').value.trim().toUpperCase();
+            if (!key) return;
+
+            try {
+                const res = await fetch(`${SERVER}/api/use_key`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({key, username: currentUser})
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    if (data.type === 'balance') {
+                        balance = data.balance;
+                        document.getElementById('balance').innerText = balance.toLocaleString();
+                        showNotification(`✅ +${data.value} монет!`);
+                    } else if (data.type === 'winter') {
+                        openWinterCase();
+                    } else if (data.type === 'role') {
+                        openRoleCase();
+                    }
+                    document.getElementById('keyInput').value = '';
+                } else {
+                    showNotification(data.message, 'error');
+                }
+            } catch (e) {
+                showNotification('Ошибка сервера', 'error');
             }
-
-            const keyIndex = keys.findIndex(k => k.key === keyText);
-            if (keyIndex === -1) {
-                showNotification('❌ Ключ не найден', 'error');
-                return;
-            }
-
-            const key = keys[keyIndex];
-            if (key.used) {
-                showNotification('❌ Ключ уже использован', 'error');
-                return;
-            }
-
-            key.used = true;
-            key.usedBy = currentUser;
-            key.usedAt = new Date().toLocaleString();
-
-            if (key.type === 'balance') {
-                users[currentUser].balance += key.value;
-                balance = users[currentUser].balance;
-                document.getElementById('balance').innerText = balance.toLocaleString();
-                showNotification(`✅ +${key.value} монет!`);
-                sendWebhook('💰 КЛЮЧ БАЛАНС', `**${currentUser}** получил +${key.value} монет`);
-            } else if (key.type === 'winter') {
-                openWinterCase();
-                sendWebhook('❄️ КЛЮЧ ЗИМА', `**${currentUser}** активировал зимний кейс`);
-            }
-
-            localStorage.setItem('users', JSON.stringify(users));
-            localStorage.setItem('keys', JSON.stringify(keys));
-            
-            document.getElementById('keyInput').value = '';
-            if (adminLoggedIn) loadKeys();
         }
 
-        // ============ ОТКРЫТИЕ КЕЙСОВ ============
         function openWinterCase() {
-            const items = [
-                { name: 'NY Limited', rarity: 'LEGENDARY' },
-                { name: 'HOLIDAY', rarity: 'LEGENDARY' },
-                { name: 'WINTER', rarity: 'LEGENDARY' },
-                { name: 'Snow Reaper', rarity: 'LEGENDARY' }
-            ];
-            
-            const winItem = items[Math.floor(Math.random() * items.length)];
-            showOpeningAnimation(winItem, '#00d4ff');
+            const items = ['NY Limited', 'HOLIDAY', 'WINTER', 'Snow Reaper'];
+            const win = items[Math.floor(Math.random() * items.length)];
+            showNotification(`🎉 Вы получили: ${win}!`);
         }
 
-        function openSpringCase() {
-            if (!currentUser) {
-                showNotification('❌ Сначала войдите', 'error');
-                return;
-            }
-
+        async function openSpringCase() {
+            if (!currentUser) return;
             if (balance < 55000) {
-                showNotification('❌ Нужно 55,000 монет!', 'error');
+                showNotification('❌ Нужно 55,000 монет', 'error');
                 return;
             }
 
-            const items = [
-                { name: 'FrostBolt', rarity: 'LEGENDARY' },
-                { name: 'NeonCloud', rarity: 'LEGENDARY' },
-                { name: 'AbyssalThunder', rarity: 'LEGENDARY' }
-            ];
-
-            const winItem = items[Math.floor(Math.random() * items.length)];
+            const newBalance = balance - 55000;
             
-            users[currentUser].balance -= 55000;
-            balance = users[currentUser].balance;
+            await fetch(`${SERVER}/api/update_balance`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username: currentUser, balance: newBalance})
+            });
+
+            balance = newBalance;
             document.getElementById('balance').innerText = balance.toLocaleString();
-            localStorage.setItem('users', JSON.stringify(users));
 
-            showOpeningAnimation(winItem, '#00ffcc');
-            sendWebhook('🎁 ОТКРЫТИЕ КЕЙСА', `**${currentUser}** открыл весенний кейс и получил **${winItem.name}**`);
+            const items = ['FrostBolt', 'NeonCloud', 'AbyssalThunder'];
+            const win = items[Math.floor(Math.random() * items.length)];
+            showNotification(`🎉 Вы получили: ${win}!`);
         }
 
-        function showOpeningAnimation(winItem, color) {
-            const animation = document.getElementById('openingAnimation');
-            const result = document.getElementById('openingResult');
-            
-            animation.style.setProperty('--case-color', color);
-            animation.classList.add('active');
-            
-            setTimeout(() => {
-                result.innerText = `${winItem.name} [${winItem.rarity}]`;
-                result.style.display = 'block';
-            }, 2000);
-            
-            setTimeout(() => {
-                animation.classList.remove('active');
-                result.style.display = 'none';
-                showNotification(`🎉 Вы получили: ${winItem.name}!`);
-            }, 4000);
+        function openRoleCase() {
+            const items = ['Bloodbound', 'Shadow', 'Veteran', 'Eternal', 'Phantom', 'Chosen'];
+            const win = items[Math.floor(Math.random() * items.length)];
+            showNotification(`🎉 Вы получили: ${win}!`);
         }
 
-        // ============ АДМИН ПАНЕЛЬ ============
         function openAdmin() {
             document.getElementById('adminPanel').classList.add('active');
-            document.getElementById('adminLoginSection').style.display = 'block';
+            document.getElementById('adminLogin').style.display = 'block';
             document.getElementById('adminControls').style.display = 'none';
-            document.getElementById('adminPass').value = '';
         }
 
         function closeAdmin() {
@@ -1244,17 +926,24 @@
             adminLoggedIn = false;
         }
 
-        function adminLogin() {
+        async function adminLogin() {
             const pass = document.getElementById('adminPass').value;
-            if (pass === ADMIN_PASS) {
+            
+            const res = await fetch(`${SERVER}/api/admin/login`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({password: pass})
+            });
+            const data = await res.json();
+
+            if (data.success) {
                 adminLoggedIn = true;
-                document.getElementById('adminLoginSection').style.display = 'none';
+                document.getElementById('adminLogin').style.display = 'none';
                 document.getElementById('adminControls').style.display = 'block';
-                updateAdminStats();
+                loadAdminStats();
                 loadKeys();
                 loadUsers();
                 showNotification('✅ Добро пожаловать, Админ!');
-                sendWebhook('⚡ АДМИН ВХОД', `Администратор вошел в панель`);
             } else {
                 showNotification('❌ Неверный пароль', 'error');
             }
@@ -1262,61 +951,48 @@
 
         function logoutAdmin() {
             adminLoggedIn = false;
-            document.getElementById('adminLoginSection').style.display = 'block';
+            document.getElementById('adminLogin').style.display = 'block';
             document.getElementById('adminControls').style.display = 'none';
         }
 
-        function switchAdminTab(tab) {
-            const tabs = document.querySelectorAll('.admin-tab');
-            tabs.forEach(t => t.classList.remove('active'));
-            event.target.classList.add('active');
+        async function loadAdminStats() {
+            const res = await fetch(`${SERVER}/api/admin/get_stats`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({password: ADMIN_PASS})
+            });
+            const data = await res.json();
 
-            document.getElementById('statsTab').style.display = tab === 'stats' ? 'block' : 'none';
-            document.getElementById('keysTab').style.display = tab === 'keys' ? 'block' : 'none';
-            document.getElementById('usersTab').style.display = tab === 'users' ? 'block' : 'none';
-            document.getElementById('webhookTab').style.display = tab === 'webhook' ? 'block' : 'none';
+            if (data.success) {
+                document.getElementById('totalUsers').innerText = data.users;
+                document.getElementById('totalKeys').innerText = data.total_keys;
+                document.getElementById('usedKeys').innerText = data.used_keys;
+                document.getElementById('availableKeys').innerText = data.available_keys;
+            }
         }
 
-        function updateAdminStats() {
-            const totalUsers = Object.keys(users).length;
-            const totalKeys = keys.length;
-            const usedKeys = keys.filter(k => k.used).length;
-            const availableKeys = keys.filter(k => !k.used).length;
-
-            document.getElementById('totalUsers').innerText = totalUsers;
-            document.getElementById('totalKeys').innerText = totalKeys;
-            document.getElementById('usedKeys').innerText = usedKeys;
-            document.getElementById('availableKeys').innerText = availableKeys;
-        }
-
-        function createKey() {
+        async function createKey() {
             const type = document.getElementById('keyType').value;
-            
-            let key = {
-                key: '',
-                type: type,
-                used: false,
-                createdAt: new Date().toLocaleString()
-            };
+            const data = {password: ADMIN_PASS, key_type: type};
 
             if (type === 'balance') {
-                const value = parseInt(document.getElementById('keyValue').value) || 1000;
-                key.value = value;
-                key.key = `BAL-${value}-${Math.floor(Math.random() * 9000 + 1000)}`;
-            } else {
-                key.key = `WINTER-${Math.floor(Math.random() * 9000 + 1000)}`;
+                data.value = parseInt(document.getElementById('keyValue').value) || 1000;
             }
 
-            keys.push(key);
-            localStorage.setItem('keys', JSON.stringify(keys));
+            const res = await fetch(`${SERVER}/api/admin/create_key`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+            const result = await res.json();
 
-            document.getElementById('newKeyText').innerText = key.key;
-            document.getElementById('newKeyDisplay').style.display = 'block';
-            
-            updateAdminStats();
-            loadKeys();
-            showNotification('✅ Ключ создан!');
-            sendWebhook('🔑 КЛЮЧ СОЗДАН', `Создан ключ: **${key.key}**`);
+            if (result.success) {
+                document.getElementById('newKeyText').innerText = result.key;
+                document.getElementById('newKeyDisplay').style.display = 'block';
+                showNotification('✅ Ключ создан!');
+                loadKeys();
+                loadAdminStats();
+            }
         }
 
         function copyKey() {
@@ -1325,185 +1001,124 @@
             showNotification('✅ Ключ скопирован!');
         }
 
-        function loadKeys() {
-            const list = document.getElementById('keysList');
-            list.innerHTML = '';
-            
-            keys.slice().reverse().forEach(key => {
-                const div = document.createElement('div');
-                div.className = 'key-item';
-                div.innerHTML = `
-                    <span style="font-family: monospace;">${key.key}</span>
-                    <span class="key-status ${key.used ? 'status-used' : 'status-available'}">
-                        ${key.used ? 'ИСПОЛЬЗОВАН' : 'ДОСТУПЕН'}
-                    </span>
-                `;
-                list.appendChild(div);
+        async function loadKeys() {
+            const res = await fetch(`${SERVER}/api/admin/get_keys`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({password: ADMIN_PASS})
             });
-        }
+            const data = await res.json();
 
-        function loadUsers() {
-            const list = document.getElementById('usersList');
-            list.innerHTML = '';
-            
-            Object.keys(users).sort((a, b) => users[b].balance - users[a].balance).forEach(username => {
-                const div = document.createElement('div');
-                div.className = 'user-item';
-                div.innerHTML = `
-                    <div>
-                        <div style="font-weight: bold;">${username}</div>
-                        <div class="user-balance">💰 ${users[username].balance}</div>
-                    </div>
-                    <div class="user-actions">
-                        <button class="user-btn" onclick="addBalance('${username}')">➕</button>
-                        <button class="user-btn" onclick="openChangePassword('${username}')">🔑</button>
-                        <button class="user-btn danger" onclick="deleteUser('${username}')">❌</button>
-                    </div>
-                `;
-                list.appendChild(div);
-            });
-        }
-
-        function addBalance(username) {
-            const amount = prompt(`Сколько добавить ${username}?`, '1000');
-            if (amount && !isNaN(amount) && parseInt(amount) > 0) {
-                users[username].balance += parseInt(amount);
-                localStorage.setItem('users', JSON.stringify(users));
-                loadUsers();
-                if (username === currentUser) {
-                    balance = users[username].balance;
-                    document.getElementById('balance').innerText = balance.toLocaleString();
-                }
-                showNotification(`✅ Добавлено ${amount} монет пользователю ${username}`);
-                sendWebhook('💰 ПОПОЛНЕНИЕ', `Админ добавил **${amount}** монет пользователю **${username}**`);
+            if (data.success) {
+                const list = document.getElementById('keysList');
+                list.innerHTML = '';
+                data.keys.forEach(k => {
+                    list.innerHTML += `
+                        <div class="key-item">
+                            <span>${k.key}</span>
+                            <span class="${k.used ? 'key-used' : 'key-available'}">${k.used ? 'ИСПОЛЬЗОВАН' : 'ДОСТУПЕН'}</span>
+                        </div>
+                    `;
+                });
             }
         }
 
-        function openChangePassword(username) {
-            document.getElementById('changePasswordModal').classList.add('active');
+        async function loadUsers() {
+            const res = await fetch(`${SERVER}/api/admin/get_users`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({password: ADMIN_PASS})
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                const list = document.getElementById('usersList');
+                list.innerHTML = '';
+                data.users.forEach(u => {
+                    list.innerHTML += `
+                        <div class="user-item">
+                            <span>${u.username}</span>
+                            <span>
+                                <span class="user-balance">💰 ${u.balance}</span>
+                                <button class="admin-btn small" onclick="addBalance('${u.username}')">➕</button>
+                                <button class="admin-btn small" onclick="openPasswordModal('${u.username}')">🔑</button>
+                                <button class="admin-btn small" onclick="deleteUser('${u.username}')">❌</button>
+                            </span>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        async function addBalance(username) {
+            const amount = prompt('Сколько добавить?', '1000');
+            if (!amount) return;
+
+            await fetch(`${SERVER}/api/admin/add_balance`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({password: ADMIN_PASS, username, amount: parseInt(amount)})
+            });
+
+            loadUsers();
+            if (username === currentUser) {
+                await loadBalance();
+            }
+            showNotification(`✅ Добавлено ${amount} монет`);
+        }
+
+        function openPasswordModal(username) {
             document.getElementById('changeUsername').value = username;
-            document.getElementById('newPassword').value = '';
-            document.getElementById('confirmNewPassword').value = '';
-            document.getElementById('changePasswordError').style.display = 'none';
+            document.getElementById('passwordModal').classList.add('active');
         }
 
-        function closeChangePasswordModal() {
-            document.getElementById('changePasswordModal').classList.remove('active');
-        }
-
-        function changePassword() {
+        async function changePassword() {
             const username = document.getElementById('changeUsername').value;
             const newPass = document.getElementById('newPassword').value;
-            const confirmPass = document.getElementById('confirmNewPassword').value;
+            const confirm = document.getElementById('confirmNew').value;
 
-            if (!newPass || !confirmPass) {
-                document.getElementById('changePasswordError').innerText = 'Заполните все поля';
-                document.getElementById('changePasswordError').style.display = 'block';
+            if (newPass !== confirm) {
+                document.getElementById('passwordError').innerText = 'Пароли не совпадают';
+                document.getElementById('passwordError').style.display = 'block';
                 return;
             }
 
-            if (newPass !== confirmPass) {
-                document.getElementById('changePasswordError').innerText = 'Пароли не совпадают';
-                document.getElementById('changePasswordError').style.display = 'block';
-                return;
-            }
-
-            if (newPass.length < 4) {
-                document.getElementById('changePasswordError').innerText = 'Пароль должен быть минимум 4 символа';
-                document.getElementById('changePasswordError').style.display = 'block';
-                return;
-            }
-
-            users[username].password = newPass;
-            localStorage.setItem('users', JSON.stringify(users));
-            
-            closeChangePasswordModal();
-            showNotification(`✅ Пароль пользователя ${username} изменен`);
-            sendWebhook('🔑 СМЕНА ПАРОЛЯ', `Админ сменил пароль пользователю **${username}**`);
-        }
-
-        function deleteUser(username) {
-            if (confirm(`Точно удалить пользователя ${username}?`)) {
-                delete users[username];
-                localStorage.setItem('users', JSON.stringify(users));
-                loadUsers();
-                showNotification(`❌ Пользователь ${username} удален`);
-                sendWebhook('🗑️ УДАЛЕНИЕ', `Админ удалил пользователя **${username}**`);
-                
-                if (currentUser === username) {
-                    logout();
-                }
-            }
-        }
-
-        // ============ DISCORD WEBHOOK ============
-        function sendWebhook(title, description) {
-            fetch(webhookUrl, {
+            await fetch(`${SERVER}/api/admin/change_password`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    embeds: [{
-                        title: title,
-                        description: description,
-                        color: 0x5865F2,
-                        timestamp: new Date().toISOString(),
-                        footer: { text: 'Clan Case System' }
-                    }]
-                })
-            }).catch(e => console.log('Webhook error:', e));
-        }
-
-        function testWebhook() {
-            const url = document.getElementById('webhookUrl').value;
-            fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    content: '🔔 **Тестовое уведомление**',
-                    embeds: [{
-                        title: '✅ WEBHOOK РАБОТАЕТ',
-                        description: 'Если вы это видите, значит вебхук настроен правильно!',
-                        color: 0x00ff00
-                    }]
-                })
-            }).then(res => {
-                if (res.ok) {
-                    showNotification('✅ Вебхук работает!');
-                    document.getElementById('webhookStatus').className = 'webhook-status webhook-online';
-                    document.getElementById('webhookStatus').innerText = '✅ WEBHOOK ONLINE';
-                } else {
-                    showNotification('❌ Ошибка вебхука', 'error');
-                }
-            }).catch(() => {
-                showNotification('❌ Ошибка вебхука', 'error');
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({password: ADMIN_PASS, username, new_password: newPass})
             });
+
+            closeModals();
+            showNotification('✅ Пароль изменен');
         }
 
-        function saveWebhook() {
-            const url = document.getElementById('webhookUrl').value;
-            if (url) {
-                webhookUrl = url;
-                localStorage.setItem('webhookUrl', url);
-                showNotification('✅ Вебхук сохранен');
+        async function deleteUser(username) {
+            if (!confirm(`Удалить ${username}?`)) return;
+
+            await fetch(`${SERVER}/api/admin/delete_user`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({password: ADMIN_PASS, username})
+            });
+
+            loadUsers();
+            if (username === currentUser) {
+                logout();
             }
+            showNotification(`❌ Пользователь удален`);
         }
 
-        // ============ УВЕДОМЛЕНИЯ ============
         function showNotification(text, type = 'success') {
             const notif = document.getElementById('notification');
             notif.style.background = type === 'success' ? '#5865F2' : '#ff4757';
             notif.innerText = text;
             notif.style.display = 'block';
-            
-            setTimeout(() => {
-                notif.style.display = 'none';
-            }, 3000);
+            setTimeout(() => notif.style.display = 'none', 3000);
         }
 
-        // Показываем/скрываем поле суммы для ключа на баланс
-        document.getElementById('keyType')?.addEventListener('change', function(e) {
-            const balanceInput = document.getElementById('balanceInput');
-            balanceInput.style.display = e.target.value === 'balance' ? 'block' : 'none';
+        document.getElementById('keyType').addEventListener('change', function(e) {
+            document.getElementById('balanceInput').style.display = e.target.value === 'balance' ? 'block' : 'none';
         });
     </script>
 </body>
