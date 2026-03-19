@@ -15,13 +15,14 @@
         body {
             background: #0a0a0a;
             color: white;
-            min-height: 100vh;
+            padding: 20px;
         }
 
         .header {
             background: #111;
             padding: 20px;
-            border-bottom: 1px solid #333;
+            border-radius: 15px;
+            margin-bottom: 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -29,30 +30,17 @@
             gap: 15px;
         }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .balance-card {
+        .balance {
             background: #1a1a1a;
             padding: 10px 25px;
             border-radius: 40px;
             border: 2px solid #ffd700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .balance-amount {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: bold;
             color: #ffd700;
         }
 
-        .profile {
+        .user {
             display: flex;
             align-items: center;
             gap: 10px;
@@ -62,41 +50,18 @@
             cursor: pointer;
         }
 
-        .avatar {
-            width: 40px;
-            height: 40px;
-            background: #00ffcc;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: black;
-        }
-
-        .season-info {
-            background: #333;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-        }
-
         .key-section {
-            background: #1a1a1a;
-            padding: 15px 25px;
-            border-radius: 50px;
             display: flex;
             gap: 10px;
         }
 
         .key-input {
-            background: #0a0a0a;
+            background: #1a1a1a;
             border: 2px solid #333;
             color: white;
             padding: 10px 20px;
             border-radius: 30px;
             width: 250px;
-            font-family: monospace;
         }
 
         .key-input:focus {
@@ -104,7 +69,7 @@
             border-color: #00ffcc;
         }
 
-        .use-key-btn {
+        .btn {
             background: #00ffcc;
             color: black;
             border: none;
@@ -114,211 +79,57 @@
             cursor: pointer;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 3em;
-            background: linear-gradient(45deg, #00ffcc, #ffd700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
         .cases-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
-            margin-top: 40px;
+            margin-top: 30px;
         }
 
         .case-card {
             background: #111;
             border: 2px solid #333;
-            border-radius: 30px;
-            padding: 30px;
-            text-align: center;
-            transition: 0.3s;
-            position: relative;
-        }
-
-        .case-card.past {
-            opacity: 0.7;
-            filter: grayscale(0.5);
-        }
-
-        .case-card.future {
-            opacity: 0.7;
-            filter: grayscale(0.3);
-        }
-
-        .case-card.available {
-            border-color: var(--case-color);
-            box-shadow: 0 0 20px var(--case-color);
-        }
-
-        .case-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            padding: 5px 15px;
             border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .badge-past {
-            background: #666;
-            color: white;
-        }
-
-        .badge-future {
-            background: #ffaa00;
-            color: black;
-        }
-
-        .badge-current {
-            background: #00ffcc;
-            color: black;
-        }
-
-        .badge-key-only {
-            background: #ff4757;
-            color: white;
+            padding: 25px;
+            text-align: center;
         }
 
         .case-icon {
-            width: 120px;
-            height: 120px;
-            background: #1a1a1a;
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 50px;
-            border: 3px solid var(--case-color);
-        }
-
-        .case-name {
-            font-size: 24px;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        .case-date {
-            color: #666;
+            font-size: 60px;
             margin-bottom: 15px;
         }
 
-        .case-price {
-            background: #1a1a1a;
-            padding: 10px 20px;
-            border-radius: 30px;
-            display: inline-block;
-            margin: 15px 0;
-            color: #ffd700;
-            font-weight: bold;
+        .case-name {
+            font-size: 22px;
+            margin-bottom: 10px;
         }
 
-        .open-case-btn {
-            background: var(--case-color);
+        .case-status {
+            padding: 5px 10px;
+            border-radius: 15px;
+            display: inline-block;
+            margin: 10px 0;
+            font-size: 12px;
+        }
+
+        .status-current { background: #00ffcc; color: black; }
+        .status-past { background: #666; color: white; }
+        .status-future { background: #ffaa00; color: black; }
+
+        .open-btn {
+            background: var(--btn-color, #00ffcc);
             color: black;
             border: none;
-            padding: 15px 30px;
+            padding: 12px 20px;
             border-radius: 30px;
+            width: 100%;
             font-weight: bold;
             cursor: pointer;
-            width: 100%;
-            font-size: 18px;
-            transition: 0.2s;
         }
 
-        .open-case-btn:disabled {
+        .open-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            background: #666;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: #111;
-            padding: 30px;
-            border-radius: 30px;
-            width: 90%;
-            max-width: 600px;
-            border: 2px solid var(--case-color);
-        }
-
-        .roulette {
-            position: relative;
-            height: 150px;
-            overflow: hidden;
-            border: 2px solid #333;
-            border-radius: 15px;
-            margin: 30px 0;
-            background: #000;
-        }
-
-        .roulette-items {
-            display: flex;
-            position: absolute;
-            left: 50%;
-            transition: transform 5s cubic-bezier(0.1, 0.8, 0.2, 1);
-        }
-
-        .roulette-item {
-            width: 120px;
-            height: 120px;
-            margin: 15px 5px;
-            background: #1a1a1a;
-            border: 2px solid #333;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-        }
-
-        .selector {
-            position: absolute;
-            left: 50%;
-            top: 0;
-            width: 4px;
-            height: 100%;
-            background: #ff4757;
-            transform: translateX(-50%);
-            z-index: 10;
-        }
-
-        .result {
-            text-align: center;
-            padding: 30px;
-            background: #1a1a1a;
-            border-radius: 20px;
-            margin-top: 20px;
-            border: 2px solid var(--case-color);
-            display: none;
         }
 
         .admin-btn {
@@ -333,341 +144,133 @@
             color: white;
             font-size: 24px;
             cursor: pointer;
-            opacity: 0.3;
-            z-index: 100;
-        }
-
-        .admin-btn:hover {
-            opacity: 1;
-            background: #ff4757;
-        }
-
-        .admin-panel {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .admin-panel.active {
-            display: flex;
-        }
-
-        .admin-content {
-            background: #111;
-            padding: 40px;
-            border-radius: 30px;
-            width: 90%;
-            max-width: 500px;
-            border: 2px solid #ff4757;
-        }
-
-        .admin-input, .admin-select {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            background: #0a0a0a;
-            border: 1px solid #333;
-            color: white;
-            border-radius: 10px;
-        }
-
-        .admin-btn-small {
-            background: #00ffcc;
-            color: black;
-            border: none;
-            padding: 12px;
-            border-radius: 10px;
-            cursor: pointer;
-            margin: 5px;
-            width: 100%;
-        }
-
-        .key-display {
-            background: #0a0a0a;
-            padding: 20px;
-            border-radius: 15px;
-            font-family: monospace;
-            word-break: break-all;
-            margin: 15px 0;
         }
 
         .notification {
             position: fixed;
-            top: 100px;
+            top: 20px;
             right: 20px;
-            padding: 15px 30px;
-            border-radius: 15px;
-            animation: slideIn 0.3s;
-            z-index: 3000;
-            display: none;
-        }
-
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0%); opacity: 1; }
-        }
-
-        .login-form {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .login-input {
-            width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            background: #1a1a1a;
-            border: 2px solid #333;
-            color: white;
+            padding: 15px 25px;
             border-radius: 10px;
-            font-size: 16px;
+            background: #00ffcc;
+            color: black;
+            display: none;
+            z-index: 1000;
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <div class="user-info">
-            <div class="balance-card">
-                <span class="balance-amount" id="balance">0</span> 💰
-            </div>
-            <div class="profile" onclick="changeUser()">
-                <div class="avatar" id="avatar">?</div>
-                <span id="username">гость</span>
-            </div>
-            <div class="season-info" id="seasonInfo">Сезон: --</div>
+        <div class="balance" id="balance">0 💰</div>
+        <div class="user" onclick="changeUser()">
+            <span id="username">гость</span>
         </div>
-        
         <div class="key-section">
             <input type="text" class="key-input" id="keyInput" placeholder="ВВЕДИТЕ КЛЮЧ">
-            <button class="use-key-btn" onclick="useKey()">Активировать</button>
+            <button class="btn" onclick="useKey()">Активировать</button>
         </div>
     </div>
 
-    <div class="container">
-        <h1>🎲 СЕЗОННЫЕ КЕЙСЫ</h1>
-        <div class="cases-grid" id="casesGrid"></div>
-    </div>
+    <h1 style="text-align: center; margin-bottom: 30px;">🎲 СЕЗОННЫЕ КЕЙСЫ</h1>
+    <div id="seasonInfo" style="text-align: center; margin-bottom: 20px; color: #666;"></div>
+    
+    <div class="cases-grid" id="casesGrid"></div>
 
-    <!-- Модалка кейса -->
-    <div class="modal" id="caseModal">
-        <div class="modal-content" id="modalContent">
-            <h2 id="modalCaseName" style="text-align: center; margin-bottom: 20px;"></h2>
-            
-            <div class="roulette">
-                <div class="selector"></div>
-                <div class="roulette-items" id="rouletteItems"></div>
-            </div>
-
-            <button class="open-case-btn" id="openCaseBtn" onclick="openCase()">Открыть за 2 💰</button>
-            <button class="open-case-btn" onclick="closeModal()" style="background: #333; color: white; margin-top: 10px;">Закрыть</button>
-
-            <div class="result" id="result">
-                <div style="font-size: 50px; margin-bottom: 20px;" id="winIcon">🎁</div>
-                <h2 id="winName"></h2>
-                <p id="winRarity" style="font-size: 18px; margin: 10px 0;"></p>
-                <button class="open-case-btn" onclick="closeResult()">Продолжить</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Админка -->
-    <button class="admin-btn" onclick="showAdminLogin()">⚙️</button>
-
-    <div class="admin-panel" id="adminPanel">
-        <div class="admin-content">
-            <div id="adminLogin">
-                <h2 style="text-align: center; margin-bottom: 20px;">🔐 ВХОД АДМИНА</h2>
-                <input type="password" class="login-input" id="adminPass" placeholder="Пароль">
-                <button class="admin-btn-small" onclick="adminLogin()">ВОЙТИ</button>
-            </div>
-
-            <div id="adminControls" style="display: none;">
-                <h2 style="text-align: center; margin-bottom: 20px;">⚡ ADMIN PANEL</h2>
-                
-                <h3>💰 Ключ на баланс</h3>
-                <input type="number" class="admin-input" id="balanceValue" value="10">
-                <button class="admin-btn-small" onclick="createBalanceKey()">Создать ключ</button>
-
-                <h3 style="margin-top: 20px;">🎲 Ключ на кейс</h3>
-                <select class="admin-select" id="caseType">
-                    <option value="winter2025">❄️ ЗИМА 2025</option>
-                    <option value="spring2026">🌱 ВЕСНА 2026</option>
-                    <option value="summer2026">☀️ ЛЕТО 2026</option>
-                    <option value="autumn2026">🍂 ОСЕНЬ 2026</option>
-                </select>
-                <button class="admin-btn-small" onclick="createCaseKey()">Создать ключ</button>
-
-                <div id="keyDisplay" style="display: none; margin-top: 20px;">
-                    <h3>✅ Новый ключ:</h3>
-                    <div class="key-display" id="newKey"></div>
-                    <button class="admin-btn-small" onclick="copyKey()">Копировать</button>
-                </div>
-
-                <button class="admin-btn-small" onclick="closeAdmin()" style="background: #ff4757; margin-top: 20px;">Закрыть</button>
-            </div>
-        </div>
-    </div>
-
+    <button class="admin-btn" onclick="openAdmin()">⚙️</button>
     <div class="notification" id="notification"></div>
 
     <script>
         const SERVER = 'http://localhost:5000';
         let currentUser = localStorage.getItem('username') || 'гость';
         let balance = parseInt(localStorage.getItem('balance')) || 0;
-        let currentCase = null;
-        let isSpinning = false;
-        let cases = [];
-        let adminLoggedIn = false;
 
         window.onload = () => {
-            updateUserDisplay();
-            document.getElementById('balance').innerText = balance;
+            document.getElementById('username').innerText = currentUser;
+            document.getElementById('balance').innerText = balance + ' 💰';
             loadCases();
         };
 
-        function updateUserDisplay() {
-            document.getElementById('username').innerText = currentUser;
-            document.getElementById('avatar').innerText = currentUser[0].toUpperCase();
-        }
-
-        function changeUser() {
-            let name = prompt('Введите ваш username:');
-            if (name) {
-                currentUser = name.toLowerCase().trim();
-                localStorage.setItem('username', currentUser);
-                updateUserDisplay();
-                loadUserBalance();
-            }
-        }
-
-        async function loadUserBalance() {
-            try {
-                const response = await fetch(`${SERVER}/api/user/get`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username: currentUser })
-                });
-                const data = await response.json();
-                balance = data.balance;
-                localStorage.setItem('balance', balance);
-                document.getElementById('balance').innerText = balance;
-            } catch (e) {
-                showNotif('❌ Сервер не доступен', 'error');
-            }
-        }
-
         async function loadCases() {
             try {
-                const response = await fetch(`${SERVER}/api/cases`);
+                const response = await fetch(`${SERVER}/cases`);
                 const data = await response.json();
-                cases = data.cases;
-                document.getElementById('seasonInfo').innerText = `Сезон: ${data.current_season}`;
-                renderCases();
+                
+                if (data.success) {
+                    document.getElementById('seasonInfo').innerText = `Текущий сезон: ${data.current_season}`;
+                    renderCases(data.cases);
+                }
             } catch (e) {
-                console.error('Failed to load cases:', e);
+                showNotif('❌ Сервер не отвечает', 'error');
             }
         }
 
-        function renderCases() {
+        function renderCases(cases) {
             const grid = document.getElementById('casesGrid');
             grid.innerHTML = '';
             
             cases.forEach(c => {
-                let badgeClass = '';
-                let badgeText = '';
+                let statusClass = '';
+                let statusText = '';
                 
                 if (!c.available_for_purchase && c.year < 2026) {
-                    badgeClass = 'badge-key-only';
-                    badgeText = '🔑 ТОЛЬКО ПО КЛЮЧАМ';
+                    statusClass = 'status-past';
+                    statusText = '🔑 ТОЛЬКО ПО КЛЮЧАМ';
                 } else if (c.available_for_purchase) {
-                    badgeClass = 'badge-current';
-                    badgeText = '✨ ТЕКУЩИЙ СЕЗОН';
-                } else if (c.year > 2026 || (c.year === 2026 && 
-                           ((c.season === 'spring' && c.year > 2026) || 
-                            (c.season === 'summer' && c.year > 2026) ||
-                            (c.season === 'autumn' && c.year > 2026)))) {
-                    badgeClass = 'badge-future';
-                    badgeText = '⏳ СКОРО';
+                    statusClass = 'status-current';
+                    statusText = '✨ ТЕКУЩИЙ СЕЗОН';
                 } else {
-                    badgeClass = 'badge-past';
-                    badgeText = '📅 ПРОШЛЫЙ СЕЗОН';
+                    statusClass = 'status-future';
+                    statusText = '⏳ СКОРО';
                 }
                 
                 const card = document.createElement('div');
-                card.className = `case-card ${c.available_for_purchase ? 'available' : ''}`;
-                card.style.setProperty('--case-color', c.color);
-                
+                card.className = 'case-card';
                 card.innerHTML = `
-                    <div class="case-badge ${badgeClass}">${badgeText}</div>
                     <div class="case-icon">${c.icon}</div>
                     <div class="case-name">${c.name}</div>
-                    <div class="case-date">${c.season} ${c.year}</div>
-                    <div class="case-price">💰 ${c.price}</div>
-                    <button class="open-case-btn" 
-                            onclick="openCaseModal('${c.id}')"
-                            ${!c.available_for_purchase ? 'disabled' : ''}
-                            style="background: ${c.color}">
+                    <div class="case-status ${statusClass}">${statusText}</div>
+                    <div style="margin: 15px 0; color: #ffd700;">💰 ${c.price}</div>
+                    <button class="open-btn" 
+                            style="--btn-color: ${c.color}"
+                            onclick="openCase('${c.id}')"
+                            ${!c.available_for_purchase ? 'disabled' : ''}>
                         ${c.available_for_purchase ? 'ОТКРЫТЬ' : 'НЕДОСТУПЕН'}
                     </button>
                 `;
-                
                 grid.appendChild(card);
             });
         }
 
-        function openCaseModal(caseId) {
-            if (balance < 2) {
-                showNotif('❌ Недостаточно монет!', 'error');
-                return;
+        function changeUser() {
+            let name = prompt('Ваш username:');
+            if (name) {
+                currentUser = name.toLowerCase().trim();
+                localStorage.setItem('username', currentUser);
+                document.getElementById('username').innerText = currentUser;
             }
-            
-            currentCase = cases.find(c => c.id === caseId);
-            document.getElementById('modalCaseName').innerText = currentCase.name;
-            document.getElementById('modalContent').style.setProperty('--case-color', currentCase.color);
-            document.getElementById('caseModal').classList.add('active');
         }
 
         async function useKey() {
             const key = document.getElementById('keyInput').value.trim().toUpperCase();
-            if (!key) {
-                showNotif('❌ Введите ключ', 'error');
-                return;
-            }
+            if (!key) return showNotif('❌ Введите ключ', 'error');
 
             try {
-                const response = await fetch(`${SERVER}/api/key/use`, {
+                const response = await fetch(`${SERVER}/key/use`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        key: key,
-                        username: currentUser
-                    })
+                    body: JSON.stringify({ key, username: currentUser })
                 });
 
                 const data = await response.json();
-
+                
                 if (data.success) {
                     if (data.type === 'balance') {
                         balance += data.value;
                         localStorage.setItem('balance', balance);
-                        document.getElementById('balance').innerText = balance;
-                        showNotif(`✅ +${data.value} монет!`, 'success');
+                        document.getElementById('balance').innerText = balance + ' 💰';
+                        showNotif(`✅ +${data.value} монет!`);
                     } else {
-                        const caseToOpen = cases.find(c => c.id === data.case_type);
-                        if (caseToOpen) {
-                            currentCase = caseToOpen;
-                            document.getElementById('modalCaseName').innerText = caseToOpen.name;
-                            document.getElementById('modalContent').style.setProperty('--case-color', caseToOpen.color);
-                            document.getElementById('caseModal').classList.add('active');
-                            setTimeout(() => openCase(true), 500);
-                        }
+                        showNotif('✅ Ключ активирован! Открывайте кейс!');
                     }
                     document.getElementById('keyInput').value = '';
                 } else {
@@ -678,156 +281,22 @@
             }
         }
 
-        async function openCase(isFromKey = false) {
-            if (isSpinning) return;
-
-            if (!isFromKey) {
-                if (balance < 2) {
-                    showNotif('❌ Недостаточно монет', 'error');
-                    closeModal();
-                    return;
-                }
-                balance -= 2;
-                localStorage.setItem('balance', balance);
-                document.getElementById('balance').innerText = balance;
+        function openCase(caseId) {
+            if (balance < 2) {
+                return showNotif('❌ Нужно 2 монеты!', 'error');
             }
-
-            isSpinning = true;
-            document.getElementById('openCaseBtn').disabled = true;
-
-            const roulette = document.getElementById('rouletteItems');
-            roulette.innerHTML = '';
             
-            for (let i = 0; i < 20; i++) {
-                for (let j = 0; j < currentCase.items.length; j++) {
-                    const item = currentCase.items[j];
-                    roulette.innerHTML += `<div class="roulette-item">${item.icon}</div>`;
-                }
+            balance -= 2;
+            localStorage.setItem('balance', balance);
+            document.getElementById('balance').innerText = balance + ' 💰';
+            showNotif('✅ Кейс открыт! (тут должна быть анимация)');
+        }
+
+        function openAdmin() {
+            let pass = prompt('Пароль админа:');
+            if (pass === '1337') {
+                window.location.href = 'admin.html';
             }
-
-            let r = Math.random() * 100;
-            let cumulative = 0;
-            let winItem = currentCase.items[0];
-            
-            for (let item of currentCase.items) {
-                cumulative += item.chance;
-                if (r <= cumulative) {
-                    winItem = item;
-                    break;
-                }
-            }
-
-            setTimeout(() => {
-                roulette.style.transform = `translateX(-${45 * 130}px)`;
-            }, 100);
-
-            setTimeout(() => {
-                document.getElementById('winIcon').innerText = winItem.icon;
-                document.getElementById('winName').innerText = winItem.name;
-                document.getElementById('winRarity').innerText = winItem.rarity;
-                document.getElementById('result').style.display = 'block';
-                isSpinning = false;
-            }, 5100);
-        }
-
-        function closeModal() {
-            document.getElementById('caseModal').classList.remove('active');
-            document.getElementById('result').style.display = 'none';
-            document.getElementById('rouletteItems').innerHTML = '';
-            document.getElementById('openCaseBtn').disabled = false;
-        }
-
-        function closeResult() {
-            document.getElementById('result').style.display = 'none';
-            closeModal();
-        }
-
-        // ============ АДМИНКА С ПАРОЛЕМ ============
-        function showAdminLogin() {
-            document.getElementById('adminPanel').classList.add('active');
-            document.getElementById('adminLogin').style.display = 'block';
-            document.getElementById('adminControls').style.display = 'none';
-        }
-
-        async function adminLogin() {
-            const pass = document.getElementById('adminPass').value;
-            
-            const response = await fetch(`${SERVER}/api/admin/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ password: pass })
-            });
-            
-            const data = await response.json();
-            
-            if (data.success) {
-                adminLoggedIn = true;
-                document.getElementById('adminLogin').style.display = 'none';
-                document.getElementById('adminControls').style.display = 'block';
-                document.getElementById('adminPass').value = '';
-            } else {
-                showNotif('❌ Неверный пароль!', 'error');
-            }
-        }
-
-        async function createBalanceKey() {
-            if (!adminLoggedIn) return;
-            
-            const value = document.getElementById('balanceValue').value;
-            
-            const response = await fetch(`${SERVER}/api/admin/create_key`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    password: ADMIN_PASS,
-                    admin_name: currentUser,
-                    key_type: 'balance',
-                    value: parseInt(value)
-                })
-            });
-
-            const data = await response.json();
-            if (data.success) {
-                document.getElementById('newKey').innerText = data.key;
-                document.getElementById('keyDisplay').style.display = 'block';
-                showNotif('✅ Ключ создан!', 'success');
-            }
-        }
-
-        async function createCaseKey() {
-            if (!adminLoggedIn) return;
-            
-            const caseType = document.getElementById('caseType').value;
-            
-            const response = await fetch(`${SERVER}/api/admin/create_key`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    password: ADMIN_PASS,
-                    admin_name: currentUser,
-                    key_type: 'case',
-                    case_type: caseType
-                })
-            });
-
-            const data = await response.json();
-            if (data.success) {
-                document.getElementById('newKey').innerText = data.key;
-                document.getElementById('keyDisplay').style.display = 'block';
-                showNotif('✅ Ключ создан!', 'success');
-            }
-        }
-
-        function copyKey() {
-            const key = document.getElementById('newKey').innerText;
-            navigator.clipboard.writeText(key);
-            showNotif('✅ Ключ скопирован!');
-        }
-
-        function closeAdmin() {
-            document.getElementById('adminPanel').classList.remove('active');
-            document.getElementById('keyDisplay').style.display = 'none';
-            adminLoggedIn = false;
         }
 
         function showNotif(text, type = 'success') {
@@ -836,10 +305,7 @@
             notif.style.color = type === 'success' ? 'black' : 'white';
             notif.innerText = text;
             notif.style.display = 'block';
-            
-            setTimeout(() => {
-                notif.style.display = 'none';
-            }, 3000);
+            setTimeout(() => notif.style.display = 'none', 3000);
         }
     </script>
 </body>
