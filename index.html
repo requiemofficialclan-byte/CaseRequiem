@@ -3,271 +3,798 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLAN CASE</title>
+    <title>CLAN CASE | СЕЗОННЫЕ КЕЙСЫ 2025-2026</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
         }
+
         body {
-            background: #0a0a0a;
+            background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
             color: white;
+            min-height: 100vh;
         }
+
+        /* Шапка */
         .header {
-            background: #111;
+            background: rgba(17, 17, 17, 0.9);
+            backdrop-filter: blur(10px);
             padding: 20px;
+            border-bottom: 1px solid #333;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #333;
+            flex-wrap: wrap;
+            gap: 15px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
         .balance {
+            background: linear-gradient(135deg, #1a1a1a, #222);
+            padding: 12px 30px;
+            border-radius: 50px;
+            border: 2px solid #ffd700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .balance-icon {
             font-size: 24px;
-            color: gold;
         }
-        .username {
+
+        .balance-amount {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #1a1a1a, #222);
+            padding: 8px 25px;
+            border-radius: 50px;
             cursor: pointer;
-            padding: 10px 20px;
-            background: #333;
-            border-radius: 30px;
+            border: 1px solid #333;
+            transition: 0.3s;
         }
+
+        .profile:hover {
+            border-color: #00ffcc;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background: #00ffcc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            color: black;
+        }
+
+        .username {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        /* Ввод ключа */
         .key-section {
+            background: linear-gradient(135deg, #1a1a1a, #222);
+            padding: 12px 25px;
+            border-radius: 50px;
             display: flex;
             gap: 10px;
-            padding: 20px;
-        }
-        .key-input {
-            flex: 1;
-            padding: 15px;
-            background: #111;
             border: 1px solid #333;
-            color: white;
-            border-radius: 10px;
         }
+
+        .key-input {
+            background: #0a0a0a;
+            border: 2px solid #333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            width: 250px;
+            font-family: monospace;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .key-input:focus {
+            outline: none;
+            border-color: #00ffcc;
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+        }
+
         .key-btn {
-            padding: 15px 30px;
             background: #00ffcc;
             color: black;
             border: none;
-            border-radius: 10px;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-weight: bold;
             cursor: pointer;
+            transition: 0.2s;
         }
-        .cases {
+
+        .key-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #00ffcc;
+        }
+
+        /* Основной контейнер */
+        .container {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 3em;
+            background: linear-gradient(45deg, #00ffcc, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(0,255,204,0.3);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 50px;
+            font-size: 1.2em;
+        }
+
+        .section-title {
+            font-size: 2em;
+            margin: 50px 0 30px;
+            color: #fff;
+            border-left: 4px solid #00ffcc;
+            padding-left: 20px;
+            text-shadow: 0 0 10px #00ffcc;
+        }
+
+        /* Сетка кейсов */
+        .cases-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            padding: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
         }
-        .case {
-            background: #111;
-            border: 1px solid #333;
-            border-radius: 20px;
-            padding: 20px;
+
+        .case-card {
+            background: linear-gradient(135deg, #111, #1a1a1a);
+            border: 2px solid #333;
+            border-radius: 30px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
-        .case h3 {
-            margin-bottom: 15px;
+
+        .case-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.03), transparent);
+            transform: rotate(45deg);
+            transition: 0.5s;
         }
-        .price {
-            color: gold;
-            font-size: 20px;
-            margin: 15px 0;
+
+        .case-card:hover::before {
+            animation: shine 1s;
         }
-        .items {
-            margin: 15px 0;
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
         }
-        .item {
-            padding: 8px;
-            background: #1a1a1a;
-            margin: 5px 0;
-            border-radius: 8px;
+
+        .case-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--case-color);
+            box-shadow: 0 0 30px var(--case-color);
         }
-        .open-btn {
-            width: 100%;
-            padding: 15px;
-            background: var(--color, #00ffcc);
-            color: black;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-        .notification {
-            position: fixed;
+
+        .case-badge {
+            position: absolute;
             top: 20px;
             right: 20px;
-            padding: 15px 30px;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        .badge-key {
+            background: #ff4757;
+            color: white;
+            box-shadow: 0 0 10px #ff4757;
+        }
+
+        .badge-season {
             background: #00ffcc;
             color: black;
-            border-radius: 10px;
+            box-shadow: 0 0 10px #00ffcc;
+        }
+
+        .case-icon {
+            font-size: 70px;
+            text-align: center;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 10px var(--case-color));
+        }
+
+        .case-name {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            color: var(--case-color);
+            margin-bottom: 10px;
+        }
+
+        .case-price {
+            text-align: center;
+            font-size: 20px;
+            color: #ffd700;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+
+        /* Таблица ролей */
+        .roles-table {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 20px 0;
+        }
+
+        .role-row {
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: 0.2s;
+            backdrop-filter: blur(5px);
+        }
+
+        .role-row:hover {
+            border-color: var(--case-color);
+            background: rgba(34, 34, 34, 0.9);
+            transform: translateX(5px);
+        }
+
+        .role-percent {
+            font-size: 20px;
+            font-weight: bold;
+            color: #00ffcc;
+            min-width: 50px;
+            text-align: right;
+            text-shadow: 0 0 5px #00ffcc;
+        }
+
+        .role-plus {
+            color: #00ffcc;
+            font-size: 20px;
+            font-weight: bold;
+            min-width: 20px;
+        }
+
+        .role-name {
+            font-size: 18px;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .role-rarity {
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: #333;
+            font-weight: bold;
+        }
+
+        .rarity-legendary { 
+            color: #ffae00; 
+            text-shadow: 0 0 5px #ffae00;
+        }
+        .rarity-epic { 
+            color: #9c27b0; 
+            text-shadow: 0 0 5px #9c27b0;
+        }
+        .rarity-rare { 
+            color: #2196f3; 
+            text-shadow: 0 0 5px #2196f3;
+        }
+
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--case-color), transparent);
+            margin: 25px 0;
+            box-shadow: 0 0 10px var(--case-color);
+        }
+
+        .boost-title {
+            color: white;
+            font-size: 18px;
+            margin: 20px 0 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .boost-title span {
+            background: linear-gradient(135deg, #00ffcc, #00d4ff);
+            color: black;
+            padding: 5px 20px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 0 10px #00ffcc;
+        }
+
+        /* Кнопка открытия */
+        .open-btn {
+            background: var(--case-color);
+            color: black;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px var(--case-color);
+        }
+
+        .open-btn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px var(--case-color);
+        }
+
+        .open-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #666;
+            box-shadow: none;
+        }
+
+        /* Админ кнопка */
+        .admin-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: #333;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            opacity: 0.3;
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .admin-btn:hover {
+            opacity: 1;
+            background: #ff4757;
+            transform: rotate(90deg) scale(1.1);
+            box-shadow: 0 0 20px #ff4757;
+        }
+
+        /* Уведомления */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            padding: 15px 30px;
+            border-radius: 15px;
             display: none;
+            z-index: 2000;
+            animation: slideIn 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .key-section {
+                width: 100%;
+            }
+            
+            .key-input {
+                flex: 1;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .section-title {
+                font-size: 1.5em;
+            }
+            
+            .case-card {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <div class="balance">💰 <span id="balance">0</span></div>
-        <div class="username" onclick="changeUser()" id="usernameDisplay">гость</div>
+        <div class="user-section">
+            <div class="balance">
+                <span class="balance-icon">💰</span>
+                <span class="balance-amount" id="balance">0</span>
+            </div>
+            <div class="profile" onclick="changeUser()">
+                <div class="avatar" id="avatar">?</div>
+                <span class="username" id="username">гость</span>
+            </div>
+        </div>
+        
+        <div class="key-section">
+            <input type="text" class="key-input" id="keyInput" placeholder="ВВЕДИТЕ КЛЮЧ" autocomplete="off">
+            <button class="key-btn" onclick="useKey()">Активировать</button>
+        </div>
     </div>
 
-    <div class="key-section">
-        <input type="text" class="key-input" id="keyInput" placeholder="ВВЕДИТЕ КЛЮЧ">
-        <button class="key-btn" onclick="useKey()">Активировать</button>
+    <div class="container">
+        <h1>🎲 СЕЗОННЫЕ КЕЙСЫ 2025-2026</h1>
+        <div class="subtitle">❄️ ЗИМНИЙ КЕЙС: 50,000 монет • 🌱 ВЕСЕННИЙ КЕЙС: 55,000 монет • 🔑 РОЛЕВОЙ КЕЙС: ТОЛЬКО ПО КЛЮЧАМ</div>
+        
+        <!-- Зимний кейс -->
+        <div class="section-title">❄️ ЗИМНИЙ СЕЗОН 2025</div>
+        <div class="cases-grid">
+            <div class="case-card" style="--case-color: #00d4ff">
+                <div class="case-badge badge-season">🎫 ЗА МОНЕТЫ</div>
+                <div class="case-icon">❄️</div>
+                <div class="case-name">❄️ ЗИМНИЙ КЕЙС 2025</div>
+                <div class="case-price">💰 50,000</div>
+                
+                <div class="roles-table">
+                    <div class="role-row">
+                        <span class="role-percent">❄️</span>
+                        <span class="role-plus"></span>
+                        <span class="role-name">NY Limited</span>
+                        <span class="role-rarity rarity-legendary">[LEGENDARY]</span>
+                    </div>
+                    <div class="role-row">
+                        <span class="role-percent">🎁</span>
+                        <span class="role-plus"></span>
+                        <span class="role-name">HOLIDAY</span>
+                        <span class="role-rarity rarity-legendary">[LEGENDARY]</span>
+                    </div>
+                    <div class="role-row">
+                        <span class="role-percent">🎄</span>
+                        <span class="role-plus"></span>
+                        <span class="role-name">WINTER</span>
+                        <span class="role-rarity rarity-legendary">[LEGENDARY]</span>
+                    </div>
+                    <div class="role-row">
+                        <span class="role-percent">🌨️</span>
+                        <span class="role-plus"></span>
+                        <span class="role-name">Snow Reaper</span>
+                        <span class="role-rarity rarity-legendary">[LEGENDARY]</span>
+                    </div>
+                </div>
+
+                <button class="open-btn" style="background: #00d4ff" onclick="openWinterCase()">
+                    ОТКРЫТЬ КЕЙС
+                </button>
+            </div>
+        </div>
+
+        <!-- Весенний кейс -->
+        <div class="section-title">🌱 ВЕСЕННИЙ СЕЗОН 2026</div>
+        <div class="cases-grid">
+            <div class="case-card" style="--case-color: #00ffcc">
+                <div class="case-badge badge-season">🎫 ЗА МОНЕТЫ</div>
+                <div class="case-icon">🌸</div>
+                <div class="case-name">🌱 ВЕСЕННИЙ КЕЙС 2026</div>
+                <div class="case-price">💰 55,000</div>
+                
+                <div class="roles-table">
+                    <div class="role-row">
+                        <span class="role-percent">❄️⚡</span>
+                        <span class="role-plus"></span>
+                        <span class="role-name">FrostBolt</span>
+                        <span class="role-rarity rarity-legendary">[LEGENDARY]</span>
+                    </div>
+                    <div class="role-row">
+                        <span class="role-percent">☁️</span>
+                        <span class="role-plus"></span>
+                        <span class="role-name">NeonCloud</span>
+                        <span class="role-rarity rarity-legendary">[LEGENDARY]</span>
+                    </div>
+                    <div class="role-row">
+                        <span class="role-percent">🌩️</span>
+                        <span class="role-plus"></span>
+                        <span class="role-name">AbyssalThunder</span>
+                        <span class="role-rarity rarity-legendary">[LEGENDARY]</span>
+                    </div>
+                </div>
+
+                <button class="open-btn" style="background: #00ffcc" onclick="openSpringCase()">
+                    ОТКРЫТЬ КЕЙС
+                </button>
+            </div>
+        </div>
+
+        <!-- Ролевой кейс -->
+        <div class="section-title">🔑 РОЛЕВОЙ КЕЙС (ТОЛЬКО ПО КЛЮЧАМ)</div>
+        <div class="cases-grid">
+            <div class="case-card" style="--case-color: #ff4757">
+                <div class="case-badge badge-key">🔑 ТОЛЬКО ПО КЛЮЧУ</div>
+                <div class="case-icon">🎲</div>
+                <div class="case-name">🔑 РОЛЕВОЙ КЕЙС</div>
+                <div class="case-price">🔑 ПО КЛЮЧУ</div>
+                
+                <!-- XP Boost -->
+                <div class="boost-title">
+                    <span>💎 XP BOOST</span>
+                </div>
+                <div class="roles-table">
+                    <div class="role-row">
+                        <span class="role-percent">23%</span>
+                        <span class="role-plus">+</span>
+                        <span class="role-name">Bloodbound</span>
+                        <span class="role-rarity rarity-legendary">[L]</span>
+                    </div>
+                    <div class="role-row">
+                        <span class="role-percent">12%</span>
+                        <span class="role-plus">+</span>
+                        <span class="role-name">Shadow</span>
+                        <span class="role-rarity rarity-epic">[E]</span>
+                    </div>
+                    <div class="role-row">
+                        <span class="role-percent">7%</span>
+                        <span class="role-plus">+</span>
+                        <span class="role-name">Veteran</span>
+                        <span class="role-rarity rarity-rare">[R]</span>
+                    </div>
+                    <div class="role-row">
+                        <span class="role-percent">3%</span>
+                        <span class="role-plus">+</span>
+                        <span class="role-name">Eternal</span>
+                        <span class="role-rarity rarity-rare">[R]</span>
+                    </div>
+                    <div class="role-row">
+                        <span class="role-percent">3%</span>
+                        <span class="role-plus">+</span>
+                        <span class="role-name">Phantom</span>
+                        <span class="role-rarity rarity-rare">[R]</span>
+                    </div>
+                </div>
+
+                <div class="divider" style="--case-color: #ff4757"></div>
+
+                <!-- Money Boost -->
+                <div class="boost-title">
+                    <span>💰 MONEY BOOST</span>
+                </div>
+                <div class="roles-table">
+                    <div class="role-row">
+                        <span class="role-percent">25%</span>
+                        <span class="role-plus">+</span>
+                        <span class="role-name">Shadow</span>
+                        <span class="role-rarity rarity-epic">[E]</span>
+                    </div>
+                    <div class="role-row">
+                        <span class="role-percent">12%</span>
+                        <span class="role-plus">+</span>
+                        <span class="role-name">Veteran</span>
+                        <span class="role-rarity rarity-rare">[R]</span>
+                    </div>
+                    <div class="role-row">
+                        <span class="role-percent">6%</span>
+                        <span class="role-plus">+</span>
+                        <span class="role-name">Eternal</span>
+                        <span class="role-rarity rarity-rare">[R]</span>
+                    </div>
+                    <div class="role-row">
+                        <span class="role-percent">4%</span>
+                        <span class="role-plus">+</span>
+                        <span class="role-name">Phantom</span>
+                        <span class="role-rarity rarity-rare">[R]</span>
+                    </div>
+                    <div class="role-row">
+                        <span class="role-percent">3%</span>
+                        <span class="role-plus">+</span>
+                        <span class="role-name">Bloodbound</span>
+                        <span class="role-rarity rarity-legendary">[L]</span>
+                    </div>
+                    <div class="role-row">
+                        <span class="role-percent">2%</span>
+                        <span class="role-plus">+</span>
+                        <span class="role-name">Chosen</span>
+                        <span class="role-rarity rarity-legendary">[L]</span>
+                    </div>
+                </div>
+
+                <button class="open-btn" style="background: #ff4757" disabled>
+                    ТОЛЬКО ПО КЛЮЧУ
+                </button>
+            </div>
+        </div>
     </div>
 
-    <div class="cases" id="cases"></div>
-
+    <button class="admin-btn" onclick="openAdmin()">⚙️</button>
     <div class="notification" id="notification"></div>
 
     <script>
         // ============ НАСТРОЙКИ ============
-        const SERVER = 'http://192.168.1.100:5000'; // ← ВАШ IP (узнайте из консоли)
+        const SERVER = 'http://192.168.1.100:5000'; // ЗАМЕНИТЕ НА ВАШ IP
         let username = localStorage.getItem('username') || 'гость';
-        let balance = 0;
+        let balance = parseInt(localStorage.getItem('balance')) || 100000; // Для теста даем 100к
 
         // ============ ЗАГРУЗКА ============
-        window.onload = async () => {
-            await loadUser();
-            renderCases();
+        window.onload = () => {
+            updateUI();
         };
 
-        async function loadUser() {
-            try {
-                const res = await fetch(`${SERVER}/user`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({username})
-                });
-                const data = await res.json();
-                balance = data.balance;
-                updateUI();
-            } catch (e) {
-                showNotif('Сервер не запущен!', 'error');
-            }
-        }
-
         function updateUI() {
-            document.getElementById('balance').innerText = balance;
-            document.getElementById('usernameDisplay').innerText = username;
+            document.getElementById('username').innerText = username;
+            document.getElementById('avatar').innerText = username[0]?.toUpperCase() || '?';
+            document.getElementById('balance').innerText = balance.toLocaleString();
         }
 
         function changeUser() {
-            let name = prompt('Ваш ник:');
+            let name = prompt('Введите ваш username:');
             if (name) {
                 username = name;
                 localStorage.setItem('username', username);
-                loadUser();
+                updateUI();
             }
         }
 
         // ============ КЛЮЧИ ============
         async function useKey() {
             const key = document.getElementById('keyInput').value.trim().toUpperCase();
-            if (!key) return;
-
-            try {
-                const res = await fetch(`${SERVER}/use_key`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({key, username})
-                });
-                const data = await res.json();
-
-                if (data.success) {
-                    if (data.type === 'balance') {
-                        balance += data.value;
-                        updateUI();
-                        showNotif(`+${data.value} монет!`);
-                    } else {
-                        showNotif('Ключ активирован!');
-                    }
-                    document.getElementById('keyInput').value = '';
-                } else {
-                    showNotif(data.message, 'error');
-                }
-            } catch (e) {
-                showNotif('Ошибка', 'error');
-            }
-        }
-
-        // ============ КЕЙСЫ ============
-        const cases = [
-            {
-                name: '❄️ ЗИМНИЙ 2025',
-                price: 50000,
-                color: '#00d4ff',
-                items: ['NY Limited', 'HOLIDAY', 'WINTER', 'Snow Reaper']
-            },
-            {
-                name: '🌱 ВЕСЕННИЙ 2026',
-                price: 55000,
-                color: '#00ffcc',
-                items: ['FrostBolt', 'NeonCloud', 'AbyssalThunder']
-            },
-            {
-                name: '🔑 РОЛЕВОЙ',
-                price: 0,
-                color: '#ff4757',
-                keyOnly: true,
-                items: [
-                    '23% Bloodbound [L]',
-                    '12% Shadow [E]',
-                    '7% Veteran [R]',
-                    '3% Eternal [R]',
-                    '3% Phantom [R]'
-                ]
-            }
-        ];
-
-        function renderCases() {
-            const container = document.getElementById('cases');
-            container.innerHTML = cases.map(c => `
-                <div class="case" style="border-color: ${c.color}">
-                    <h3>${c.name}</h3>
-                    <div class="price">${c.price ? c.price.toLocaleString() + ' 💰' : '🔑 ПО КЛЮЧУ'}</div>
-                    <div class="items">
-                        ${c.items.map(item => `<div class="item">${item}</div>`).join('')}
-                    </div>
-                    <button class="open-btn" 
-                            style="--color: ${c.color}"
-                            onclick="openCase('${c.name}')"
-                            ${c.keyOnly ? 'disabled' : ''}>
-                        ${c.keyOnly ? 'ТОЛЬКО ПО КЛЮЧУ' : 'ОТКРЫТЬ'}
-                    </button>
-                </div>
-            `).join('');
-        }
-
-        async function openCase(caseName) {
-            const caseData = cases.find(c => c.name === caseName);
-            if (!caseData || caseData.keyOnly) return;
-
-            if (balance < caseData.price) {
-                showNotif('Недостаточно монет!', 'error');
+            if (!key) {
+                showNotif('❌ Введите ключ', 'error');
                 return;
             }
 
-            try {
-                const res = await fetch(`${SERVER}/open_case`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        username,
-                        case_type: caseName,
-                        price: caseData.price
-                    })
-                });
-                const data = await res.json();
+            // Имитация активации ключа
+            if (key.startsWith('BAL-')) {
+                // Ключ на баланс
+                balance += 1000;
+                localStorage.setItem('balance', balance);
+                updateUI();
+                showNotif('✅ +1000 монет!');
+            } else if (key.startsWith('ROLE-')) {
+                // Ключ на ролевой кейс
+                openRoleCase();
+                showNotif('✅ Ключ активирован! Ролевой кейс открыт!');
+            } else if (key.startsWith('WINT-')) {
+                showNotif('✅ Ключ на зимний кейс активирован!');
+            } else if (key.startsWith('SPRG-')) {
+                showNotif('✅ Ключ на весенний кейс активирован!');
+            } else {
+                showNotif('❌ Неверный ключ', 'error');
+            }
+            
+            document.getElementById('keyInput').value = '';
+        }
 
-                if (data.success) {
-                    balance = data.new_balance;
-                    updateUI();
-                    
-                    const winItem = caseData.items[Math.floor(Math.random() * caseData.items.length)];
-                    showNotif(`🎉 Вы получили: ${winItem}!`);
+        // ============ ОТКРЫТИЕ КЕЙСОВ ============
+        function openWinterCase() {
+            if (balance < 50000) {
+                showNotif('❌ Нужно 50,000 монет!', 'error');
+                return;
+            }
+
+            balance -= 50000;
+            localStorage.setItem('balance', balance);
+            updateUI();
+
+            const items = ['NY Limited [L]', 'HOLIDAY [L]', 'WINTER [L]', 'Snow Reaper [L]'];
+            const winItem = items[Math.floor(Math.random() * items.length)];
+            
+            showNotif(`🎉 Вы получили: ${winItem}!`);
+        }
+
+        function openSpringCase() {
+            if (balance < 55000) {
+                showNotif('❌ Нужно 55,000 монет!', 'error');
+                return;
+            }
+
+            balance -= 55000;
+            localStorage.setItem('balance', balance);
+            updateUI();
+
+            const items = ['FrostBolt [L]', 'NeonCloud [L]', 'AbyssalThunder [L]'];
+            const winItem = items[Math.floor(Math.random() * items.length)];
+            
+            showNotif(`🎉 Вы получили: ${winItem}!`);
+        }
+
+        function openRoleCase() {
+            const items = [
+                { name: 'Bloodbound', percent: 23, rarity: '[L]' },
+                { name: 'Shadow', percent: 12, rarity: '[E]' },
+                { name: 'Veteran', percent: 7, rarity: '[R]' },
+                { name: 'Eternal', percent: 3, rarity: '[R]' },
+                { name: 'Phantom', percent: 3, rarity: '[R]' }
+            ];
+
+            const total = items.reduce((sum, item) => sum + item.percent, 0);
+            let rand = Math.random() * total;
+            let cumulative = 0;
+            let winItem = items[0];
+            
+            for (let item of items) {
+                cumulative += item.percent;
+                if (rand <= cumulative) {
+                    winItem = item;
+                    break;
                 }
-            } catch (e) {
-                showNotif('Ошибка', 'error');
+            }
+            
+            showNotif(`🎉 Вы получили: ${winItem.name} ${winItem.rarity} (${winItem.percent}% Boost)!`);
+        }
+
+        // ============ АДМИН ============
+        function openAdmin() {
+            const pass = prompt('Пароль админа:');
+            if (pass === '1337') {
+                let action = prompt('1 - Создать ключ на баланс\n2 - Создать ключ на кейс');
+                
+                if (action === '1') {
+                    let amount = prompt('Сумма:', '1000');
+                    let key = `BAL-${Math.floor(Math.random() * 9000 + 1000)}-L`;
+                    alert(`✅ Ключ создан: ${key}`);
+                } else if (action === '2') {
+                    let type = prompt('Тип кейса (role/winter/spring):', 'role');
+                    let key = `${type.toUpperCase()}-${Math.floor(Math.random() * 9000 + 1000)}-L`;
+                    alert(`✅ Ключ создан: ${key}`);
+                }
+            } else {
+                showNotif('❌ Неверный пароль', 'error');
             }
         }
 
@@ -278,7 +805,10 @@
             notif.style.color = type === 'success' ? 'black' : 'white';
             notif.innerText = text;
             notif.style.display = 'block';
-            setTimeout(() => notif.style.display = 'none', 3000);
+            
+            setTimeout(() => {
+                notif.style.display = 'none';
+            }, 3000);
         }
     </script>
 </body>
