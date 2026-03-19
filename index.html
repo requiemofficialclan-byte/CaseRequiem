@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLAN CASE | СЕЗОННАЯ СИСТЕМА</title>
+    <title>CLAN CASE | РОЛИ DISCORD</title>
     <style>
         * {
             margin: 0;
@@ -15,14 +15,13 @@
         body {
             background: #0a0a0a;
             color: white;
-            padding: 20px;
+            min-height: 100vh;
         }
 
         .header {
             background: #111;
             padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 30px;
+            border-bottom: 1px solid #333;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -30,38 +29,69 @@
             gap: 15px;
         }
 
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
         .balance {
-            background: #1a1a1a;
-            padding: 10px 25px;
-            border-radius: 40px;
+            background: linear-gradient(135deg, #1a1a1a, #222);
+            padding: 12px 30px;
+            border-radius: 50px;
             border: 2px solid #ffd700;
-            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .balance-amount {
+            font-size: 28px;
             font-weight: bold;
             color: #ffd700;
         }
 
-        .user {
+        .profile {
             display: flex;
             align-items: center;
-            gap: 10px;
-            background: #1a1a1a;
-            padding: 8px 20px;
-            border-radius: 40px;
+            gap: 12px;
+            background: linear-gradient(135deg, #1a1a1a, #222);
+            padding: 8px 25px;
+            border-radius: 50px;
             cursor: pointer;
+            border: 1px solid #333;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background: #00ffcc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: black;
         }
 
         .key-section {
+            background: linear-gradient(135deg, #1a1a1a, #222);
+            padding: 12px 25px;
+            border-radius: 50px;
             display: flex;
             gap: 10px;
+            border: 1px solid #333;
         }
 
         .key-input {
-            background: #1a1a1a;
+            background: #0a0a0a;
             border: 2px solid #333;
             color: white;
             padding: 10px 20px;
             border-radius: 30px;
             width: 250px;
+            font-family: monospace;
         }
 
         .key-input:focus {
@@ -69,7 +99,7 @@
             border-color: #00ffcc;
         }
 
-        .btn {
+        .key-btn {
             background: #00ffcc;
             color: black;
             border: none;
@@ -79,57 +109,192 @@
             cursor: pointer;
         }
 
+        .container {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 3em;
+            background: linear-gradient(45deg, #00ffcc, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-title {
+            font-size: 2em;
+            margin: 50px 0 30px;
+            color: #666;
+            border-left: 4px solid #00ffcc;
+            padding-left: 20px;
+        }
+
         .cases-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 30px;
             margin-top: 30px;
         }
 
         .case-card {
-            background: #111;
+            background: linear-gradient(135deg, #111, #1a1a1a);
             border: 2px solid #333;
+            border-radius: 30px;
+            padding: 30px;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .case-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--case-color);
+            box-shadow: 0 0 20px var(--case-color);
+        }
+
+        .case-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 5px 15px;
             border-radius: 20px;
-            padding: 25px;
-            text-align: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .badge-key {
+            background: #ff4757;
+            color: white;
+        }
+
+        .badge-season {
+            background: #00ffcc;
+            color: black;
         }
 
         .case-icon {
             font-size: 60px;
+            text-align: center;
             margin-bottom: 15px;
         }
 
         .case-name {
-            font-size: 22px;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            color: var(--case-color);
             margin-bottom: 10px;
         }
 
-        .case-status {
-            padding: 5px 10px;
-            border-radius: 15px;
-            display: inline-block;
-            margin: 10px 0;
-            font-size: 12px;
+        .case-price {
+            text-align: center;
+            font-size: 20px;
+            color: #ffd700;
+            margin-bottom: 25px;
         }
 
-        .status-current { background: #00ffcc; color: black; }
-        .status-past { background: #666; color: white; }
-        .status-future { background: #ffaa00; color: black; }
+        /* XP Boost таблица */
+        .boost-section {
+            margin: 20px 0;
+        }
+
+        .boost-title {
+            color: #00ffcc;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .boost-title span {
+            background: #00ffcc;
+            color: black;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .roles-table {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .role-row {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: 0.2s;
+        }
+
+        .role-row:hover {
+            border-color: var(--case-color);
+            background: #222;
+        }
+
+        .role-percent {
+            font-size: 18px;
+            font-weight: bold;
+            color: #00ffcc;
+            min-width: 45px;
+            text-align: right;
+        }
+
+        .role-plus {
+            color: #00ffcc;
+            font-size: 18px;
+            font-weight: bold;
+            min-width: 20px;
+        }
+
+        .role-name {
+            font-size: 16px;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .role-rarity {
+            font-size: 12px;
+            padding: 3px 10px;
+            border-radius: 15px;
+            background: #333;
+        }
+
+        .rarity-legendary { color: #ffae00; }
+        .rarity-epic { color: #9c27b0; }
+        .rarity-rare { color: #2196f3; }
+        .rarity-common { color: #aaa; }
 
         .open-btn {
-            background: var(--btn-color, #00ffcc);
+            background: var(--case-color);
             color: black;
             border: none;
-            padding: 12px 20px;
+            padding: 15px 30px;
             border-radius: 30px;
-            width: 100%;
             font-weight: bold;
+            font-size: 18px;
             cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
+            margin-top: 20px;
+        }
+
+        .open-btn:hover:not(:disabled) {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px var(--case-color);
         }
 
         .open-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            background: #666;
         }
 
         .admin-btn {
@@ -144,159 +309,513 @@
             color: white;
             font-size: 24px;
             cursor: pointer;
+            opacity: 0.3;
+            z-index: 100;
+        }
+
+        .admin-btn:hover {
+            opacity: 1;
+            background: #ff4757;
+        }
+
+        .admin-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admin-panel.active {
+            display: flex;
+        }
+
+        .admin-content {
+            background: #111;
+            padding: 40px;
+            border-radius: 30px;
+            width: 90%;
+            max-width: 400px;
+            border: 2px solid #ff4757;
+        }
+
+        .admin-input, .admin-select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: white;
+            border-radius: 10px;
+        }
+
+        .admin-btn-small {
+            background: #00ffcc;
+            color: black;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            margin: 5px 0;
+            font-weight: bold;
+        }
+
+        .key-display {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-family: monospace;
+            word-break: break-all;
+            text-align: center;
         }
 
         .notification {
             position: fixed;
-            top: 20px;
+            top: 100px;
             right: 20px;
-            padding: 15px 25px;
+            padding: 15px 30px;
             border-radius: 10px;
-            background: #00ffcc;
-            color: black;
             display: none;
             z-index: 1000;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #333, transparent);
+            margin: 25px 0;
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <div class="balance" id="balance">0 💰</div>
-        <div class="user" onclick="changeUser()">
-            <span id="username">гость</span>
+        <div class="user-section">
+            <div class="balance">
+                <span class="balance-icon">💰</span>
+                <span class="balance-amount" id="balance">0</span>
+            </div>
+            <div class="profile" onclick="changeUser()">
+                <div class="avatar" id="avatar">?</div>
+                <span id="username">гость</span>
+            </div>
         </div>
+        
         <div class="key-section">
             <input type="text" class="key-input" id="keyInput" placeholder="ВВЕДИТЕ КЛЮЧ">
-            <button class="btn" onclick="useKey()">Активировать</button>
+            <button class="key-btn" onclick="useKey()">Активировать</button>
         </div>
     </div>
 
-    <h1 style="text-align: center; margin-bottom: 30px;">🎲 СЕЗОННЫЕ КЕЙСЫ</h1>
-    <div id="seasonInfo" style="text-align: center; margin-bottom: 20px; color: #666;"></div>
-    
-    <div class="cases-grid" id="casesGrid"></div>
+    <div class="container">
+        <h1>🎲 СЕЗОННЫЕ КЕЙСЫ</h1>
+        
+        <!-- Зимний кейс -->
+        <div class="section-title">❄️ ЗИМНИЙ СЕЗОН 2025</div>
+        <div class="cases-grid">
+            <div class="case-card" style="--case-color: #00d4ff">
+                <div class="case-badge badge-season">🎫 ЗА МОНЕТЫ</div>
+                <div class="case-icon">❄️</div>
+                <div class="case-name">❄️ ЗИМНИЙ КЕЙС 2025</div>
+                <div class="case-price">💰 50,000</div>
+                
+                <div class="roles-table">
+                    <div class="role-row">
+                        <span class="role-percent">❄️</span>
+                        <span class="role-plus"></span>
+                        <span class="role-name">NY Limited</span>
+                        <span class="role-rarity rarity-legendary">[L]</span>
+                    </div>
+                    <div class="role-row">
+                        <span class="role-percent">🎁</span>
+                        <span class="role-plus"></span>
+                        <span class="role-name">HOLIDAY</span>
+                        <span class="role-rarity rarity-legendary">[L]</span>
+                    </div>
+                    <div class="role-row">
+                        <span class="role-percent">🎄</span>
+                        <span class="role-plus"></span>
+                        <span class="role-name">WINTER</span>
+                        <span class="role-rarity rarity-legendary">[L]</span>
+                    </div>
+                    <div class="role-row">
+                        <span class="role-percent">🌨️</span>
+                        <span class="role-plus"></span>
+                        <span class="role-name">Snow Reaper</span>
+                        <span class="role-rarity rarity-legendary">[L]</span>
+                    </div>
+                </div>
+
+                <button class="open-btn" style="background: #00d4ff" onclick="openWinterCase()">
+                    ОТКРЫТЬ КЕЙС
+                </button>
+            </div>
+        </div>
+
+        <!-- Весенний кейс -->
+        <div class="section-title">🌱 ВЕСЕННИЙ СЕЗОН 2026</div>
+        <div class="cases-grid">
+            <div class="case-card" style="--case-color: #00ffcc">
+                <div class="case-badge badge-season">🎫 ЗА МОНЕТЫ</div>
+                <div class="case-icon">🌸</div>
+                <div class="case-name">🌱 ВЕСЕННИЙ КЕЙС 2026</div>
+                <div class="case-price">💰 55,000</div>
+                
+                <div class="roles-table">
+                    <div class="role-row">
+                        <span class="role-percent">❄️⚡</span>
+                        <span class="role-plus"></span>
+                        <span class="role-name">FrostBolt</span>
+                        <span class="role-rarity rarity-legendary">[L]</span>
+                    </div>
+                    <div class="role-row">
+                        <span class="role-percent">☁️</span>
+                        <span class="role-plus"></span>
+                        <span class="role-name">NeonCloud</span>
+                        <span class="role-rarity rarity-legendary">[L]</span>
+                    </div>
+                    <div class="role-row">
+                        <span class="role-percent">🌩️</span>
+                        <span class="role-plus"></span>
+                        <span class="role-name">AbyssalThunder</span>
+                        <span class="role-rarity rarity-legendary">[L]</span>
+                    </div>
+                </div>
+
+                <button class="open-btn" style="background: #00ffcc" onclick="openSpringCase()">
+                    ОТКРЫТЬ КЕЙС
+                </button>
+            </div>
+        </div>
+
+        <!-- Ролевой кейс (только по ключам) -->
+        <div class="section-title">🔑 РОЛЕВОЙ КЕЙС (ТОЛЬКО ПО КЛЮЧАМ)</div>
+        <div class="cases-grid">
+            <div class="case-card" style="--case-color: #ff4757">
+                <div class="case-badge badge-key">🔑 ТОЛЬКО ПО КЛЮЧУ</div>
+                <div class="case-icon">🎲</div>
+                <div class="case-name">🔑 РОЛЕВОЙ КЕЙС</div>
+                <div class="case-price">🔑 ПО КЛЮЧУ</div>
+                
+                <!-- XP Boost -->
+                <div class="boost-title">
+                    <span>💎 XP BOOST</span>
+                </div>
+                <div class="roles-table">
+                    <div class="role-row">
+                        <span class="role-percent">23%</span>
+                        <span class="role-plus">+</span>
+                        <span class="role-name">Bloodbound</span>
+                        <span class="role-rarity rarity-legendary">[L]</span>
+                    </div>
+                    <div class="role-row">
+                        <span class="role-percent">12%</span>
+                        <span class="role-plus">+</span>
+                        <span class="role-name">Shadow</span>
+                        <span class="role-rarity rarity-epic">[E]</span>
+                    </div>
+                    <div class="role-row">
+                        <span class="role-percent">7%</span>
+                        <span class="role-plus">+</span>
+                        <span class="role-name">Veteran</span>
+                        <span class="role-rarity rarity-rare">[R]</span>
+                    </div>
+                    <div class="role-row">
+                        <span class="role-percent">3%</span>
+                        <span class="role-plus">+</span>
+                        <span class="role-name">Eternal</span>
+                        <span class="role-rarity rarity-rare">[R]</span>
+                    </div>
+                    <div class="role-row">
+                        <span class="role-percent">3%</span>
+                        <span class="role-plus">+</span>
+                        <span class="role-name">Phantom</span>
+                        <span class="role-rarity rarity-rare">[R]</span>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <!-- Money Boost -->
+                <div class="boost-title">
+                    <span>💰 MONEY BOOST</span>
+                </div>
+                <div class="roles-table">
+                    <div class="role-row">
+                        <span class="role-percent">25%</span>
+                        <span class="role-plus">+</span>
+                        <span class="role-name">Shadow</span>
+                        <span class="role-rarity rarity-epic">[E]</span>
+                    </div>
+                    <div class="role-row">
+                        <span class="role-percent">12%</span>
+                        <span class="role-plus">+</span>
+                        <span class="role-name">Veteran</span>
+                        <span class="role-rarity rarity-rare">[R]</span>
+                    </div>
+                    <div class="role-row">
+                        <span class="role-percent">6%</span>
+                        <span class="role-plus">+</span>
+                        <span class="role-name">Eternal</span>
+                        <span class="role-rarity rarity-rare">[R]</span>
+                    </div>
+                    <div class="role-row">
+                        <span class="role-percent">4%</span>
+                        <span class="role-plus">+</span>
+                        <span class="role-name">Phantom</span>
+                        <span class="role-rarity rarity-rare">[R]</span>
+                    </div>
+                    <div class="role-row">
+                        <span class="role-percent">3%</span>
+                        <span class="role-plus">+</span>
+                        <span class="role-name">Bloodbound</span>
+                        <span class="role-rarity rarity-legendary">[L]</span>
+                    </div>
+                    <div class="role-row">
+                        <span class="role-percent">2%</span>
+                        <span class="role-plus">+</span>
+                        <span class="role-name">Chosen</span>
+                        <span class="role-rarity rarity-legendary">[L]</span>
+                    </div>
+                </div>
+
+                <button class="open-btn" style="background: #ff4757" disabled>
+                    ТОЛЬКО ПО КЛЮЧУ
+                </button>
+            </div>
+        </div>
+    </div>
 
     <button class="admin-btn" onclick="openAdmin()">⚙️</button>
+
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-content">
+            <h2 style="text-align: center; margin-bottom: 20px;">🔐 АДМИН ПАНЕЛЬ</h2>
+            
+            <input type="password" class="admin-input" id="adminPass" placeholder="Пароль">
+            <button class="admin-btn-small" onclick="adminLogin()">ВОЙТИ</button>
+
+            <div id="adminControls" style="display: none;">
+                <h3 style="margin: 20px 0 10px;">💰 Ключ на баланс</h3>
+                <input type="number" class="admin-input" id="balanceValue" value="1000">
+                <button class="admin-btn-small" onclick="createBalanceKey()">СОЗДАТЬ</button>
+
+                <h3 style="margin: 20px 0 10px;">🎲 Ключи на кейсы</h3>
+                <select class="admin-input" id="caseType">
+                    <option value="role">🔑 Ролевой кейс</option>
+                    <option value="winter">❄️ Зимний кейс</option>
+                    <option value="spring">🌱 Весенний кейс</option>
+                </select>
+                <button class="admin-btn-small" onclick="createCaseKey()">СОЗДАТЬ КЛЮЧ</button>
+
+                <div id="keyDisplay" style="display: none;">
+                    <h3 style="margin: 15px 0;">✅ Новый ключ:</h3>
+                    <div class="key-display" id="newKey"></div>
+                    <button class="admin-btn-small" onclick="copyKey()">КОПИРОВАТЬ</button>
+                </div>
+            </div>
+
+            <button class="admin-btn-small" onclick="closeAdmin()" style="background: #ff4757; margin-top: 20px;">ЗАКРЫТЬ</button>
+        </div>
+    </div>
+
     <div class="notification" id="notification"></div>
 
     <script>
-        const SERVER = 'http://localhost:5000';
+        const ADMIN_PASS = '1337';
         let currentUser = localStorage.getItem('username') || 'гость';
         let balance = parseInt(localStorage.getItem('balance')) || 0;
+        let adminLoggedIn = false;
 
         window.onload = () => {
             document.getElementById('username').innerText = currentUser;
-            document.getElementById('balance').innerText = balance + ' 💰';
-            loadCases();
+            document.getElementById('avatar').innerText = currentUser[0].toUpperCase();
+            document.getElementById('balance').innerText = balance.toLocaleString();
         };
 
-        async function loadCases() {
-            try {
-                const response = await fetch(`${SERVER}/cases`);
-                const data = await response.json();
-                
-                if (data.success) {
-                    document.getElementById('seasonInfo').innerText = `Текущий сезон: ${data.current_season}`;
-                    renderCases(data.cases);
-                }
-            } catch (e) {
-                showNotif('❌ Сервер не отвечает', 'error');
-            }
-        }
-
-        function renderCases(cases) {
-            const grid = document.getElementById('casesGrid');
-            grid.innerHTML = '';
-            
-            cases.forEach(c => {
-                let statusClass = '';
-                let statusText = '';
-                
-                if (!c.available_for_purchase && c.year < 2026) {
-                    statusClass = 'status-past';
-                    statusText = '🔑 ТОЛЬКО ПО КЛЮЧАМ';
-                } else if (c.available_for_purchase) {
-                    statusClass = 'status-current';
-                    statusText = '✨ ТЕКУЩИЙ СЕЗОН';
-                } else {
-                    statusClass = 'status-future';
-                    statusText = '⏳ СКОРО';
-                }
-                
-                const card = document.createElement('div');
-                card.className = 'case-card';
-                card.innerHTML = `
-                    <div class="case-icon">${c.icon}</div>
-                    <div class="case-name">${c.name}</div>
-                    <div class="case-status ${statusClass}">${statusText}</div>
-                    <div style="margin: 15px 0; color: #ffd700;">💰 ${c.price}</div>
-                    <button class="open-btn" 
-                            style="--btn-color: ${c.color}"
-                            onclick="openCase('${c.id}')"
-                            ${!c.available_for_purchase ? 'disabled' : ''}>
-                        ${c.available_for_purchase ? 'ОТКРЫТЬ' : 'НЕДОСТУПЕН'}
-                    </button>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
         function changeUser() {
-            let name = prompt('Ваш username:');
+            let name = prompt('Введите ваш username:');
             if (name) {
                 currentUser = name.toLowerCase().trim();
                 localStorage.setItem('username', currentUser);
                 document.getElementById('username').innerText = currentUser;
+                document.getElementById('avatar').innerText = currentUser[0].toUpperCase();
             }
         }
 
         async function useKey() {
             const key = document.getElementById('keyInput').value.trim().toUpperCase();
-            if (!key) return showNotif('❌ Введите ключ', 'error');
+            if (!key) {
+                showNotif('❌ Введите ключ', 'error');
+                return;
+            }
 
-            try {
-                const response = await fetch(`${SERVER}/key/use`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ key, username: currentUser })
-                });
-
-                const data = await response.json();
-                
-                if (data.success) {
-                    if (data.type === 'balance') {
-                        balance += data.value;
-                        localStorage.setItem('balance', balance);
-                        document.getElementById('balance').innerText = balance + ' 💰';
-                        showNotif(`✅ +${data.value} монет!`);
-                    } else {
-                        showNotif('✅ Ключ активирован! Открывайте кейс!');
-                    }
-                    document.getElementById('keyInput').value = '';
-                } else {
-                    showNotif(data.message, 'error');
-                }
-            } catch (e) {
-                showNotif('❌ Ошибка сервера', 'error');
+            if (key.startsWith('ROLE-')) {
+                openRoleCase();
+                document.getElementById('keyInput').value = '';
+                showNotif('✅ Ключ активирован! Ролевой кейс открыт!', 'success');
+            } else if (key.startsWith('WINT-')) {
+                showNotif('✅ Ключ на зимний кейс активирован!', 'success');
+                document.getElementById('keyInput').value = '';
+            } else if (key.startsWith('SPRG-')) {
+                showNotif('✅ Ключ на весенний кейс активирован!', 'success');
+                document.getElementById('keyInput').value = '';
+            } else if (key.startsWith('BAL-')) {
+                const value = parseInt(key.split('-')[1]) || 1000;
+                balance += value;
+                localStorage.setItem('balance', balance);
+                document.getElementById('balance').innerText = balance.toLocaleString();
+                document.getElementById('keyInput').value = '';
+                showNotif(`✅ +${value} монет!`, 'success');
+            } else {
+                showNotif('❌ Неверный ключ', 'error');
             }
         }
 
-        function openCase(caseId) {
-            if (balance < 2) {
-                return showNotif('❌ Нужно 2 монеты!', 'error');
+        function openWinterCase() {
+            if (balance < 50000) {
+                showNotif('❌ Нужно 50,000 монет!', 'error');
+                return;
             }
-            
-            balance -= 2;
+            balance -= 50000;
             localStorage.setItem('balance', balance);
-            document.getElementById('balance').innerText = balance + ' 💰';
-            showNotif('✅ Кейс открыт! (тут должна быть анимация)');
+            document.getElementById('balance').innerText = balance.toLocaleString();
+            
+            const winterItems = ['NY Limited [L]', 'HOLIDAY [L]', 'WINTER [L]', 'Snow Reaper [L]'];
+            const winItem = winterItems[Math.floor(Math.random() * winterItems.length)];
+            showNotif(`🎉 Вы получили: ${winItem}!`, 'success');
         }
 
-        function openAdmin() {
-            let pass = prompt('Пароль админа:');
-            if (pass === '1337') {
-                window.location.href = 'admin.html';
+        function openSpringCase() {
+            if (balance < 55000) {
+                showNotif('❌ Нужно 55,000 монет!', 'error');
+                return;
             }
+            balance -= 55000;
+            localStorage.setItem('balance', balance);
+            document.getElementById('balance').innerText = balance.toLocaleString();
+            
+            const springItems = ['FrostBolt [L]', 'NeonCloud [L]', 'AbyssalThunder [L]'];
+            const winItem = springItems[Math.floor(Math.random() * springItems.length)];
+            showNotif(`🎉 Вы получили: ${winItem}!`, 'success');
+        }
+
+        function openRoleCase() {
+            // Роли для XP Boost
+            const xpRoles = [
+                { name: 'Bloodbound', percent: 23, rarity: '[L]' },
+                { name: 'Shadow', percent: 12, rarity: '[E]' },
+                { name: 'Veteran', percent: 7, rarity: '[R]' },
+                { name: 'Eternal', percent: 3, rarity: '[R]' },
+                { name: 'Phantom', percent: 3, rarity: '[R]' }
+            ];
+
+            // Роли для Money Boost
+            const moneyRoles = [
+                { name: 'Shadow', percent: 25, rarity: '[E]' },
+                { name: 'Veteran', percent: 12, rarity: '[R]' },
+                { name: 'Eternal', percent: 6, rarity: '[R]' },
+                { name: 'Phantom', percent: 4, rarity: '[R]' },
+                { name: 'Bloodbound', percent: 3, rarity: '[L]' },
+                { name: 'Chosen', percent: 2, rarity: '[L]' }
+            ];
+
+            // Рандомно выбираем тип буста (50/50)
+            const boostType = Math.random() < 0.5 ? 'xp' : 'money';
+            
+            if (boostType === 'xp') {
+                const total = xpRoles.reduce((sum, item) => sum + item.percent, 0);
+                let rand = Math.random() * total;
+                let cumulative = 0;
+                let winItem = xpRoles[0];
+                
+                for (let item of xpRoles) {
+                    cumulative += item.percent;
+                    if (rand <= cumulative) {
+                        winItem = item;
+                        break;
+                    }
+                }
+                showNotif(`🎉 Вы получили: ${winItem.name} ${winItem.rarity} (${winItem.percent}% XP Boost)!`, 'success');
+            } else {
+                const total = moneyRoles.reduce((sum, item) => sum + item.percent, 0);
+                let rand = Math.random() * total;
+                let cumulative = 0;
+                let winItem = moneyRoles[0];
+                
+                for (let item of moneyRoles) {
+                    cumulative += item.percent;
+                    if (rand <= cumulative) {
+                        winItem = item;
+                        break;
+                    }
+                }
+                showNotif(`🎉 Вы получили: ${winItem.name} ${winItem.rarity} (${winItem.percent}% Money Boost)!`, 'success');
+            }
+        }
+
+        // Админ функции
+        function openAdmin() {
+            document.getElementById('adminPanel').classList.add('active');
+        }
+
+        function closeAdmin() {
+            document.getElementById('adminPanel').classList.remove('active');
+            document.getElementById('adminControls').style.display = 'none';
+            document.getElementById('keyDisplay').style.display = 'none';
+            document.getElementById('adminPass').value = '';
+        }
+
+        function adminLogin() {
+            const pass = document.getElementById('adminPass').value;
+            if (pass === ADMIN_PASS) {
+                adminLoggedIn = true;
+                document.getElementById('adminControls').style.display = 'block';
+                showNotif('✅ Добро пожаловать, админ!');
+            } else {
+                showNotif('❌ Неверный пароль!', 'error');
+            }
+        }
+
+        function createBalanceKey() {
+            if (!adminLoggedIn) return;
+            const value = document.getElementById('balanceValue').value;
+            const key = `BAL-${value}-${Math.random().toString(36).substr(2, 8).toUpperCase()}-L`;
+            document.getElementById('newKey').innerText = key;
+            document.getElementById('keyDisplay').style.display = 'block';
+            showNotif('✅ Ключ создан!');
+        }
+
+        function createCaseKey() {
+            if (!adminLoggedIn) return;
+            const caseType = document.getElementById('caseType').value;
+            let prefix = '';
+            
+            if (caseType === 'role') prefix = 'ROLE';
+            else if (caseType === 'winter') prefix = 'WINT';
+            else if (caseType === 'spring') prefix = 'SPRG';
+            
+            const key = `${prefix}-${Math.random().toString(36).substr(2, 8).toUpperCase()}-L`;
+            document.getElementById('newKey').innerText = key;
+            document.getElementById('keyDisplay').style.display = 'block';
+            showNotif('✅ Ключ создан!');
+        }
+
+        function copyKey() {
+            const key = document.getElementById('newKey').innerText;
+            navigator.clipboard.writeText(key);
+            showNotif('✅ Ключ скопирован!');
         }
 
         function showNotif(text, type = 'success') {
@@ -305,7 +824,10 @@
             notif.style.color = type === 'success' ? 'black' : 'white';
             notif.innerText = text;
             notif.style.display = 'block';
-            setTimeout(() => notif.style.display = 'none', 3000);
+            
+            setTimeout(() => {
+                notif.style.display = 'none';
+            }, 3000);
         }
     </script>
 </body>
