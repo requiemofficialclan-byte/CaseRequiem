@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLAN CASE | ПРОСТАЯ ВЕРСИЯ</title>
+    <title>CLAN CASE | СЕРВЕРНАЯ ВЕРСИЯ</title>
     <style>
         * {
             margin: 0;
@@ -13,38 +13,97 @@
         }
 
         body {
-            background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+            background: #0a0a0a;
             color: white;
+        }
+
+        .header {
+            background: #111;
             padding: 20px;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .balance {
             background: #1a1a1a;
-            padding: 15px 30px;
-            border-radius: 50px;
+            padding: 10px 30px;
+            border-radius: 40px;
             border: 2px solid gold;
-            display: inline-block;
-            margin-bottom: 20px;
             font-size: 24px;
+            color: gold;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .auth-btn {
+            background: #5865F2;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+
+        .key-section {
+            display: flex;
+            gap: 10px;
+            background: #1a1a1a;
+            padding: 10px 20px;
+            border-radius: 40px;
+        }
+
+        .key-input {
+            background: #0a0a0a;
+            border: 1px solid #333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            width: 250px;
+        }
+
+        .key-btn {
+            background: #5865F2;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
         }
 
         .cases {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-top: 30px;
+            gap: 30px;
         }
 
         .case {
-            background: #1a1a1a;
+            background: #111;
             border: 2px solid #333;
             border-radius: 20px;
-            padding: 20px;
+            padding: 25px;
             text-align: center;
         }
 
         .case h3 {
             margin-bottom: 15px;
+            color: var(--color);
         }
 
         .price {
@@ -53,246 +112,419 @@
             margin: 15px 0;
         }
 
+        .items {
+            margin: 20px 0;
+        }
+
+        .item {
+            background: #1a1a1a;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 8px;
+        }
+
         .open-btn {
             background: var(--color);
             color: black;
             border: none;
-            padding: 15px;
+            padding: 12px;
             border-radius: 30px;
             width: 100%;
             font-weight: bold;
             cursor: pointer;
         }
 
-        /* Анимация прямо здесь */
-        .animation-overlay {
+        .open-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .admin-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: #333;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .modal {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.95);
-            display: none;
-            justify-content: center;
+            background: rgba(0,0,0,0.9);
             align-items: center;
-            z-index: 10000;
+            justify-content: center;
         }
 
-        .animation-box {
-            background: #1a1a1a;
-            border: 3px solid var(--anim-color);
-            border-radius: 30px;
-            padding: 30px;
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #111;
+            padding: 40px;
+            border-radius: 20px;
             width: 90%;
-            max-width: 600px;
-            text-align: center;
+            max-width: 400px;
         }
 
-        .slot-machine {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin: 30px 0;
-            perspective: 500px;
+        .modal input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: white;
+            border-radius: 10px;
         }
 
-        .slot {
-            width: 100px;
-            height: 100px;
-            background: #0a0a0a;
-            border: 2px solid var(--anim-color);
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            animation: spin 0.2s infinite linear;
-        }
-
-        @keyframes spin {
-            0% { transform: rotateX(0deg); }
-            100% { transform: rotateX(360deg); }
-        }
-
-        .slot:nth-child(1) { animation-duration: 0.1s; }
-        .slot:nth-child(2) { animation-duration: 0.15s; }
-        .slot:nth-child(3) { animation-duration: 0.2s; }
-
-        .result {
-            font-size: 32px;
-            margin-top: 20px;
-            color: var(--anim-color);
-            display: none;
-        }
-
-        .close-animation {
-            background: var(--anim-color);
-            color: black;
+        .modal-btn {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: #5865F2;
+            color: white;
             border: none;
-            padding: 10px 30px;
-            border-radius: 30px;
-            margin-top: 20px;
+            border-radius: 10px;
             cursor: pointer;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 30px;
+            background: #5865F2;
+            color: white;
+            border-radius: 10px;
             display: none;
         }
     </style>
 </head>
 <body>
-    <div class="balance">💰 <span id="balance">0</span></div>
-
-    <div class="cases">
-        <!-- Зимний кейс -->
-        <div class="case" style="--color: #00d4ff">
-            <h3>❄️ ЗИМНИЙ КЕЙС</h3>
-            <div class="price">🔑 ПО КЛЮЧУ</div>
-            <button class="open-btn" style="background: #00d4ff" onclick="openWinterCase()">ОТКРЫТЬ</button>
+    <div class="header">
+        <div class="balance">💰 <span id="balance">0</span></div>
+        
+        <div class="user-section">
+            <div id="authButtons">
+                <button class="auth-btn" onclick="showModal('login')">Войти</button>
+                <button class="auth-btn" onclick="showModal('register')">Регистрация</button>
+            </div>
+            <div id="userInfo" style="display: none;">
+                <span id="username"></span>
+                <button class="auth-btn" onclick="logout()" style="background: #ff4757;">Выйти</button>
+            </div>
         </div>
 
-        <!-- Весенний кейс -->
-        <div class="case" style="--color: #00ffcc">
-            <h3>🌸 ВЕСЕННИЙ КЕЙС</h3>
-            <div class="price">💰 55,000</div>
-            <button class="open-btn" style="background: #00ffcc" onclick="openSpringCase()">ОТКРЫТЬ</button>
-        </div>
-
-        <!-- Ролевой кейс -->
-        <div class="case" style="--color: #ff4757">
-            <h3>🎲 РОЛЕВОЙ КЕЙС</h3>
-            <div class="price">🔑 ПО КЛЮЧУ</div>
-            <button class="open-btn" style="background: #ff4757" onclick="openRoleCase()">ОТКРЫТЬ</button>
+        <div class="key-section">
+            <input type="text" class="key-input" id="keyInput" placeholder="ВВЕДИТЕ КЛЮЧ">
+            <button class="key-btn" onclick="useKey()">Активировать</button>
         </div>
     </div>
 
-    <!-- Анимация открытия -->
-    <div class="animation-overlay" id="animation">
-        <div class="animation-box" id="animBox">
-            <h2 id="animTitle" style="color: var(--anim-color)">ОТКРЫТИЕ КЕЙСА</h2>
-            
-            <div class="slot-machine" id="slotMachine">
-                <div class="slot" id="slot1">🎲</div>
-                <div class="slot" id="slot2">🎲</div>
-                <div class="slot" id="slot3">🎲</div>
+    <div class="container" id="mainContent" style="display: none;">
+        <h1>🎲 КЕЙСЫ CLAN CASE</h1>
+        
+        <div class="cases">
+            <!-- Зимний кейс -->
+            <div class="case" style="--color: #00d4ff">
+                <h3>❄️ ЗИМНИЙ КЕЙС</h3>
+                <div class="price">🔑 ПО КЛЮЧУ</div>
+                <div class="items">
+                    <div class="item">NY Limited</div>
+                    <div class="item">HOLIDAY</div>
+                    <div class="item">WINTER</div>
+                    <div class="item">Snow Reaper</div>
+                </div>
+                <button class="open-btn" style="background: #00d4ff" disabled>ТОЛЬКО ПО КЛЮЧУ</button>
             </div>
 
-            <div class="result" id="result">
-                <div id="resultIcon" style="font-size: 60px;">🎁</div>
-                <div id="resultName"></div>
+            <!-- Весенний кейс -->
+            <div class="case" style="--color: #00ffcc">
+                <h3>🌸 ВЕСЕННИЙ КЕЙС</h3>
+                <div class="price">💰 55,000</div>
+                <div class="items">
+                    <div class="item">FrostBolt</div>
+                    <div class="item">NeonCloud</div>
+                    <div class="item">AbyssalThunder</div>
+                </div>
+                <button class="open-btn" style="background: #00ffcc" onclick="openSpringCase()">ОТКРЫТЬ</button>
             </div>
 
-            <button class="close-animation" id="closeAnim" onclick="closeAnimation()">ПРОДОЛЖИТЬ</button>
+            <!-- Ролевой кейс -->
+            <div class="case" style="--color: #ff4757">
+                <h3>🎲 РОЛЕВОЙ КЕЙС</h3>
+                <div class="price">🔑 ПО КЛЮЧУ</div>
+                <div class="items">
+                    <div class="item">Bloodbound</div>
+                    <div class="item">Shadow</div>
+                    <div class="item">Veteran</div>
+                    <div class="item">Eternal</div>
+                    <div class="item">Phantom</div>
+                    <div class="item">Chosen</div>
+                </div>
+                <button class="open-btn" style="background: #ff4757" disabled>ТОЛЬКО ПО КЛЮЧУ</button>
+            </div>
         </div>
     </div>
+
+    <!-- Модалка входа -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <h2 style="text-align: center;">🔐 ВХОД</h2>
+            <input type="text" id="loginUsername" placeholder="Логин">
+            <input type="password" id="loginPassword" placeholder="Пароль">
+            <div id="loginError" style="color: #ff4757; margin: 10px 0; display: none;"></div>
+            <button class="modal-btn" onclick="login()">Войти</button>
+            <button class="modal-btn" style="background: #333;" onclick="closeModals()">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- Модалка регистрации -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <h2 style="text-align: center;">📝 РЕГИСТРАЦИЯ</h2>
+            <input type="text" id="regUsername" placeholder="Логин">
+            <input type="password" id="regPassword" placeholder="Пароль">
+            <input type="password" id="regConfirm" placeholder="Повторите пароль">
+            <div id="registerError" style="color: #ff4757; margin: 10px 0; display: none;"></div>
+            <button class="modal-btn" onclick="register()">Зарегистрироваться</button>
+            <button class="modal-btn" style="background: #333;" onclick="closeModals()">Закрыть</button>
+        </div>
+    </div>
+
+    <button class="admin-btn" onclick="openAdmin()">⚙️</button>
+    <div class="notification" id="notification"></div>
 
     <script>
-        let balance = 50000; // Для теста
+        // ============ НАСТРОЙКИ ============
+        const SERVER = 'http://localhost:5000';  // ЗАМЕНИТЕ НА ВАШ IP
+        const ADMIN_PASS = '34125';
+        let currentUser = null;
+        let balance = 0;
 
-        // Предметы
-        const winterItems = [
-            { name: 'NY Limited', icon: '❄️' },
-            { name: 'HOLIDAY', icon: '🎁' },
-            { name: 'WINTER', icon: '🎄' },
-            { name: 'Snow Reaper', icon: '🌨️' }
-        ];
+        // ============ ЗАГРУЗКА ============
+        window.onload = () => {
+            checkSession();
+        };
 
-        const springItems = [
-            { name: 'FrostBolt', icon: '❄️⚡' },
-            { name: 'NeonCloud', icon: '☁️' },
-            { name: 'AbyssalThunder', icon: '🌩️' }
-        ];
-
-        const roleItems = [
-            { name: 'Bloodbound', icon: '🩸' },
-            { name: 'Shadow', icon: '👤' },
-            { name: 'Veteran', icon: '⚔️' },
-            { name: 'Eternal', icon: '∞' },
-            { name: 'Phantom', icon: '👻' },
-            { name: 'Chosen', icon: '⭐' }
-        ];
-
-        function openWinterCase() {
-            const winItem = winterItems[Math.floor(Math.random() * winterItems.length)];
-            startAnimation(winItem, '#00d4ff', '❄️ ЗИМНИЙ КЕЙС');
+        async function checkSession() {
+            const session = localStorage.getItem('session');
+            if (session) {
+                const data = JSON.parse(session);
+                currentUser = data.username;
+                await loadBalance();
+                showUserContent();
+            }
         }
 
-        function openSpringCase() {
-            if (balance < 55000) {
-                alert('❌ Недостаточно монет!');
+        async function loadBalance() {
+            try {
+                const res = await fetch(`${SERVER}/api/get_balance`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({username: currentUser})
+                });
+                const data = await res.json();
+                balance = data.balance;
+                document.getElementById('balance').innerText = balance.toLocaleString();
+            } catch (e) {
+                showNotification('Ошибка загрузки', 'error');
+            }
+        }
+
+        function showUserContent() {
+            document.getElementById('authButtons').style.display = 'none';
+            document.getElementById('userInfo').style.display = 'flex';
+            document.getElementById('username').innerText = currentUser;
+            document.getElementById('mainContent').style.display = 'block';
+        }
+
+        // ============ АВТОРИЗАЦИЯ ============
+        function showModal(type) {
+            closeModals();
+            document.getElementById(type + 'Modal').classList.add('active');
+        }
+
+        function closeModals() {
+            document.getElementById('loginModal').classList.remove('active');
+            document.getElementById('registerModal').classList.remove('active');
+        }
+
+        async function login() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const res = await fetch(`${SERVER}/api/login`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({username, password})
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    currentUser = username;
+                    balance = data.balance;
+                    localStorage.setItem('session', JSON.stringify({username}));
+                    closeModals();
+                    showUserContent();
+                    document.getElementById('balance').innerText = balance.toLocaleString();
+                    showNotification('✅ Успешный вход!');
+                } else {
+                    document.getElementById('loginError').innerText = data.message;
+                    document.getElementById('loginError').style.display = 'block';
+                }
+            } catch (e) {
+                showNotification('Ошибка сервера', 'error');
+            }
+        }
+
+        async function register() {
+            const username = document.getElementById('regUsername').value;
+            const password = document.getElementById('regPassword').value;
+            const confirm = document.getElementById('regConfirm').value;
+
+            if (password !== confirm) {
+                document.getElementById('registerError').innerText = 'Пароли не совпадают';
+                document.getElementById('registerError').style.display = 'block';
                 return;
             }
-            balance -= 55000;
-            document.getElementById('balance').innerText = balance;
+
+            try {
+                const res = await fetch(`${SERVER}/api/register`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({username, password})
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    showNotification('✅ Регистрация успешна! Войдите');
+                    closeModals();
+                    showModal('login');
+                } else {
+                    document.getElementById('registerError').innerText = data.message;
+                    document.getElementById('registerError').style.display = 'block';
+                }
+            } catch (e) {
+                showNotification('Ошибка сервера', 'error');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('session');
+            currentUser = null;
+            location.reload();
+        }
+
+        // ============ КЛЮЧИ ============
+        async function useKey() {
+            if (!currentUser) {
+                showNotification('❌ Сначала войдите', 'error');
+                return;
+            }
+
+            const key = document.getElementById('keyInput').value.trim().toUpperCase();
+            if (!key) return;
+
+            try {
+                const res = await fetch(`${SERVER}/api/use_key`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({key, username: currentUser})
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    if (data.type === 'balance') {
+                        balance = data.balance;
+                        document.getElementById('balance').innerText = balance.toLocaleString();
+                        showNotification(`✅ +${data.value} монет!`);
+                    } else if (data.type === 'winter') {
+                        openWinterCase();
+                    } else if (data.type === 'role') {
+                        openRoleCase();
+                    }
+                    document.getElementById('keyInput').value = '';
+                } else {
+                    showNotification(data.message, 'error');
+                }
+            } catch (e) {
+                showNotification('Ошибка сервера', 'error');
+            }
+        }
+
+        // ============ ОТКРЫТИЕ КЕЙСОВ ============
+        function openWinterCase() {
+            const items = ['NY Limited', 'HOLIDAY', 'WINTER', 'Snow Reaper'];
+            const win = items[Math.floor(Math.random() * items.length)];
+            showNotification(`🎉 Вы получили: ${win}!`);
+        }
+
+        async function openSpringCase() {
+            if (!currentUser) return;
+            if (balance < 55000) {
+                showNotification('❌ Нужно 55,000 монет', 'error');
+                return;
+            }
+
+            const newBalance = balance - 55000;
             
-            const winItem = springItems[Math.floor(Math.random() * springItems.length)];
-            startAnimation(winItem, '#00ffcc', '🌸 ВЕСЕННИЙ КЕЙС');
+            await fetch(`${SERVER}/api/update_balance`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username: currentUser, balance: newBalance})
+            });
+
+            balance = newBalance;
+            document.getElementById('balance').innerText = balance.toLocaleString();
+
+            const items = ['FrostBolt', 'NeonCloud', 'AbyssalThunder'];
+            const win = items[Math.floor(Math.random() * items.length)];
+            showNotification(`🎉 Вы получили: ${win}!`);
         }
 
         function openRoleCase() {
-            const winItem = roleItems[Math.floor(Math.random() * roleItems.length)];
-            startAnimation(winItem, '#ff4757', '🎲 РОЛЕВОЙ КЕЙС');
+            const items = ['Bloodbound', 'Shadow', 'Veteran', 'Eternal', 'Phantom', 'Chosen'];
+            const win = items[Math.floor(Math.random() * items.length)];
+            showNotification(`🎉 Вы получили: ${win}!`);
         }
 
-        function startAnimation(winItem, color, title) {
-            const anim = document.getElementById('animation');
-            const box = document.getElementById('animBox');
-            const titleEl = document.getElementById('animTitle');
-            const slot1 = document.getElementById('slot1');
-            const slot2 = document.getElementById('slot2');
-            const slot3 = document.getElementById('slot3');
-            const result = document.getElementById('result');
-            const resultIcon = document.getElementById('resultIcon');
-            const resultName = document.getElementById('resultName');
-            const closeBtn = document.getElementById('closeAnim');
-
-            // Устанавливаем цвет
-            box.style.setProperty('--anim-color', color);
-            titleEl.style.color = color;
-            titleEl.innerText = title;
-
-            // Случайные иконки в слотах
-            const allItems = [...winterItems, ...springItems, ...roleItems];
-            slot1.innerText = allItems[Math.floor(Math.random() * allItems.length)].icon;
-            slot2.innerText = allItems[Math.floor(Math.random() * allItems.length)].icon;
-            slot3.innerText = allItems[Math.floor(Math.random() * allItems.length)].icon;
-
-            // Показываем анимацию
-            anim.style.display = 'flex';
-            result.style.display = 'none';
-            closeBtn.style.display = 'none';
-
-            // Останавливаем слоты по очереди
-            setTimeout(() => {
-                slot1.style.animation = 'none';
-                slot1.innerText = winItem.icon;
-            }, 2000);
-
-            setTimeout(() => {
-                slot2.style.animation = 'none';
-                slot2.innerText = winItem.icon;
-            }, 2500);
-
-            setTimeout(() => {
-                slot3.style.animation = 'none';
-                slot3.innerText = winItem.icon;
-            }, 3000);
-
-            // Показываем результат
-            setTimeout(() => {
-                resultIcon.innerText = winItem.icon;
-                resultName.innerText = winItem.name;
-                result.style.display = 'block';
-                closeBtn.style.display = 'inline-block';
-            }, 3500);
+        // ============ АДМИН ============
+        function openAdmin() {
+            const pass = prompt('Пароль админа:');
+            if (pass === ADMIN_PASS) {
+                let action = prompt('1 - Создать ключ на баланс\n2 - Создать ключ на кейс');
+                
+                if (action === '1') {
+                    let amount = prompt('Сумма:', '1000');
+                    alert(`✅ Ключ создан: BAL-${amount}-${Math.floor(Math.random()*9000+1000)}`);
+                } else if (action === '2') {
+                    let type = prompt('Тип кейса (winter/role):', 'winter');
+                    alert(`✅ Ключ создан: ${type.toUpperCase()}-${Math.floor(Math.random()*9000+1000)}`);
+                }
+            } else {
+                showNotification('❌ Неверный пароль', 'error');
+            }
         }
 
-        function closeAnimation() {
-            document.getElementById('animation').style.display = 'none';
-            
-            // Сбрасываем слоты
-            const slots = document.querySelectorAll('.slot');
-            slots.forEach(slot => {
-                slot.style.animation = '';
-                slot.innerText = '🎲';
-            });
+        // ============ УВЕДОМЛЕНИЯ ============
+        function showNotification(text, type = 'success') {
+            const notif = document.getElementById('notification');
+            notif.style.background = type === 'success' ? '#5865F2' : '#ff4757';
+            notif.innerText = text;
+            notif.style.display = 'block';
+            setTimeout(() => notif.style.display = 'none', 3000);
         }
     </script>
 </body>
