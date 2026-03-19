@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLAN CASE | ПРЕМИУМ КЕЙСЫ</title>
+    <title>CLAN CASE | CS2 СТИЛЬ</title>
     <style>
         * {
             margin: 0;
@@ -637,6 +637,143 @@
             margin-bottom: 30px;
         }
 
+        /* CS2 СТИЛЬ АНИМАЦИИ */
+        .case-opening-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 5000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .case-opening-overlay.active {
+            display: flex;
+        }
+
+        .case-opening-container {
+            width: 90%;
+            max-width: 1000px;
+            background: linear-gradient(135deg, #111, #1a1a1a);
+            border: 2px solid var(--case-color);
+            border-radius: 40px;
+            padding: 30px;
+            box-shadow: 0 0 50px var(--case-color);
+        }
+
+        .case-opening-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .case-opening-header h2 {
+            font-size: 32px;
+            color: var(--case-color);
+            text-shadow: 0 0 20px var(--case-color);
+        }
+
+        .case-opening-roulette {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            border: 2px solid var(--case-color);
+            border-radius: 20px;
+            background: #0a0a0a;
+            margin-bottom: 30px;
+        }
+
+        .case-opening-roulette::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 4px;
+            height: 100%;
+            background: #ff4757;
+            transform: translateX(-50%);
+            z-index: 10;
+            box-shadow: 0 0 20px #ff4757;
+        }
+
+        .case-opening-items {
+            display: flex;
+            position: absolute;
+            left: 50%;
+            transform: translateX(0);
+            transition: transform 6s cubic-bezier(0.1, 0.8, 0.2, 1);
+            gap: 10px;
+            padding: 0 20px;
+        }
+
+        .case-opening-item {
+            width: 160px;
+            height: 160px;
+            background: #1a1a1a;
+            border: 2px solid var(--case-color);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .case-opening-item-icon {
+            font-size: 60px;
+            margin-bottom: 5px;
+        }
+
+        .case-opening-item-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .case-opening-item-rarity {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: #333;
+            margin-top: 5px;
+        }
+
+        .case-opening-result {
+            text-align: center;
+            padding: 30px;
+            background: #1a1a1a;
+            border-radius: 20px;
+            border: 2px solid var(--case-color);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .case-opening-result.show {
+            opacity: 1;
+        }
+
+        .case-opening-result-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .case-opening-result-name {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--case-color);
+            margin-bottom: 10px;
+        }
+
+        .case-opening-result-rarity {
+            font-size: 18px;
+            color: #888;
+        }
+
         .notification {
             position: fixed;
             top: 100px;
@@ -893,6 +1030,23 @@
         </div>
     </div>
 
+    <!-- CS2 СТИЛЬ АНИМАЦИИ ОТКРЫТИЯ -->
+    <div class="case-opening-overlay" id="caseOpening">
+        <div class="case-opening-container" id="caseOpeningContainer">
+            <div class="case-opening-header">
+                <h2 id="openingTitle">ОТКРЫТИЕ КЕЙСА</h2>
+            </div>
+            <div class="case-opening-roulette">
+                <div class="case-opening-items" id="rouletteItems"></div>
+            </div>
+            <div class="case-opening-result" id="openingResult">
+                <div class="case-opening-result-icon" id="resultIcon">🎁</div>
+                <div class="case-opening-result-name" id="resultName"></div>
+                <div class="case-opening-result-rarity" id="resultRarity"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- Кнопка админки -->
     <button class="admin-open-btn" onclick="openAdmin()">⚙️</button>
 
@@ -1091,11 +1245,17 @@
             }
         }
 
-        // Открыть зимний кейс
+        // Открыть зимний кейс (через ключ)
         function openWinterCase() {
-            const items = ['NY Limited', 'HOLIDAY', 'WINTER', 'Snow Reaper'];
-            const win = items[Math.floor(Math.random() * items.length)];
-            showNotification(`🎉 Вы получили: ${win}!`);
+            const items = [
+                { name: 'NY Limited', rarity: 'LEGENDARY', icon: '❄️' },
+                { name: 'HOLIDAY', rarity: 'LEGENDARY', icon: '🎁' },
+                { name: 'WINTER', rarity: 'LEGENDARY', icon: '🎄' },
+                { name: 'Snow Reaper', rarity: 'LEGENDARY', icon: '🌨️' }
+            ];
+            
+            const winItem = items[Math.floor(Math.random() * items.length)];
+            showCaseOpening(items, winItem, '#00d4ff', '❄️ ЗИМНИЙ КЕЙС');
         }
 
         // Открыть весенний кейс
@@ -1117,16 +1277,104 @@
             balance = newBalance;
             document.getElementById('balance').innerText = balance.toLocaleString();
 
-            const items = ['FrostBolt', 'NeonCloud', 'AbyssalThunder'];
-            const win = items[Math.floor(Math.random() * items.length)];
-            showNotification(`🎉 Вы получили: ${win}!`);
+            const items = [
+                { name: 'FrostBolt', rarity: 'LEGENDARY', icon: '❄️⚡' },
+                { name: 'NeonCloud', rarity: 'LEGENDARY', icon: '☁️' },
+                { name: 'AbyssalThunder', rarity: 'LEGENDARY', icon: '🌩️' }
+            ];
+            
+            const winItem = items[Math.floor(Math.random() * items.length)];
+            showCaseOpening(items, winItem, '#00ffcc', '🌱 ВЕСЕННИЙ КЕЙС');
         }
 
-        // Открыть ролевой кейс
+        // Открыть ролевой кейс (через ключ)
         function openRoleCase() {
-            const items = ['Bloodbound', 'Shadow', 'Veteran', 'Eternal', 'Phantom', 'Chosen'];
-            const win = items[Math.floor(Math.random() * items.length)];
-            showNotification(`🎉 Вы получили: ${win}!`);
+            const items = [
+                { name: 'Bloodbound', rarity: 'LEGENDARY', icon: '🩸' },
+                { name: 'Shadow', rarity: 'EPIC', icon: '👤' },
+                { name: 'Veteran', rarity: 'RARE', icon: '⚔️' },
+                { name: 'Eternal', rarity: 'RARE', icon: '∞' },
+                { name: 'Phantom', rarity: 'RARE', icon: '👻' },
+                { name: 'Chosen', rarity: 'LEGENDARY', icon: '⭐' }
+            ];
+            
+            const winItem = items[Math.floor(Math.random() * items.length)];
+            showCaseOpening(items, winItem, '#ff4757', '🎲 РОЛЕВОЙ КЕЙС');
+        }
+
+        // CS2 СТИЛЬ АНИМАЦИИ
+        function showCaseOpening(items, winItem, color, title) {
+            const overlay = document.getElementById('caseOpening');
+            const container = document.getElementById('caseOpeningContainer');
+            const roulette = document.getElementById('rouletteItems');
+            const result = document.getElementById('openingResult');
+            const resultIcon = document.getElementById('resultIcon');
+            const resultName = document.getElementById('resultName');
+            const resultRarity = document.getElementById('resultRarity');
+            const titleEl = document.getElementById('openingTitle');
+
+            // Устанавливаем цвет
+            container.style.setProperty('--case-color', color);
+            titleEl.style.color = color;
+            titleEl.innerText = title;
+
+            // Создаем предметы для рулетки (много копий)
+            roulette.innerHTML = '';
+            for (let i = 0; i < 50; i++) {
+                const randomItem = items[Math.floor(Math.random() * items.length)];
+                roulette.innerHTML += `
+                    <div class="case-opening-item">
+                        <div class="case-opening-item-icon">${randomItem.icon}</div>
+                        <div class="case-opening-item-name">${randomItem.name}</div>
+                        <div class="case-opening-item-rarity" style="color: ${getRarityColor(randomItem.rarity)}">${randomItem.rarity}</div>
+                    </div>
+                `;
+            }
+
+            // Добавляем выигрышный предмет в центр
+            const centerIndex = 25;
+            const items_collection = roulette.children;
+            if (items_collection[centerIndex]) {
+                items_collection[centerIndex].innerHTML = `
+                    <div class="case-opening-item-icon">${winItem.icon}</div>
+                    <div class="case-opening-item-name">${winItem.name}</div>
+                    <div class="case-opening-item-rarity" style="color: ${getRarityColor(winItem.rarity)}">${winItem.rarity}</div>
+                `;
+            }
+
+            // Показываем анимацию
+            overlay.classList.add('active');
+            result.style.opacity = '0';
+
+            // Запускаем прокрутку
+            setTimeout(() => {
+                roulette.style.transform = `translateX(-${centerIndex * 180}px)`;
+            }, 100);
+
+            // Показываем результат
+            setTimeout(() => {
+                resultIcon.innerText = winItem.icon;
+                resultName.innerText = winItem.name;
+                resultRarity.innerText = winItem.rarity;
+                resultRarity.style.color = getRarityColor(winItem.rarity);
+                result.style.opacity = '1';
+            }, 6000);
+
+            // Закрываем анимацию
+            setTimeout(() => {
+                overlay.classList.remove('active');
+                roulette.style.transform = 'translateX(0)';
+                showNotification(`🎉 Вы получили: ${winItem.name}!`);
+            }, 8000);
+        }
+
+        function getRarityColor(rarity) {
+            switch(rarity) {
+                case 'LEGENDARY': return '#ffae00';
+                case 'EPIC': return '#9c27b0';
+                case 'RARE': return '#2196f3';
+                default: return '#aaa';
+            }
         }
 
         // Открыть админ панель
