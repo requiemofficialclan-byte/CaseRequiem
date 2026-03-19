@@ -2,113 +2,73 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLAN CASE | СТАБИЛЬНАЯ ВЕРСИЯ</title>
+    <title>CLAN CASE | SIMPLE</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
             background: #0a0a0a;
             color: white;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: Arial, sans-serif;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-        }
-
-        .header {
-            width: 100%;
-            padding: 20px;
-            background: #111;
-            border-bottom: 1px solid #333;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: #1a1a1a;
-            padding: 8px 15px;
-            border-radius: 30px;
-            cursor: pointer;
-        }
-
-        .avatar {
-            width: 30px;
-            height: 30px;
-            background: #00ffcc;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            color: black;
-            font-weight: bold;
         }
-
+        
+        .container {
+            width: 90%;
+            max-width: 400px;
+            background: #111;
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid #333;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #00ffcc;
+        }
+        
         .case-selector {
             display: flex;
-            gap: 30px;
-            margin-top: 100px;
+            gap: 20px;
+            margin-bottom: 30px;
         }
-
-        .case-card {
-            background: #111;
-            padding: 30px;
-            border-radius: 20px;
-            border: 2px solid #333;
-            cursor: pointer;
-            transition: 0.3s;
-            width: 250px;
-            text-align: center;
-        }
-
-        .case-card:hover {
-            border-color: #00ffcc;
-            transform: translateY(-10px);
-        }
-
-        .case-card img {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            margin-bottom: 15px;
-        }
-
-        .main-container {
-            display: none;
-            width: 90%;
-            max-width: 600px;
-            margin-top: 30px;
-            background: #111;
-            padding: 30px;
-            border-radius: 20px;
-            position: relative;
-        }
-
-        .back-button {
-            position: absolute;
-            top: 15px;
-            left: 15px;
+        
+        .case {
+            flex: 1;
+            padding: 20px;
             background: #1a1a1a;
-            border: 1px solid #333;
-            color: white;
-            padding: 5px 15px;
+            border: 2px solid #333;
             border-radius: 15px;
             cursor: pointer;
-            font-size: 14px;
+            text-align: center;
+            transition: 0.3s;
         }
-
-        .back-button:hover {
+        
+        .case:hover {
             border-color: #00ffcc;
+            transform: translateY(-5px);
         }
-
+        
+        .case img {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 10px;
+        }
+        
+        .case.selected {
+            border-color: #00ffcc;
+            background: #1a1a1a;
+        }
+        
         input {
             width: 100%;
             padding: 15px;
@@ -116,100 +76,91 @@
             border: 2px solid #333;
             color: white;
             border-radius: 10px;
-            font-size: 18px;
+            font-size: 16px;
             text-align: center;
-            margin: 20px 0;
+            margin-bottom: 15px;
             font-family: monospace;
         }
-
+        
         input:focus {
             outline: none;
             border-color: #00ffcc;
         }
-
-        .btn {
+        
+        button {
             width: 100%;
             padding: 15px;
             background: #00ffcc;
             color: black;
             border: none;
             border-radius: 10px;
-            font-weight: bold;
             font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
-            transition: 0.2s;
+            margin-bottom: 10px;
         }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-
-        .btn:disabled {
+        
+        button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
-
-        .status {
-            margin-top: 10px;
+        
+        .message {
             padding: 10px;
             border-radius: 10px;
+            margin-top: 10px;
             text-align: center;
             font-size: 14px;
-            min-height: 40px;
         }
-
-        .status.error { background: #ff4757; color: white; }
-        .status.success { background: #00ffcc; color: black; }
-        .status.warning { background: #ffaa00; color: black; }
-
-        .roulette-wrapper {
+        
+        .message.error {
+            background: #ff4757;
+            color: white;
+        }
+        
+        .message.success {
+            background: #00ffcc;
+            color: black;
+        }
+        
+        .message.info {
+            background: #ffaa00;
+            color: black;
+        }
+        
+        .roulette {
             display: none;
-            margin-top: 20px;
-            position: relative;
-            height: 160px;
+            margin: 20px 0;
+            height: 100px;
             overflow: hidden;
+            position: relative;
             border: 2px solid #333;
             border-radius: 10px;
-            background: #000;
         }
-
-        .selector {
-            position: absolute;
-            left: 50%;
-            width: 4px;
-            height: 100%;
-            background: #ff4757;
-            z-index: 10;
-            transform: translateX(-50%);
-            box-shadow: 0 0 10px #ff4757;
-        }
-
-        .tape {
+        
+        .roulette-items {
             display: flex;
-            position: absolute;
-            left: 50%;
-            transition: transform 8s cubic-bezier(0.1, 0.8, 0.2, 1);
+            animation: spin 3s ease-out forwards;
         }
-
-        .item {
-            width: 140px;
-            height: 140px;
-            margin: 0 5px;
-            background: #111;
+        
+        .roulette-item {
+            min-width: 80px;
+            height: 80px;
+            margin: 10px 5px;
+            background: #1a1a1a;
             border: 2px solid #333;
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-
-        .item img {
-            width: 80px;
-            height: 80px;
-            object-fit: contain;
+        
+        .roulette-item img {
+            width: 50px;
+            height: 50px;
         }
-
-        #result {
+        
+        .result {
             display: none;
             margin-top: 20px;
             padding: 20px;
@@ -218,25 +169,28 @@
             border-radius: 15px;
             text-align: center;
         }
-
-        .admin-gear {
+        
+        .admin-btn {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: none;
-            border: none;
-            color: #333;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #333;
+            color: white;
             font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            opacity: 0.3;
-            transition: 0.3s;
+            opacity: 0.5;
         }
-
-        .admin-gear:hover {
+        
+        .admin-btn:hover {
             opacity: 1;
-            color: #00ffcc;
         }
-
+        
         .admin-panel {
             display: none;
             position: fixed;
@@ -245,245 +199,168 @@
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.9);
-            z-index: 2000;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
         }
-
-        .admin-container {
-            background: #1a1a1a;
+        
+        .admin-box {
+            background: #111;
             padding: 30px;
             border-radius: 20px;
             width: 90%;
-            max-width: 400px;
-            border: 2px solid #667eea;
+            max-width: 300px;
         }
-
-        .admin-btn {
-            width: 100%;
+        
+        .new-key {
+            margin-top: 15px;
             padding: 10px;
-            margin: 5px 0;
-            background: #333;
-            border: none;
-            color: white;
+            background: #1a1a1a;
             border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .admin-btn:hover {
-            background: #667eea;
-        }
-
-        .timer {
-            font-size: 14px;
-            color: #ffaa00;
-            margin-left: 10px;
+            font-family: monospace;
+            word-break: break-all;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="user-profile" onclick="changeUsername()">
-            <div class="avatar" id="avatar">?</div>
-            <span id="username">username</span>
-        </div>
-        <div id="serverStatus">🔄</div>
-    </div>
-
-    <!-- Главное меню -->
-    <div id="mainMenu">
-        <h1 style="text-align:center; margin-top:50px;">ВЫБЕРИТЕ КЕЙС</h1>
+    <div class="container">
+        <h1>🎲 CLAN CASE</h1>
+        
+        <!-- Выбор кейса -->
         <div class="case-selector">
-            <div class="case-card" onclick="selectCase('spring')">
+            <div class="case" onclick="selectCase('spring')" id="caseSpring">
                 <img src="https://cdn-icons-png.flaticon.com/512/2850/2850906.png">
-                <h3>ВЕСЕННИЙ</h3>
+                <div>Весенний</div>
             </div>
-            <div class="case-card" onclick="selectCase('winter')">
+            <div class="case" onclick="selectCase('winter')" id="caseWinter">
                 <img src="https://cdn-icons-png.flaticon.com/512/2322/2322731.png">
-                <h3>ЗИМНИЙ</h3>
+                <div>Зимний</div>
             </div>
         </div>
-    </div>
-
-    <!-- Экран кейса -->
-    <div class="main-container" id="caseScreen">
-        <button class="back-button" onclick="goBack()">← НАЗАД</button>
         
-        <h2 id="caseTitle" style="margin-top:20px;">КЕЙС</h2>
-        <img id="caseImage" style="width:100px; height:100px; border-radius:50%; margin:10px 0;">
+        <!-- Поле для ключа -->
+        <input type="text" id="keyInput" placeholder="Введите ключ" disabled>
         
-        <input type="text" id="keyInput" placeholder="ВВЕДИТЕ КЛЮЧ" autocomplete="off">
+        <!-- Кнопка -->
+        <button id="mainBtn" onclick="startSpin()" disabled>Активировать</button>
         
-        <div class="status" id="status"></div>
+        <!-- Сообщения -->
+        <div class="message" id="message"></div>
         
-        <button class="btn" id="mainBtn" onclick="startSpin()">АКТИВИРОВАТЬ</button>
-
-        <div class="roulette-wrapper" id="roulette">
-            <div class="selector"></div>
-            <div class="tape" id="tape"></div>
+        <!-- Рулетка -->
+        <div class="roulette" id="roulette">
+            <div class="roulette-items" id="rouletteItems"></div>
         </div>
-
-        <div id="result">
+        
+        <!-- Результат -->
+        <div class="result" id="result">
             <h2 id="winName"></h2>
             <p id="winRarity"></p>
-            <button class="btn" onclick="resetToMenu()" style="margin-top:15px;">ЗАВЕРШИТЬ</button>
+            <button onclick="resetGame()">Завершить</button>
         </div>
     </div>
-
-    <button class="admin-gear" onclick="openAdmin()">⚙️</button>
-
+    
+    <!-- Админка -->
+    <div class="admin-btn" onclick="openAdmin()">⚙️</div>
+    
     <div class="admin-panel" id="adminPanel">
-        <div class="admin-container">
-            <h2 style="text-align:center; margin-bottom:20px;">ADMIN PANEL</h2>
-            <button class="admin-btn" onclick="createKey('spring')">🌱 СОЗДАТЬ ВЕСЕННИЙ КЛЮЧ</button>
-            <button class="admin-btn" onclick="createKey('winter')">❄️ СОЗДАТЬ ЗИМНИЙ КЛЮЧ</button>
-            <div id="newKey" style="margin-top:15px; padding:10px; background:#111; border-radius:5px; word-break:break-all;"></div>
-            <button class="admin-btn" onclick="closeAdmin()" style="margin-top:15px; background:#ff4757;">ЗАКРЫТЬ</button>
+        <div class="admin-box">
+            <h3 style="margin-bottom: 20px;">Админ панель</h3>
+            <button onclick="createKey('spring')" style="margin-bottom: 10px;">🌱 Создать весенний</button>
+            <button onclick="createKey('winter')" style="margin-bottom: 10px;">❄️ Создать зимний</button>
+            <div class="new-key" id="newKey"></div>
+            <button onclick="closeAdmin()" style="margin-top: 20px; background: #ff4757;">Закрыть</button>
         </div>
     </div>
-
+    
     <script>
-        const API_URL = 'http://localhost:5000';
-        const ADMIN_PASS = "1337";
-        
-        let username = localStorage.getItem('username') || 'гость';
-        let caseType = '';
-        let isSpinning = false;
+        // Настройки
+        const SERVER = 'http://localhost:5000';
+        let selectedCase = '';
+        let username = localStorage.getItem('username') || 'user';
         let currentKey = '';
-        let pendingTimer = null;
-        let spinTimer = null;
-
+        let isSpinning = false;
+        
+        // Предметы
         const items = {
             spring: [
-                { name: "Storm Bringer", img: "https://cdn-icons-png.flaticon.com/512/1146/1146869.png", rarity: "Легендарный", color: "#ffae00", chance: 1 },
-                { name: "Grass Blade", img: "https://cdn-icons-png.flaticon.com/512/2850/2850906.png", rarity: "Обычный", color: "#aaa", chance: 49 },
-                { name: "Spring Flower", img: "https://cdn-icons-png.flaticon.com/512/2936/2936890.png", rarity: "Редкий", color: "#4caf50", chance: 30 },
-                { name: "Butterfly Wing", img: "https://cdn-icons-png.flaticon.com/512/3095/3095256.png", rarity: "Эпический", color: "#9c27b0", chance: 20 }
+                { name: 'Легендарный меч', rarity: 'Легендарный', color: '#ffae00', chance: 1 },
+                { name: 'Трава', rarity: 'Обычный', color: '#aaa', chance: 49 },
+                { name: 'Цветок', rarity: 'Редкий', color: '#4caf50', chance: 30 },
+                { name: 'Бабочка', rarity: 'Эпический', color: '#9c27b0', chance: 20 }
             ],
             winter: [
-                { name: "Ice King Sword", img: "https://cdn-icons-png.flaticon.com/512/2322/2322731.png", rarity: "Легендарный", color: "#ffae00", chance: 1 },
-                { name: "Snowball", img: "https://cdn-icons-png.flaticon.com/512/2334/2334861.png", rarity: "Обычный", color: "#aaa", chance: 49 },
-                { name: "Frost Cape", img: "https://cdn-icons-png.flaticon.com/512/2936/2936845.png", rarity: "Редкий", color: "#2196f3", chance: 30 },
-                { name: "Reindeer Horns", img: "https://cdn-icons-png.flaticon.com/512/2936/2936875.png", rarity: "Эпический", color: "#9c27b0", chance: 20 }
+                { name: 'Ледяной меч', rarity: 'Легендарный', color: '#ffae00', chance: 1 },
+                { name: 'Снежок', rarity: 'Обычный', color: '#aaa', chance: 49 },
+                { name: 'Морозный плащ', rarity: 'Редкий', color: '#2196f3', chance: 30 },
+                { name: 'Рога', rarity: 'Эпический', color: '#9c27b0', chance: 20 }
             ]
         };
-
-        // Инициализация
-        window.onload = () => {
-            document.getElementById('avatar').innerText = username[0].toUpperCase();
-            document.getElementById('username').innerText = '@' + username;
-            checkServer();
+        
+        // Иконки (для красоты)
+        const icons = {
+            'Легендарный меч': '⚔️',
+            'Трава': '🌱',
+            'Цветок': '🌸',
+            'Бабочка': '🦋',
+            'Ледяной меч': '❄️⚔️',
+            'Снежок': '⛄',
+            'Морозный плащ': '🧥',
+            'Рога': '🦌'
         };
-
-        function changeUsername() {
-            let newName = prompt('Введите ваш Discord username (без @):');
-            if (newName) {
-                username = newName.toLowerCase().trim();
+        
+        // Запуск
+        window.onload = () => {
+            let name = prompt('Ваш Discord username (без @):');
+            if (name) {
+                username = name.toLowerCase().trim();
                 localStorage.setItem('username', username);
-                document.getElementById('avatar').innerText = username[0].toUpperCase();
-                document.getElementById('username').innerText = '@' + username;
             }
-        }
-
-        async function checkServer() {
-            try {
-                await fetch(`${API_URL}/api/cleanup_pending`, { method: 'POST' });
-                document.getElementById('serverStatus').innerHTML = '✅ ONLINE';
-                document.getElementById('serverStatus').style.color = '#00ff00';
-            } catch {
-                document.getElementById('serverStatus').innerHTML = '❌ OFFLINE';
-                document.getElementById('serverStatus').style.color = '#ff4757';
-            }
-        }
-
+        };
+        
+        // Выбор кейса
         function selectCase(type) {
-            caseType = type;
-            document.getElementById('mainMenu').style.display = 'none';
-            document.getElementById('caseScreen').style.display = 'block';
+            selectedCase = type;
+            document.getElementById('caseSpring').style.borderColor = '#333';
+            document.getElementById('caseWinter').style.borderColor = '#333';
             
-            if (type === 'winter') {
-                document.getElementById('caseTitle').innerText = '❄️ ЗИМНИЙ КЕЙС';
-                document.getElementById('caseImage').src = 'https://cdn-icons-png.flaticon.com/512/2322/2322731.png';
+            if (type === 'spring') {
+                document.getElementById('caseSpring').style.borderColor = '#00ffcc';
             } else {
-                document.getElementById('caseTitle').innerText = '🌱 ВЕСЕННИЙ КЕЙС';
-                document.getElementById('caseImage').src = 'https://cdn-icons-png.flaticon.com/512/2850/2850906.png';
+                document.getElementById('caseWinter').style.borderColor = '#00d4ff';
             }
             
-            document.getElementById('keyInput').value = '';
-            document.getElementById('status').innerHTML = '';
-            document.getElementById('status').className = 'status';
-        }
-
-        function goBack() {
-            if (isSpinning) {
-                if (!confirm('Открытие в процессе. Прервать?')) return;
-                clearTimers();
-            }
-            releaseKey();
-            resetUI();
-            document.getElementById('mainMenu').style.display = 'block';
-            document.getElementById('caseScreen').style.display = 'none';
-        }
-
-        function resetToMenu() {
-            clearTimers();
-            releaseKey();
-            resetUI();
-            document.getElementById('mainMenu').style.display = 'block';
-            document.getElementById('caseScreen').style.display = 'none';
-        }
-
-        function resetUI() {
-            isSpinning = false;
-            document.getElementById('roulette').style.display = 'none';
-            document.getElementById('result').style.display = 'none';
-            document.getElementById('mainBtn').disabled = false;
             document.getElementById('keyInput').disabled = false;
+            document.getElementById('mainBtn').disabled = false;
+            document.getElementById('keyInput').focus();
+            showMessage('');
         }
-
-        function clearTimers() {
-            if (pendingTimer) {
-                clearInterval(pendingTimer);
-                pendingTimer = null;
-            }
-            if (spinTimer) {
-                clearTimeout(spinTimer);
-                spinTimer = null;
-            }
+        
+        // Показать сообщение
+        function showMessage(text, type = '') {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.className = 'message ' + type;
         }
-
-        async function releaseKey() {
-            if (currentKey) {
-                try {
-                    await fetch(`${API_URL}/api/release_key`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ key: currentKey })
-                    });
-                } catch {}
-                currentKey = '';
-            }
-        }
-
+        
         // ОСНОВНАЯ ФУНКЦИЯ
         async function startSpin() {
             if (isSpinning) return;
             
             const key = document.getElementById('keyInput').value.trim().toUpperCase();
             if (!key) {
-                showStatus('Введите ключ', 'error');
+                showMessage('Введите ключ', 'error');
                 return;
             }
-
-            // Блокируем интерфейс
+            
+            // Блокируем кнопки
             isSpinning = true;
             document.getElementById('mainBtn').disabled = true;
             document.getElementById('keyInput').disabled = true;
-            showStatus('Проверка ключа...', 'warning');
-
+            showMessage('Проверка ключа...', 'info');
+            
             try {
                 // Проверяем ключ на сервере
-                const response = await fetch(`${API_URL}/api/check_key`, {
+                const response = await fetch(`${SERVER}/check`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -494,46 +371,43 @@
                 
                 const data = await response.json();
                 
-                if (!data.valid) {
-                    showStatus(data.reason || 'Ошибка', 'error');
+                if (!data.success) {
+                    showMessage(data.message, 'error');
                     isSpinning = false;
                     document.getElementById('mainBtn').disabled = false;
                     document.getElementById('keyInput').disabled = false;
                     return;
                 }
-
-                // Ключ заблокирован, запоминаем его
+                
+                // Ключ принят - запускаем рулетку
                 currentKey = key;
-                showStatus('✅ Ключ принят! Запуск...', 'success');
-
-                // Запускаем рулетку
-                startRoulette(key);
-
+                showMessage('✅ Ключ принят!', 'success');
+                startRoulette();
+                
             } catch (error) {
-                showStatus('Ошибка соединения с сервером', 'error');
+                showMessage('Ошибка соединения с сервером', 'error');
                 isSpinning = false;
                 document.getElementById('mainBtn').disabled = false;
                 document.getElementById('keyInput').disabled = false;
             }
         }
-
-        function startRoulette(key) {
-            // Скрываем поле ввода
-            document.getElementById('setup').style.display = 'none';
-            document.getElementById('roulette').style.display = 'block';
-
-            // Создаем ленту
-            const pool = items[caseType];
-            const tape = document.getElementById('tape');
-            tape.innerHTML = '';
+        
+        // Запуск рулетки
+        function startRoulette() {
+            const pool = items[selectedCase];
             
-            for (let i = 0; i < 30; i++) {
+            // Создаем ленту
+            const roulette = document.getElementById('rouletteItems');
+            roulette.innerHTML = '';
+            
+            for (let i = 0; i < 20; i++) {
                 for (let j = 0; j < pool.length; j++) {
-                    let it = pool[j];
-                    tape.innerHTML += `<div class="item" style="border-color:${it.color}"><img src="${it.img}"></div>`;
+                    const item = pool[j];
+                    const icon = icons[item.name] || '🎁';
+                    roulette.innerHTML += `<div class="roulette-item">${icon}</div>`;
                 }
             }
-
+            
             // Выбираем выигрыш
             let r = Math.random() * 100;
             let cumulative = 0;
@@ -546,75 +420,72 @@
                     break;
                 }
             }
-
-            // Подменяем выигрышный элемент
-            const blocks = tape.getElementsByClassName('item');
-            const winPos = 45;
-            if (blocks[winPos]) {
-                blocks[winPos].innerHTML = `<img src="${winItem.img}">`;
-                blocks[winPos].style.borderColor = winItem.color;
-                blocks[winPos].style.background = 'rgba(255,215,0,0.2)';
-            }
-
+            
+            // Показываем рулетку
+            document.getElementById('roulette').style.display = 'block';
+            
             // Запускаем анимацию
             setTimeout(() => {
-                const container = document.querySelector('.roulette-wrapper');
-                const itemWidth = 150;
-                const target = (winPos * itemWidth) - (container.offsetWidth / 2) + 75;
-                tape.style.transform = `translateX(-${target}px)`;
-            }, 200);
-
+                roulette.style.animation = 'spin 3s ease-out forwards';
+            }, 100);
+            
             // Показываем результат
-            spinTimer = setTimeout(async () => {
-                document.getElementById('winName').innerText = winItem.name;
-                document.getElementById('winRarity').innerText = winItem.rarity;
-                document.getElementById('winRarity').style.color = winItem.color;
+            setTimeout(async () => {
+                document.getElementById('roulette').style.display = 'none';
                 document.getElementById('result').style.display = 'block';
-
+                document.getElementById('winName').textContent = winItem.name;
+                document.getElementById('winRarity').textContent = winItem.rarity;
+                
                 // Активируем ключ на сервере
                 try {
-                    await fetch(`${API_URL}/api/activate_key`, {
+                    await fetch(`${SERVER}/activate`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            key: key,
-                            username: username,
-                            win_item: winItem.name
+                            key: currentKey,
+                            username: username
                         })
                     });
                 } catch {}
-
+                
                 currentKey = '';
                 isSpinning = false;
-            }, 8500);
+            }, 3100);
         }
-
-        function showStatus(text, type) {
-            const status = document.getElementById('status');
-            status.innerHTML = text;
-            status.className = 'status ' + type;
+        
+        // Сброс игры
+        function resetGame() {
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('keyInput').value = '';
+            document.getElementById('keyInput').disabled = false;
+            document.getElementById('mainBtn').disabled = false;
+            document.getElementById('rouletteItems').style.animation = 'none';
+            showMessage('');
+            selectedCase = '';
+            document.getElementById('caseSpring').style.borderColor = '#333';
+            document.getElementById('caseWinter').style.borderColor = '#333';
         }
-
-        // Админ функции
+        
+        // Админка
         async function openAdmin() {
-            const pass = prompt('Пароль админа:');
-            if (pass === ADMIN_PASS) {
+            const pass = prompt('Пароль:');
+            if (pass === '1337') {
                 document.getElementById('adminPanel').style.display = 'flex';
             }
         }
-
+        
         function closeAdmin() {
             document.getElementById('adminPanel').style.display = 'none';
         }
-
+        
         async function createKey(type) {
             try {
-                const response = await fetch(`${API_URL}/api/create_key`, {
+                const response = await fetch(`${SERVER}/create`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        admin_pass: ADMIN_PASS,
-                        key_type: type
+                        pass: '1337',
+                        type: type
                     })
                 });
                 
@@ -623,14 +494,19 @@
                     document.getElementById('newKey').innerHTML = 
                         `✅ Новый ключ:<br><strong>${data.key}</strong>`;
                 }
-            } catch {}
+            } catch (error) {
+                document.getElementById('newKey').innerHTML = '❌ Ошибка';
+            }
         }
-
-        // Освобождаем ключ при закрытии вкладки
+        
+        // Освобождаем ключ при закрытии
         window.addEventListener('beforeunload', () => {
             if (currentKey) {
-                navigator.sendBeacon(`${API_URL}/api/release_key`, 
-                    JSON.stringify({ key: currentKey }));
+                fetch(`${SERVER}/cancel`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ key: currentKey })
+                });
             }
         });
     </script>
