@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLAN CASE | БЕЗОПАСНАЯ СИСТЕМА</title>
+    <title>CLAN CASE | DISCORD АВТОРИЗАЦИЯ</title>
     <style>
         * {
             margin: 0;
@@ -45,11 +45,6 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
-        }
-
-        .balance-icon {
-            font-size: 24px;
         }
 
         .balance-amount {
@@ -67,32 +62,39 @@
             border-radius: 50px;
             cursor: pointer;
             border: 1px solid #333;
-            transition: 0.3s;
-        }
-
-        .profile:hover {
-            border-color: #00ffcc;
         }
 
         .avatar {
             width: 40px;
             height: 40px;
-            background: #00ffcc;
+            background: #5865F2;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 18px;
-            color: black;
+            color: white;
         }
 
-        .username {
-            font-size: 16px;
-            font-weight: 500;
+        .discord-btn {
+            background: #5865F2;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.2s;
         }
 
-        /* Ввод ключа */
+        .discord-btn:hover {
+            background: #4752c4;
+            transform: scale(1.02);
+        }
+
         .key-section {
             background: linear-gradient(135deg, #1a1a1a, #222);
             padding: 12px 25px;
@@ -110,33 +112,23 @@
             border-radius: 30px;
             width: 250px;
             font-family: monospace;
-            font-size: 14px;
-            transition: 0.3s;
         }
 
         .key-input:focus {
             outline: none;
-            border-color: #00ffcc;
-            box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+            border-color: #5865F2;
         }
 
         .key-btn {
-            background: #00ffcc;
-            color: black;
+            background: #5865F2;
+            color: white;
             border: none;
             padding: 10px 25px;
             border-radius: 30px;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.2s;
         }
 
-        .key-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px #00ffcc;
-        }
-
-        /* Основной контейнер */
         .container {
             max-width: 1400px;
             margin: 40px auto;
@@ -147,27 +139,37 @@
             text-align: center;
             margin-bottom: 20px;
             font-size: 3em;
-            background: linear-gradient(45deg, #00ffcc, #ffd700);
+            background: linear-gradient(45deg, #5865F2, #ffd700);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .subtitle {
+        .login-message {
             text-align: center;
+            padding: 60px;
+            background: #111;
+            border-radius: 30px;
+            border: 2px solid #5865F2;
+        }
+
+        .login-message h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .login-message p {
             color: #666;
-            margin-bottom: 50px;
-            font-size: 1.2em;
+            margin-bottom: 30px;
         }
 
         .section-title {
             font-size: 2em;
             margin: 50px 0 30px;
             color: #666;
-            border-left: 4px solid #00ffcc;
+            border-left: 4px solid #5865F2;
             padding-left: 20px;
         }
 
-        /* Сетка кейсов */
         .cases-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -206,8 +208,8 @@
         }
 
         .badge-season {
-            background: #00ffcc;
-            color: black;
+            background: #5865F2;
+            color: white;
         }
 
         .case-icon {
@@ -231,7 +233,6 @@
             margin-bottom: 25px;
         }
 
-        /* Таблица ролей */
         .roles-table {
             display: flex;
             flex-direction: column;
@@ -247,32 +248,23 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            transition: 0.2s;
-        }
-
-        .role-row:hover {
-            border-color: var(--case-color);
-            background: #222;
         }
 
         .role-percent {
             font-size: 18px;
             font-weight: bold;
-            color: #00ffcc;
+            color: #5865F2;
             min-width: 45px;
-            text-align: right;
         }
 
         .role-plus {
-            color: #00ffcc;
+            color: #5865F2;
             font-size: 18px;
-            font-weight: bold;
             min-width: 20px;
         }
 
         .role-name {
             font-size: 16px;
-            font-weight: 500;
             flex: 1;
         }
 
@@ -294,23 +286,11 @@
         }
 
         .boost-title {
-            color: #00ffcc;
+            color: #5865F2;
             font-size: 18px;
             margin: 20px 0 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
-        .boost-title span {
-            background: #00ffcc;
-            color: black;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-        }
-
-        /* Кнопка открытия */
         .open-btn {
             background: var(--case-color);
             color: black;
@@ -321,22 +301,14 @@
             font-size: 18px;
             cursor: pointer;
             width: 100%;
-            transition: 0.2s;
             margin-top: 20px;
-        }
-
-        .open-btn:hover:not(:disabled) {
-            transform: scale(1.02);
-            box-shadow: 0 0 20px var(--case-color);
         }
 
         .open-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            background: #666;
         }
 
-        /* Админ панель */
         .admin-btn {
             position: fixed;
             bottom: 20px;
@@ -350,176 +322,14 @@
             font-size: 24px;
             cursor: pointer;
             opacity: 0.3;
-            transition: 0.3s;
             z-index: 100;
         }
 
         .admin-btn:hover {
             opacity: 1;
             background: #ff4757;
-            transform: rotate(90deg);
         }
 
-        .admin-panel {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(5px);
-        }
-
-        .admin-panel.active {
-            display: flex;
-        }
-
-        .admin-content {
-            background: #111;
-            padding: 40px;
-            border-radius: 30px;
-            width: 90%;
-            max-width: 500px;
-            max-height: 80vh;
-            overflow-y: auto;
-            border: 2px solid #ff4757;
-            animation: modalPop 0.3s;
-        }
-
-        @keyframes modalPop {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .admin-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .admin-header h2 {
-            color: #ff4757;
-            font-size: 2em;
-        }
-
-        .admin-section {
-            background: #1a1a1a;
-            padding: 20px;
-            border-radius: 15px;
-            margin: 20px 0;
-        }
-
-        .admin-input, .admin-select {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            background: #0a0a0a;
-            border: 1px solid #333;
-            color: white;
-            border-radius: 10px;
-            font-size: 14px;
-        }
-
-        .admin-input:focus {
-            outline: none;
-            border-color: #00ffcc;
-        }
-
-        .admin-btn-small {
-            background: #00ffcc;
-            color: black;
-            border: none;
-            padding: 12px;
-            border-radius: 10px;
-            cursor: pointer;
-            width: 100%;
-            margin: 5px 0;
-            font-weight: bold;
-            transition: 0.2s;
-        }
-
-        .admin-btn-small:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 15px #00ffcc;
-        }
-
-        .admin-btn-danger {
-            background: #ff4757;
-            color: white;
-        }
-
-        .key-display {
-            background: #0a0a0a;
-            padding: 20px;
-            border-radius: 15px;
-            margin: 15px 0;
-            font-family: monospace;
-            font-size: 18px;
-            word-break: break-all;
-            text-align: center;
-            border: 1px solid #00ffcc;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 15px 0;
-        }
-
-        .stat-item {
-            background: #0a0a0a;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #00ffcc;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        .users-list {
-            max-height: 200px;
-            overflow-y: auto;
-            margin: 15px 0;
-        }
-
-        .user-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px;
-            background: #0a0a0a;
-            margin: 5px 0;
-            border-radius: 8px;
-        }
-
-        .close-admin {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            color: #666;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        .close-admin:hover {
-            color: #ff4757;
-        }
-
-        /* Уведомления */
         .notification {
             position: fixed;
             top: 100px;
@@ -529,47 +339,11 @@
             display: none;
             z-index: 2000;
             animation: slideIn 0.3s;
-            font-weight: bold;
         }
 
         @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
-        }
-
-        /* Загрузка */
-        .loader {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #333;
-            border-radius: 50%;
-            border-top-color: #00ffcc;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Адаптивность */
-        @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .key-section {
-                width: 100%;
-            }
-            
-            .key-input {
-                flex: 1;
-            }
-            
-            .section-title {
-                font-size: 1.5em;
-            }
         }
     </style>
 </head>
@@ -577,348 +351,211 @@
     <div class="header">
         <div class="user-section">
             <div class="balance">
-                <span class="balance-icon">💰</span>
-                <span class="balance-amount" id="balance">0</span>
+                <span class="balance-amount" id="balance">0</span> 💰
             </div>
-            <div class="profile" onclick="changeUser()">
+            <div class="profile" id="profileBtn" onclick="logout()" style="display: none;">
                 <div class="avatar" id="avatar">?</div>
-                <span class="username" id="username">гость</span>
+                <span id="username">загрузка...</span>
             </div>
+            <button class="discord-btn" id="loginBtn" onclick="loginWithDiscord()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                    <path d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.35-.76-.54-1.09c-.01-.02-.04-.03-.07-.03c-1.5.26-2.93.71-4.27 1.33c-.01 0-.02.01-.03.02c-2.72 4.07-3.47 8.03-3.1 11.95c0 .02.01.04.03.05c1.8 1.32 3.53 2.12 5.24 2.65c.03.01.06 0 .07-.02c.4-.55.76-1.13 1.07-1.74c.02-.04 0-.08-.04-.09c-.57-.22-1.11-.48-1.64-.78c-.04-.02-.04-.08-.01-.11c.11-.08.22-.17.33-.25c.02-.02.05-.02.07-.01c3.44 1.57 7.15 1.57 10.55 0c.02-.01.05-.01.07.01c.11.09.22.17.33.26c.04.03.04.09-.01.11c-.52.31-1.07.56-1.64.78c-.04.01-.05.06-.04.09c.32.61.68 1.19 1.07 1.74c.03.01.06.02.09.01c1.72-.53 3.45-1.33 5.25-2.65c.02-.01.03-.03.03-.05c.44-4.53-.73-8.46-3.1-11.95c-.01-.01-.02-.02-.04-.02zM8.52 14.91c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.84 2.12-1.89 2.12zm6.97 0c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.83 2.12-1.89 2.12z"/>
+                </svg>
+                Войти через Discord
+            </button>
         </div>
         
         <div class="key-section">
-            <input type="text" class="key-input" id="keyInput" placeholder="ВВЕДИТЕ КЛЮЧ" autocomplete="off">
+            <input type="text" class="key-input" id="keyInput" placeholder="ВВЕДИТЕ КЛЮЧ">
             <button class="key-btn" onclick="useKey()">Активировать</button>
         </div>
     </div>
 
-    <div class="container">
+    <div class="container" id="mainContent" style="display: none;">
         <h1>🎲 КЕЙСЫ С РОЛЯМИ</h1>
-        <div class="subtitle">❄️ ЗИМА 50,000 • 🌱 ВЕСНА 55,000 • 🔑 РОЛЕВОЙ (ПО КЛЮЧАМ)</div>
         
-        <!-- Зимний кейс -->
         <div class="section-title">❄️ ЗИМНИЙ СЕЗОН 2025</div>
-        <div class="cases-grid">
-            <div class="case-card" style="--case-color: #00d4ff">
-                <div class="case-badge badge-season">🎫 ЗА МОНЕТЫ</div>
-                <div class="case-icon">❄️</div>
-                <div class="case-name">❄️ ЗИМНИЙ КЕЙС 2025</div>
-                <div class="case-price">💰 50,000</div>
-                
-                <div class="roles-table">
-                    <div class="role-row">
-                        <span class="role-percent">❄️</span>
-                        <span class="role-plus"></span>
-                        <span class="role-name">NY Limited</span>
-                        <span class="role-rarity rarity-legendary">[L]</span>
-                    </div>
-                    <div class="role-row">
-                        <span class="role-percent">🎁</span>
-                        <span class="role-plus"></span>
-                        <span class="role-name">HOLIDAY</span>
-                        <span class="role-rarity rarity-legendary">[L]</span>
-                    </div>
-                    <div class="role-row">
-                        <span class="role-percent">🎄</span>
-                        <span class="role-plus"></span>
-                        <span class="role-name">WINTER</span>
-                        <span class="role-rarity rarity-legendary">[L]</span>
-                    </div>
-                    <div class="role-row">
-                        <span class="role-percent">🌨️</span>
-                        <span class="role-plus"></span>
-                        <span class="role-name">Snow Reaper</span>
-                        <span class="role-rarity rarity-legendary">[L]</span>
-                    </div>
-                </div>
+        <div class="cases-grid" id="winterCase"></div>
 
-                <button class="open-btn" style="background: #00d4ff" onclick="openWinterCase()">
-                    ОТКРЫТЬ КЕЙС
-                </button>
-            </div>
-        </div>
-
-        <!-- Весенний кейс -->
         <div class="section-title">🌱 ВЕСЕННИЙ СЕЗОН 2026</div>
-        <div class="cases-grid">
-            <div class="case-card" style="--case-color: #00ffcc">
-                <div class="case-badge badge-season">🎫 ЗА МОНЕТЫ</div>
-                <div class="case-icon">🌸</div>
-                <div class="case-name">🌱 ВЕСЕННИЙ КЕЙС 2026</div>
-                <div class="case-price">💰 55,000</div>
-                
-                <div class="roles-table">
-                    <div class="role-row">
-                        <span class="role-percent">❄️⚡</span>
-                        <span class="role-plus"></span>
-                        <span class="role-name">FrostBolt</span>
-                        <span class="role-rarity rarity-legendary">[L]</span>
-                    </div>
-                    <div class="role-row">
-                        <span class="role-percent">☁️</span>
-                        <span class="role-plus"></span>
-                        <span class="role-name">NeonCloud</span>
-                        <span class="role-rarity rarity-legendary">[L]</span>
-                    </div>
-                    <div class="role-row">
-                        <span class="role-percent">🌩️</span>
-                        <span class="role-plus"></span>
-                        <span class="role-name">AbyssalThunder</span>
-                        <span class="role-rarity rarity-legendary">[L]</span>
-                    </div>
-                </div>
+        <div class="cases-grid" id="springCase"></div>
 
-                <button class="open-btn" style="background: #00ffcc" onclick="openSpringCase()">
-                    ОТКРЫТЬ КЕЙС
-                </button>
-            </div>
-        </div>
+        <div class="section-title">🔑 РОЛЕВОЙ КЕЙС</div>
+        <div class="cases-grid" id="roleCase"></div>
+    </div>
 
-        <!-- Ролевой кейс -->
-        <div class="section-title">🔑 РОЛЕВОЙ КЕЙС (ТОЛЬКО ПО КЛЮЧАМ)</div>
-        <div class="cases-grid">
-            <div class="case-card" style="--case-color: #ff4757">
-                <div class="case-badge badge-key">🔑 ТОЛЬКО ПО КЛЮЧУ</div>
-                <div class="case-icon">🎲</div>
-                <div class="case-name">🔑 РОЛЕВОЙ КЕЙС</div>
-                <div class="case-price">🔑 ПО КЛЮЧУ</div>
-                
-                <!-- XP Boost -->
-                <div class="boost-title">
-                    <span>💎 XP BOOST</span>
-                </div>
-                <div class="roles-table">
-                    <div class="role-row">
-                        <span class="role-percent">23%</span>
-                        <span class="role-plus">+</span>
-                        <span class="role-name">Bloodbound</span>
-                        <span class="role-rarity rarity-legendary">[L]</span>
-                    </div>
-                    <div class="role-row">
-                        <span class="role-percent">12%</span>
-                        <span class="role-plus">+</span>
-                        <span class="role-name">Shadow</span>
-                        <span class="role-rarity rarity-epic">[E]</span>
-                    </div>
-                    <div class="role-row">
-                        <span class="role-percent">7%</span>
-                        <span class="role-plus">+</span>
-                        <span class="role-name">Veteran</span>
-                        <span class="role-rarity rarity-rare">[R]</span>
-                    </div>
-                    <div class="role-row">
-                        <span class="role-percent">3%</span>
-                        <span class="role-plus">+</span>
-                        <span class="role-name">Eternal</span>
-                        <span class="role-rarity rarity-rare">[R]</span>
-                    </div>
-                    <div class="role-row">
-                        <span class="role-percent">3%</span>
-                        <span class="role-plus">+</span>
-                        <span class="role-name">Phantom</span>
-                        <span class="role-rarity rarity-rare">[R]</span>
-                    </div>
-                </div>
-
-                <div class="divider"></div>
-
-                <!-- Money Boost -->
-                <div class="boost-title">
-                    <span>💰 MONEY BOOST</span>
-                </div>
-                <div class="roles-table">
-                    <div class="role-row">
-                        <span class="role-percent">25%</span>
-                        <span class="role-plus">+</span>
-                        <span class="role-name">Shadow</span>
-                        <span class="role-rarity rarity-epic">[E]</span>
-                    </div>
-                    <div class="role-row">
-                        <span class="role-percent">12%</span>
-                        <span class="role-plus">+</span>
-                        <span class="role-name">Veteran</span>
-                        <span class="role-rarity rarity-rare">[R]</span>
-                    </div>
-                    <div class="role-row">
-                        <span class="role-percent">6%</span>
-                        <span class="role-plus">+</span>
-                        <span class="role-name">Eternal</span>
-                        <span class="role-rarity rarity-rare">[R]</span>
-                    </div>
-                    <div class="role-row">
-                        <span class="role-percent">4%</span>
-                        <span class="role-plus">+</span>
-                        <span class="role-name">Phantom</span>
-                        <span class="role-rarity rarity-rare">[R]</span>
-                    </div>
-                    <div class="role-row">
-                        <span class="role-percent">3%</span>
-                        <span class="role-plus">+</span>
-                        <span class="role-name">Bloodbound</span>
-                        <span class="role-rarity rarity-legendary">[L]</span>
-                    </div>
-                    <div class="role-row">
-                        <span class="role-percent">2%</span>
-                        <span class="role-plus">+</span>
-                        <span class="role-name">Chosen</span>
-                        <span class="role-rarity rarity-legendary">[L]</span>
-                    </div>
-                </div>
-
-                <button class="open-btn" style="background: #ff4757" disabled>
-                    ТОЛЬКО ПО КЛЮЧУ
-                </button>
-            </div>
+    <div class="container" id="loginMessage">
+        <div class="login-message">
+            <h2>🔐 Требуется авторизация</h2>
+            <p>Войдите через Discord, чтобы открывать кейсы</p>
+            <button class="discord-btn" onclick="loginWithDiscord()" style="margin: 0 auto;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                    <path d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.35-.76-.54-1.09c-.01-.02-.04-.03-.07-.03c-1.5.26-2.93.71-4.27 1.33c-.01 0-.02.01-.03.02c-2.72 4.07-3.47 8.03-3.1 11.95c0 .02.01.04.03.05c1.8 1.32 3.53 2.12 5.24 2.65c.03.01.06 0 .07-.02c.4-.55.76-1.13 1.07-1.74c.02-.04 0-.08-.04-.09c-.57-.22-1.11-.48-1.64-.78c-.04-.02-.04-.08-.01-.11c.11-.08.22-.17.33-.25c.02-.02.05-.02.07-.01c3.44 1.57 7.15 1.57 10.55 0c.02-.01.05-.01.07.01c.11.09.22.17.33.26c.04.03.04.09-.01.11c-.52.31-1.07.56-1.64.78c-.04.01-.05.06-.04.09c.32.61.68 1.19 1.07 1.74c.03.01.06.02.09.01c1.72-.53 3.45-1.33 5.25-2.65c.02-.01.03-.03.03-.05c.44-4.53-.73-8.46-3.1-11.95c-.01-.01-.02-.02-.04-.02zM8.52 14.91c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.84 2.12-1.89 2.12zm6.97 0c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.83 2.12-1.89 2.12z"/>
+                </svg>
+                Войти через Discord
+            </button>
         </div>
     </div>
 
-    <!-- Админ панель -->
     <button class="admin-btn" onclick="openAdmin()">⚙️</button>
-
-    <div class="admin-panel" id="adminPanel">
-        <div class="admin-content">
-            <button class="close-admin" onclick="closeAdmin()">✕</button>
-            
-            <div class="admin-header">
-                <h2>⚡ ADMIN PANEL</h2>
-            </div>
-
-            <!-- Вход -->
-            <div id="adminLoginSection">
-                <div class="admin-section">
-                    <input type="password" class="admin-input" id="adminPass" placeholder="Пароль">
-                    <button class="admin-btn-small" onclick="adminLogin()">ВОЙТИ</button>
-                </div>
-            </div>
-
-            <!-- Управление (после входа) -->
-            <div id="adminControls" style="display: none;">
-                <!-- Статистика -->
-                <div class="admin-section">
-                    <h3 style="margin-bottom: 15px;">📊 СТАТИСТИКА</h3>
-                    <div class="stats-grid" id="adminStats">
-                        <div class="stat-item">
-                            <div class="stat-value" id="totalKeys">0</div>
-                            <div class="stat-label">Всего ключей</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value" id="usedKeys">0</div>
-                            <div class="stat-label">Использовано</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Создание ключей -->
-                <div class="admin-section">
-                    <h3 style="margin-bottom: 15px;">🔑 СОЗДАТЬ КЛЮЧ</h3>
-                    
-                    <select class="admin-select" id="keyType">
-                        <option value="balance">💰 На баланс</option>
-                        <option value="role">🎲 Ролевой кейс</option>
-                        <option value="winter">❄️ Зимний кейс</option>
-                        <option value="spring">🌱 Весенний кейс</option>
-                    </select>
-
-                    <div id="balanceInput">
-                        <input type="number" class="admin-input" id="balanceValue" placeholder="Сумма" value="1000">
-                    </div>
-
-                    <button class="admin-btn-small" onclick="createKey()">СОЗДАТЬ КЛЮЧ</button>
-
-                    <div id="keyDisplay" style="display: none;">
-                        <div class="key-display" id="newKey"></div>
-                        <button class="admin-btn-small" onclick="copyKey()">КОПИРОВАТЬ</button>
-                    </div>
-                </div>
-
-                <!-- Пополнение баланса -->
-                <div class="admin-section">
-                    <h3 style="margin-bottom: 15px;">💰 ПОПОЛНИТЬ БАЛАНС</h3>
-                    <input type="text" class="admin-input" id="targetUser" placeholder="Имя пользователя">
-                    <input type="number" class="admin-input" id="addAmount" placeholder="Сумма" value="1000">
-                    <button class="admin-btn-small" onclick="addUserBalance()">ПОПОЛНИТЬ</button>
-                </div>
-
-                <!-- Список пользователей -->
-                <div class="admin-section">
-                    <h3 style="margin-bottom: 15px;">👥 ПОЛЬЗОВАТЕЛИ</h3>
-                    <div class="users-list" id="usersList"></div>
-                    <button class="admin-btn-small" onclick="loadUsers()">ОБНОВИТЬ</button>
-                </div>
-
-                <button class="admin-btn-small admin-btn-danger" onclick="logoutAdmin()">ВЫЙТИ</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Уведомления -->
     <div class="notification" id="notification"></div>
 
     <script>
         const SERVER = 'http://localhost:5000';
-        const ADMIN_PASS = '1337';
-        
-        let currentUser = localStorage.getItem('username') || '';
         let balance = 0;
-        let adminLoggedIn = false;
+        let isAuthenticated = false;
 
-        // Загрузка
+        // Проверка авторизации при загрузке
         window.onload = async () => {
-            if (!currentUser) {
-                currentUser = 'гость';
+            await checkAuth();
+            
+            // Проверяем параметры URL
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('login') === 'success') {
+                showNotif('✅ Успешный вход через Discord!');
+                window.history.replaceState({}, document.title, window.location.pathname);
+                await checkAuth();
             }
-            await loadUser();
-            updateUserDisplay();
         };
 
-        // ============ ПОЛЬЗОВАТЕЛЬ ============
-        async function loadUser() {
+        async function checkAuth() {
             try {
-                const response = await fetch(`${SERVER}/api/user/get`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username: currentUser })
+                const response = await fetch(`${SERVER}/api/auth/me`, {
+                    credentials: 'include'
                 });
                 const data = await response.json();
-                
-                if (data.success) {
-                    currentUser = data.username;
+
+                if (data.authenticated) {
+                    isAuthenticated = true;
                     balance = data.balance;
-                    localStorage.setItem('username', currentUser);
-                    updateUserDisplay();
+                    
+                    document.getElementById('loginBtn').style.display = 'none';
+                    document.getElementById('profileBtn').style.display = 'flex';
+                    document.getElementById('username').innerText = data.global_name || data.username;
+                    document.getElementById('avatar').innerText = (data.global_name || data.username)[0].toUpperCase();
+                    document.getElementById('balance').innerText = balance.toLocaleString();
+                    
+                    document.getElementById('loginMessage').style.display = 'none';
+                    document.getElementById('mainContent').style.display = 'block';
+                    
+                    renderCases();
+                } else {
+                    isAuthenticated = false;
+                    document.getElementById('loginBtn').style.display = 'flex';
+                    document.getElementById('profileBtn').style.display = 'none';
+                    document.getElementById('loginMessage').style.display = 'block';
+                    document.getElementById('mainContent').style.display = 'none';
                 }
             } catch (e) {
-                showNotif('❌ Ошибка загрузки', 'error');
+                console.error('Auth check failed:', e);
             }
         }
 
-        function updateUserDisplay() {
-            document.getElementById('username').innerText = currentUser;
-            document.getElementById('avatar').innerText = currentUser[0]?.toUpperCase() || '?';
-            document.getElementById('balance').innerText = balance.toLocaleString();
+        function loginWithDiscord() {
+            window.location.href = `${SERVER}/api/auth/discord`;
         }
 
-        async function changeUser() {
-            let name = prompt('Введите ваш username:');
-            if (name) {
-                currentUser = name.toLowerCase().trim();
-                localStorage.setItem('username', currentUser);
-                await loadUser();
-            }
+        async function logout() {
+            await fetch(`${SERVER}/api/auth/logout`, {
+                method: 'POST',
+                credentials: 'include'
+            });
+            isAuthenticated = false;
+            await checkAuth();
+            showNotif('👋 Вы вышли из системы');
         }
 
-        // ============ КЛЮЧИ ============
+        function renderCases() {
+            renderWinterCase();
+            renderSpringCase();
+            renderRoleCase();
+        }
+
+        function renderWinterCase() {
+            const container = document.getElementById('winterCase');
+            container.innerHTML = `
+                <div class="case-card" style="--case-color: #00d4ff">
+                    <div class="case-badge badge-season">🎫 ЗА МОНЕТЫ</div>
+                    <div class="case-icon">❄️</div>
+                    <div class="case-name">❄️ ЗИМНИЙ КЕЙС 2025</div>
+                    <div class="case-price">💰 50,000</div>
+                    
+                    <div class="roles-table">
+                        <div class="role-row"><span class="role-percent">❄️</span><span class="role-name">NY Limited</span><span class="role-rarity rarity-legendary">[L]</span></div>
+                        <div class="role-row"><span class="role-percent">🎁</span><span class="role-name">HOLIDAY</span><span class="role-rarity rarity-legendary">[L]</span></div>
+                        <div class="role-row"><span class="role-percent">🎄</span><span class="role-name">WINTER</span><span class="role-rarity rarity-legendary">[L]</span></div>
+                        <div class="role-row"><span class="role-percent">🌨️</span><span class="role-name">Snow Reaper</span><span class="role-rarity rarity-legendary">[L]</span></div>
+                    </div>
+
+                    <button class="open-btn" style="background: #00d4ff" onclick="openWinterCase()">ОТКРЫТЬ КЕЙС</button>
+                </div>
+            `;
+        }
+
+        function renderSpringCase() {
+            const container = document.getElementById('springCase');
+            container.innerHTML = `
+                <div class="case-card" style="--case-color: #00ffcc">
+                    <div class="case-badge badge-season">🎫 ЗА МОНЕТЫ</div>
+                    <div class="case-icon">🌸</div>
+                    <div class="case-name">🌱 ВЕСЕННИЙ КЕЙС 2026</div>
+                    <div class="case-price">💰 55,000</div>
+                    
+                    <div class="roles-table">
+                        <div class="role-row"><span class="role-percent">❄️⚡</span><span class="role-name">FrostBolt</span><span class="role-rarity rarity-legendary">[L]</span></div>
+                        <div class="role-row"><span class="role-percent">☁️</span><span class="role-name">NeonCloud</span><span class="role-rarity rarity-legendary">[L]</span></div>
+                        <div class="role-row"><span class="role-percent">🌩️</span><span class="role-name">AbyssalThunder</span><span class="role-rarity rarity-legendary">[L]</span></div>
+                    </div>
+
+                    <button class="open-btn" style="background: #00ffcc" onclick="openSpringCase()">ОТКРЫТЬ КЕЙС</button>
+                </div>
+            `;
+        }
+
+        function renderRoleCase() {
+            const container = document.getElementById('roleCase');
+            container.innerHTML = `
+                <div class="case-card" style="--case-color: #ff4757">
+                    <div class="case-badge badge-key">🔑 ТОЛЬКО ПО КЛЮЧУ</div>
+                    <div class="case-icon">🎲</div>
+                    <div class="case-name">🔑 РОЛЕВОЙ КЕЙС</div>
+                    <div class="case-price">🔑 ПО КЛЮЧУ</div>
+                    
+                    <div class="boost-title">💎 XP BOOST</div>
+                    <div class="roles-table">
+                        <div class="role-row"><span class="role-percent">23%</span><span class="role-plus">+</span><span class="role-name">Bloodbound</span><span class="role-rarity rarity-legendary">[L]</span></div>
+                        <div class="role-row"><span class="role-percent">12%</span><span class="role-plus">+</span><span class="role-name">Shadow</span><span class="role-rarity rarity-epic">[E]</span></div>
+                        <div class="role-row"><span class="role-percent">7%</span><span class="role-plus">+</span><span class="role-name">Veteran</span><span class="role-rarity rarity-rare">[R]</span></div>
+                        <div class="role-row"><span class="role-percent">3%</span><span class="role-plus">+</span><span class="role-name">Eternal</span><span class="role-rarity rarity-rare">[R]</span></div>
+                        <div class="role-row"><span class="role-percent">3%</span><span class="role-plus">+</span><span class="role-name">Phantom</span><span class="role-rarity rarity-rare">[R]</span></div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="boost-title">💰 MONEY BOOST</div>
+                    <div class="roles-table">
+                        <div class="role-row"><span class="role-percent">25%</span><span class="role-plus">+</span><span class="role-name">Shadow</span><span class="role-rarity rarity-epic">[E]</span></div>
+                        <div class="role-row"><span class="role-percent">12%</span><span class="role-plus">+</span><span class="role-name">Veteran</span><span class="role-rarity rarity-rare">[R]</span></div>
+                        <div class="role-row"><span class="role-percent">6%</span><span class="role-plus">+</span><span class="role-name">Eternal</span><span class="role-rarity rarity-rare">[R]</span></div>
+                        <div class="role-row"><span class="role-percent">4%</span><span class="role-plus">+</span><span class="role-name">Phantom</span><span class="role-rarity rarity-rare">[R]</span></div>
+                        <div class="role-row"><span class="role-percent">3%</span><span class="role-plus">+</span><span class="role-name">Bloodbound</span><span class="role-rarity rarity-legendary">[L]</span></div>
+                        <div class="role-row"><span class="role-percent">2%</span><span class="role-plus">+</span><span class="role-name">Chosen</span><span class="role-rarity rarity-legendary">[L]</span></div>
+                    </div>
+
+                    <button class="open-btn" style="background: #ff4757" disabled>ТОЛЬКО ПО КЛЮЧУ</button>
+                </div>
+            `;
+        }
+
         async function useKey() {
-            const key = document.getElementById('keyInput').value.trim().toUpperCase();
-            if (!key) {
-                showNotif('❌ Введите ключ', 'error');
+            if (!isAuthenticated) {
+                showNotif('❌ Сначала войдите через Discord', 'error');
                 return;
             }
 
-            // Базовая проверка формата
-            const parts = key.split('-');
-            if (parts.length !== 3 || parts[2] !== 'L') {
-                showNotif('❌ Неверный формат ключа', 'error');
+            const key = document.getElementById('keyInput').value.trim().toUpperCase();
+            if (!key) {
+                showNotif('❌ Введите ключ', 'error');
                 return;
             }
 
@@ -926,10 +563,8 @@
                 const response = await fetch(`${SERVER}/api/key/use`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        key: key,
-                        username: currentUser
-                    })
+                    credentials: 'include',
+                    body: JSON.stringify({ key: key })
                 });
 
                 const data = await response.json();
@@ -937,16 +572,13 @@
                 if (data.success) {
                     if (data.type === 'balance') {
                         balance += data.value;
-                        localStorage.setItem('balance', balance);
                         document.getElementById('balance').innerText = balance.toLocaleString();
-                        showNotif(`✅ +${data.value} монет!`, 'success');
+                        showNotif(`✅ +${data.value} монет!`);
                     } else {
                         if (data.case_type === 'role') {
                             openRoleCase();
-                        } else if (data.case_type === 'winter') {
-                            showNotif('✅ Ключ на зимний кейс активирован!', 'success');
-                        } else if (data.case_type === 'spring') {
-                            showNotif('✅ Ключ на весенний кейс активирован!', 'success');
+                        } else {
+                            showNotif('✅ Ключ активирован!');
                         }
                     }
                     document.getElementById('keyInput').value = '';
@@ -958,8 +590,8 @@
             }
         }
 
-        // ============ ОТКРЫТИЕ КЕЙСОВ ============
         async function openWinterCase() {
+            if (!isAuthenticated) return;
             if (balance < 50000) {
                 showNotif('❌ Нужно 50,000 монет!', 'error');
                 return;
@@ -969,27 +601,20 @@
                 const response = await fetch(`${SERVER}/api/case/open`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        username: currentUser,
-                        case_type: 'winter'
-                    })
+                    credentials: 'include',
+                    body: JSON.stringify({ case_type: 'winter' })
                 });
 
                 const data = await response.json();
 
                 if (data.success) {
                     balance = data.new_balance;
-                    localStorage.setItem('balance', balance);
                     document.getElementById('balance').innerText = balance.toLocaleString();
 
-                    const winterItems = [
-                        'NY Limited [L]', 'HOLIDAY [L]', 'WINTER [L]', 'Snow Reaper [L]'
-                    ];
-                    const winItem = winterItems[Math.floor(Math.random() * winterItems.length)];
+                    const items = ['NY Limited [L]', 'HOLIDAY [L]', 'WINTER [L]', 'Snow Reaper [L]'];
+                    const winItem = items[Math.floor(Math.random() * items.length)];
                     
-                    showNotif(`🎉 Вы получили: ${winItem}!`, 'success');
-                } else {
-                    showNotif('❌ Ошибка при открытии', 'error');
+                    showNotif(`🎉 Вы получили: ${winItem}!`);
                 }
             } catch (e) {
                 showNotif('❌ Ошибка сервера', 'error');
@@ -997,6 +622,7 @@
         }
 
         async function openSpringCase() {
+            if (!isAuthenticated) return;
             if (balance < 55000) {
                 showNotif('❌ Нужно 55,000 монет!', 'error');
                 return;
@@ -1006,25 +632,20 @@
                 const response = await fetch(`${SERVER}/api/case/open`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        username: currentUser,
-                        case_type: 'spring'
-                    })
+                    credentials: 'include',
+                    body: JSON.stringify({ case_type: 'spring' })
                 });
 
                 const data = await response.json();
 
                 if (data.success) {
                     balance = data.new_balance;
-                    localStorage.setItem('balance', balance);
                     document.getElementById('balance').innerText = balance.toLocaleString();
 
-                    const springItems = ['FrostBolt [L]', 'NeonCloud [L]', 'AbyssalThunder [L]'];
-                    const winItem = springItems[Math.floor(Math.random() * springItems.length)];
+                    const items = ['FrostBolt [L]', 'NeonCloud [L]', 'AbyssalThunder [L]'];
+                    const winItem = items[Math.floor(Math.random() * items.length)];
                     
-                    showNotif(`🎉 Вы получили: ${winItem}!`, 'success');
-                } else {
-                    showNotif('❌ Ошибка при открытии', 'error');
+                    showNotif(`🎉 Вы получили: ${winItem}!`);
                 }
             } catch (e) {
                 showNotif('❌ Ошибка сервера', 'error');
@@ -1049,7 +670,6 @@
                 { name: 'Chosen', percent: 2, rarity: '[L]' }
             ];
 
-            // Рандомно выбираем тип буста
             const boostType = Math.random() < 0.5 ? 'xp' : 'money';
             
             if (boostType === 'xp') {
@@ -1065,7 +685,7 @@
                         break;
                     }
                 }
-                showNotif(`🎉 Вы получили: ${winItem.name} ${winItem.rarity} (${winItem.percent}% XP Boost)!`, 'success');
+                showNotif(`🎉 Вы получили: ${winItem.name} ${winItem.rarity} (${winItem.percent}% XP Boost)!`);
             } else {
                 const total = moneyRoles.reduce((sum, item) => sum + item.percent, 0);
                 let rand = Math.random() * total;
@@ -1079,199 +699,22 @@
                         break;
                     }
                 }
-                showNotif(`🎉 Вы получили: ${winItem.name} ${winItem.rarity} (${winItem.percent}% Money Boost)!`, 'success');
+                showNotif(`🎉 Вы получили: ${winItem.name} ${winItem.rarity} (${winItem.percent}% Money Boost)!`);
             }
         }
 
-        // ============ АДМИН ПАНЕЛЬ ============
+        // Админ функции
         function openAdmin() {
-            document.getElementById('adminPanel').classList.add('active');
-            document.getElementById('adminPass').value = '';
-            document.getElementById('adminControls').style.display = 'none';
-            document.getElementById('adminLoginSection').style.display = 'block';
-        }
-
-        function closeAdmin() {
-            document.getElementById('adminPanel').classList.remove('active');
-            adminLoggedIn = false;
-        }
-
-        async function adminLogin() {
-            const pass = document.getElementById('adminPass').value;
-            
-            try {
-                const response = await fetch(`${SERVER}/api/admin/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password: pass })
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    adminLoggedIn = true;
-                    document.getElementById('adminLoginSection').style.display = 'none';
-                    document.getElementById('adminControls').style.display = 'block';
-                    loadAdminStats();
-                    loadUsers();
-                    showNotif('✅ Добро пожаловать, админ!');
-                } else {
-                    showNotif('❌ Неверный пароль!', 'error');
-                }
-            } catch (e) {
-                showNotif('❌ Ошибка сервера', 'error');
+            const pass = prompt('Пароль админа:');
+            if (pass === '1337') {
+                window.location.href = '/admin.html';
             }
         }
 
-        function logoutAdmin() {
-            adminLoggedIn = false;
-            document.getElementById('adminControls').style.display = 'none';
-            document.getElementById('adminLoginSection').style.display = 'block';
-            document.getElementById('adminPass').value = '';
-        }
-
-        // Показывать/скрывать поле суммы для баланса
-        document.getElementById('keyType').addEventListener('change', function(e) {
-            const balanceInput = document.getElementById('balanceInput');
-            balanceInput.style.display = e.target.value === 'balance' ? 'block' : 'none';
-        });
-
-        async function createKey() {
-            if (!adminLoggedIn) return;
-
-            const keyType = document.getElementById('keyType').value;
-            const data = {
-                password: ADMIN_PASS,
-                admin_name: currentUser,
-                key_type: keyType
-            };
-
-            if (keyType === 'balance') {
-                data.value = parseInt(document.getElementById('balanceValue').value) || 1000;
-            } else {
-                data.case_type = keyType;
-            }
-
-            try {
-                const response = await fetch(`${SERVER}/api/admin/create_key`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    document.getElementById('newKey').innerText = result.key;
-                    document.getElementById('keyDisplay').style.display = 'block';
-                    showNotif('✅ Ключ создан!');
-                    loadAdminStats();
-                } else {
-                    showNotif('❌ Ошибка создания', 'error');
-                }
-            } catch (e) {
-                showNotif('❌ Ошибка сервера', 'error');
-            }
-        }
-
-        function copyKey() {
-            const key = document.getElementById('newKey').innerText;
-            navigator.clipboard.writeText(key);
-            showNotif('✅ Ключ скопирован!');
-        }
-
-        async function loadAdminStats() {
-            try {
-                const response = await fetch(`${SERVER}/api/admin/stats`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password: ADMIN_PASS })
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    document.getElementById('totalKeys').innerText = data.available + data.used;
-                    document.getElementById('usedKeys').innerText = data.used;
-                }
-            } catch (e) {
-                console.error('Failed to load stats:', e);
-            }
-        }
-
-        async function loadUsers() {
-            try {
-                const response = await fetch(`${SERVER}/api/admin/users`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password: ADMIN_PASS })
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    const list = document.getElementById('usersList');
-                    list.innerHTML = '';
-                    
-                    data.users.slice(0, 10).forEach(user => {
-                        const div = document.createElement('div');
-                        div.className = 'user-item';
-                        div.innerHTML = `
-                            <span>${user[0]}</span>
-                            <span style="color: #ffd700;">💰 ${user[1].toLocaleString()}</span>
-                        `;
-                        list.appendChild(div);
-                    });
-                }
-            } catch (e) {
-                console.error('Failed to load users:', e);
-            }
-        }
-
-        async function addUserBalance() {
-            if (!adminLoggedIn) return;
-
-            const username = document.getElementById('targetUser').value.trim().toLowerCase();
-            const amount = parseInt(document.getElementById('addAmount').value);
-
-            if (!username || amount <= 0) {
-                showNotif('❌ Введите данные', 'error');
-                return;
-            }
-
-            try {
-                const response = await fetch(`${SERVER}/api/admin/add_balance`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        password: ADMIN_PASS,
-                        username: username,
-                        amount: amount
-                    })
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    showNotif(`✅ Добавлено ${amount} пользователю ${username}`);
-                    if (username === currentUser) {
-                        balance += amount;
-                        document.getElementById('balance').innerText = balance.toLocaleString();
-                    }
-                    loadUsers();
-                } else {
-                    showNotif('❌ Ошибка', 'error');
-                }
-            } catch (e) {
-                showNotif('❌ Ошибка сервера', 'error');
-            }
-        }
-
-        // ============ УВЕДОМЛЕНИЯ ============
         function showNotif(text, type = 'success') {
             const notif = document.getElementById('notification');
-            notif.style.background = type === 'success' ? '#00ffcc' : '#ff4757';
-            notif.style.color = type === 'success' ? 'black' : 'white';
+            notif.style.background = type === 'success' ? '#5865F2' : '#ff4757';
+            notif.style.color = 'white';
             notif.innerText = text;
             notif.style.display = 'block';
             
