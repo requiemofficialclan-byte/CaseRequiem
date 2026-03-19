@@ -791,6 +791,23 @@
             box-shadow: 0 0 30px rgba(88,101,242,0.3);
         }
 
+        /* Чекбокс "Запомнить меня" */
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+            color: #aaa;
+            cursor: pointer;
+        }
+
+        .remember-me input {
+            width: auto;
+            margin: 0;
+            accent-color: #5865F2;
+            transform: scale(1.2);
+        }
+
         .modal-btn {
             width: 100%;
             padding: 15px;
@@ -1003,7 +1020,14 @@
             <h2>🔐 ВХОД</h2>
             <input type="text" id="loginUsername" placeholder="Логин">
             <input type="password" id="loginPassword" placeholder="Пароль">
-            <div class="error-message" id="loginError"></div>
+            
+            <!-- Чекбокс "Запомнить меня" -->
+            <label class="remember-me">
+                <input type="checkbox" id="rememberMe" checked>
+                <span>Запомнить меня</span>
+            </label>
+
+            <div class="error-message" id="loginError" style="display: none;"></div>
             <button class="modal-btn" onclick="login()">Войти</button>
             <button class="modal-btn secondary" onclick="closeModals()">Закрыть</button>
         </div>
@@ -1016,7 +1040,7 @@
             <input type="text" id="regUsername" placeholder="Логин">
             <input type="password" id="regPassword" placeholder="Пароль">
             <input type="password" id="regConfirm" placeholder="Повторите пароль">
-            <div class="error-message" id="registerError"></div>
+            <div class="error-message" id="registerError" style="display: none;"></div>
             <button class="modal-btn" onclick="register()">Зарегистрироваться</button>
             <button class="modal-btn secondary" onclick="closeModals()">Закрыть</button>
         </div>
@@ -1047,18 +1071,39 @@
         const ADMIN_PASS = '34125';
         let currentUser = null;
         let balance = 0;
+        let rememberMe = true;
 
         window.onload = () => {
+            // Загружаем сохраненные данные
+            loadSavedData();
             checkSession();
         };
+
+        // Загрузка сохраненных данных
+        function loadSavedData() {
+            const savedUser = localStorage.getItem('savedUser');
+            if (savedUser) {
+                document.getElementById('loginUsername').value = savedUser;
+            }
+            
+            const savedRemember = localStorage.getItem('rememberMe');
+            if (savedRemember !== null) {
+                document.getElementById('rememberMe').checked = savedRemember === 'true';
+            }
+        }
 
         async function checkSession() {
             const session = localStorage.getItem('session');
             if (session) {
-                const data = JSON.parse(session);
-                currentUser = data.username;
-                await loadBalance();
-                showUserContent();
+                try {
+                    const data = JSON.parse(session);
+                    currentUser = data.username;
+                    await loadBalance();
+                    showUserContent();
+                } catch (e) {
+                    // Если сессия битая - очищаем
+                    localStorage.removeItem('session');
+                }
             }
         }
 
@@ -1087,6 +1132,15 @@
         function showModal(type) {
             closeModals();
             document.getElementById(type + 'Modal').classList.add('active');
+            
+            // Если это модалка входа и есть сохраненный пользователь
+            if (type === 'login') {
+                const savedUser = localStorage.getItem('savedUser');
+                if (savedUser) {
+                    document.getElementById('loginUsername').value = savedUser;
+                    document.getElementById('loginPassword').focus();
+                }
+            }
         }
 
         function closeModals() {
@@ -1095,8 +1149,15 @@
         }
 
         async function login() {
-            const username = document.getElementById('loginUsername').value;
+            const username = document.getElementById('loginUsername').value.trim();
             const password = document.getElementById('loginPassword').value;
+            rememberMe = document.getElementById('rememberMe').checked;
+
+            if (!username || !password) {
+                document.getElementById('loginError').innerText = 'Заполните все поля';
+                document.getElementById('loginError').style.display = 'block';
+                return;
+            }
 
             try {
                 const res = await fetch(`${SERVER}/api/login`, {
@@ -1109,7 +1170,18 @@
                 if (data.success) {
                     currentUser = username;
                     balance = data.balance;
+                    
+                    // Сохраняем данные
                     localStorage.setItem('session', JSON.stringify({username}));
+                    
+                    if (rememberMe) {
+                        localStorage.setItem('savedUser', username);
+                        localStorage.setItem('rememberMe', 'true');
+                    } else {
+                        localStorage.removeItem('savedUser');
+                        localStorage.setItem('rememberMe', 'false');
+                    }
+                    
                     closeModals();
                     showUserContent();
                     document.getElementById('balance').innerText = balance.toLocaleString();
@@ -1124,12 +1196,30 @@
         }
 
         async function register() {
-            const username = document.getElementById('regUsername').value;
+            const username = document.getElementById('regUsername').value.trim();
             const password = document.getElementById('regPassword').value;
             const confirm = document.getElementById('regConfirm').value;
 
+            if (!username || !password || !confirm) {
+                document.getElementById('registerError').innerText = 'Заполните все поля';
+                document.getElementById('registerError').style.display = 'block';
+                return;
+            }
+
             if (password !== confirm) {
                 document.getElementById('registerError').innerText = 'Пароли не совпадают';
+                document.getElementById('registerError').style.display = 'block';
+                return;
+            }
+
+            if (username.length < 3) {
+                document.getElementById('registerError').innerText = 'Логин минимум 3 символа';
+                document.getElementById('registerError').style.display = 'block';
+                return;
+            }
+
+            if (password.length < 4) {
+                document.getElementById('registerError').innerText = 'Пароль минимум 4 символа';
                 document.getElementById('registerError').style.display = 'block';
                 return;
             }
@@ -1157,6 +1247,10 @@
 
         function logout() {
             localStorage.removeItem('session');
+            // Не удаляем savedUser если включен rememberMe
+            if (!rememberMe) {
+                localStorage.removeItem('savedUser');
+            }
             location.reload();
         }
 
