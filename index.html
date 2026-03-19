@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLAN CASE | БАЛАНС + КЛЮЧИ</title>
+    <title>CLAN CASE | СЕЗОННАЯ СИСТЕМА</title>
     <style>
         * {
             margin: 0;
@@ -79,6 +79,13 @@
             color: black;
         }
 
+        .season-badge {
+            background: #333;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
         /* Ввод ключа */
         .key-section {
             background: #1a1a1a;
@@ -113,6 +120,7 @@
             border-radius: 30px;
             font-weight: bold;
             cursor: pointer;
+            transition: 0.2s;
         }
 
         .use-key-btn:hover {
@@ -147,11 +155,31 @@
             padding: 30px;
             text-align: center;
             transition: 0.3s;
+            position: relative;
         }
 
-        .case-card:hover {
-            transform: translateY(-10px);
+        .case-card.available {
             border-color: #00ffcc;
+        }
+
+        .case-card.unavailable {
+            opacity: 0.5;
+            filter: grayscale(0.5);
+        }
+
+        .case-card.unavailable:hover {
+            transform: none;
+            border-color: #333;
+        }
+
+        .season-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #333;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
         }
 
         .case-icon {
@@ -164,7 +192,7 @@
             align-items: center;
             justify-content: center;
             font-size: 50px;
-            border: 3px solid #00ffcc;
+            border: 3px solid currentColor;
         }
 
         .case-name {
@@ -196,6 +224,7 @@
         .open-case-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            background: #666;
         }
 
         /* Модалка */
@@ -265,6 +294,7 @@
             background: #ff4757;
             transform: translateX(-50%);
             z-index: 10;
+            box-shadow: 0 0 10px #ff4757;
         }
 
         .result {
@@ -273,6 +303,7 @@
             background: #1a1a1a;
             border-radius: 15px;
             margin-top: 20px;
+            border: 2px solid #00ffcc;
         }
 
         /* Админка */
@@ -319,7 +350,7 @@
             padding: 30px;
             border-radius: 20px;
             width: 90%;
-            max-width: 500px;
+            max-width: 600px;
             max-height: 80vh;
             overflow-y: auto;
         }
@@ -331,7 +362,7 @@
             margin: 20px 0;
         }
 
-        .admin-input {
+        .admin-input, .admin-select {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -375,6 +406,12 @@
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
+
+        .log-item {
+            padding: 10px;
+            border-bottom: 1px solid #333;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
@@ -389,6 +426,7 @@
                 <div class="avatar" id="avatar">?</div>
                 <span id="username">гость</span>
             </div>
+            <div class="season-badge" id="seasonDisplay">Сезон: 🌱</div>
         </div>
         
         <!-- Ввод ключа -->
@@ -434,16 +472,22 @@
             <h2 style="text-align: center; margin-bottom: 20px;">⚡ ADMIN PANEL</h2>
             
             <div class="admin-section">
-                <h3>🔑 Ключ на баланс</h3>
+                <h3>💰 Ключ на баланс</h3>
                 <input type="number" class="admin-input" id="balanceValue" placeholder="Сумма" value="10">
                 <button class="admin-btn-small" onclick="createBalanceKey()">Создать ключ</button>
             </div>
 
             <div class="admin-section">
                 <h3>🎲 Ключ на кейс</h3>
-                <select class="admin-input" id="caseType">
-                    <option value="spring">🌱 Весенний</option>
-                    <option value="winter">❄️ Зимний</option>
+                <select class="admin-select" id="caseType">
+                    <option value="winter">❄️ Зимний (только зимой)</option>
+                    <option value="spring">🌱 Весенний (только весной)</option>
+                </select>
+                <select class="admin-select" id="caseSeason">
+                    <option value="winter">❄️ Сезон: Зима</option>
+                    <option value="spring">🌱 Сезон: Весна</option>
+                    <option value="summer">☀️ Сезон: Лето</option>
+                    <option value="autumn">🍂 Сезон: Осень</option>
                 </select>
                 <button class="admin-btn-small" onclick="createCaseKey()">Создать ключ</button>
             </div>
@@ -459,6 +503,11 @@
                 <div id="stats"></div>
             </div>
 
+            <div class="admin-section">
+                <h3>📋 Последние логи</h3>
+                <div id="logsList"></div>
+            </div>
+
             <button class="admin-btn-small" onclick="closeAdmin()" style="background: #ff4757; width: 100%;">Закрыть</button>
         </div>
     </div>
@@ -467,49 +516,22 @@
     <div class="notification" id="notification"></div>
 
     <script>
-        // ============ КОНФИГ ============
         const SERVER = 'http://localhost:5000';
         const ADMIN_PASS = '1337';
         
-        // Кейсы
-        const cases = [
-            {
-                id: 'spring',
-                name: '🌱 ВЕСЕННИЙ КЕЙС',
-                icon: '🌸',
-                price: 2,
-                items: [
-                    { name: 'Шторм', rarity: 'Легендарный', icon: '⚡', chance: 1 },
-                    { name: 'Трава', rarity: 'Обычный', icon: '🌿', chance: 49 },
-                    { name: 'Цветок', rarity: 'Редкий', icon: '🌺', chance: 30 },
-                    { name: 'Бабочка', rarity: 'Эпический', icon: '🦋', chance: 20 }
-                ]
-            },
-            {
-                id: 'winter',
-                name: '❄️ ЗИМНИЙ КЕЙС',
-                icon: '⛄',
-                price: 2,
-                items: [
-                    { name: 'Ледяной меч', rarity: 'Легендарный', icon: '⚔️', chance: 1 },
-                    { name: 'Снежок', rarity: 'Обычный', icon: '⚪', chance: 49 },
-                    { name: 'Морозный плащ', rarity: 'Редкий', icon: '🧥', chance: 30 },
-                    { name: 'Рога', rarity: 'Эпический', icon: '🦌', chance: 20 }
-                ]
-            }
-        ];
-
         let currentUser = localStorage.getItem('username') || 'гость';
         let balance = 0;
         let currentCase = null;
         let isSpinning = false;
         let lastCreatedKey = '';
+        let cases = [];
+        let currentSeason = 'spring';
 
         // ============ ЗАГРУЗКА ============
         window.onload = () => {
             updateUserDisplay();
-            renderCases();
             loadUserBalance();
+            loadCases();
         };
 
         async function loadUserBalance() {
@@ -527,6 +549,24 @@
             }
         }
 
+        async function loadCases() {
+            try {
+                const response = await fetch(`${SERVER}/api/cases/available`);
+                const data = await response.json();
+                cases = data.cases;
+                currentSeason = data.current_season;
+                
+                document.getElementById('seasonDisplay').innerHTML = 
+                    `Сезон: ${currentSeason === 'winter' ? '❄️ Зима' : 
+                             currentSeason === 'spring' ? '🌱 Весна' : 
+                             currentSeason === 'summer' ? '☀️ Лето' : '🍂 Осень'}`;
+                
+                renderCases();
+            } catch (e) {
+                console.error('Failed to load cases:', e);
+            }
+        }
+
         // ============ ПОЛЬЗОВАТЕЛЬ ============
         function changeUser() {
             let name = prompt('Введите ваш username:');
@@ -541,6 +581,47 @@
         function updateUserDisplay() {
             document.getElementById('username').innerText = currentUser;
             document.getElementById('avatar').innerText = currentUser[0].toUpperCase();
+        }
+
+        // ============ КЕЙСЫ ============
+        function renderCases() {
+            const grid = document.getElementById('casesGrid');
+            grid.innerHTML = '';
+            
+            cases.forEach(c => {
+                const available = c.available;
+                const card = document.createElement('div');
+                card.className = `case-card ${available ? 'available' : 'unavailable'}`;
+                
+                card.innerHTML = `
+                    <div class="season-tag">${c.season === 'winter' ? '❄️ Зима' : '🌱 Весна'}</div>
+                    <div class="case-icon" style="border-color: ${available ? '#00ffcc' : '#666'}">${c.icon}</div>
+                    <div class="case-name">${c.name}</div>
+                    <div class="case-price">💰 ${c.price}</div>
+                    <button class="open-case-btn" onclick="openCaseModal('${c.id}')" 
+                            ${!available ? 'disabled' : ''}>
+                        ${available ? 'ОТКРЫТЬ' : 'Недоступен'}
+                    </button>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        function openCaseModal(caseId) {
+            if (balance < 2) {
+                showNotif('❌ Недостаточно монет! Используйте ключ на баланс', 'error');
+                return;
+            }
+            
+            currentCase = cases.find(c => c.id === caseId);
+            if (!currentCase.available) {
+                showNotif('❌ Этот кейс сейчас не доступен', 'error');
+                return;
+            }
+            
+            document.getElementById('modalCaseName').innerText = currentCase.name;
+            document.getElementById('caseModal').classList.add('active');
         }
 
         // ============ КЛЮЧИ ============
@@ -567,11 +648,10 @@
                     showNotif(data.message, 'success');
                     
                     if (data.type === 'balance') {
-                        // Ключ на баланс
                         balance += data.value;
                         document.getElementById('balance').innerText = balance;
                     } else if (data.type === 'case') {
-                        // Ключ на кейс - открываем сразу
+                        // Открываем кейс по ключу
                         openCaseWithKey(data.case_type);
                     }
                     
@@ -584,42 +664,24 @@
             }
         }
 
-        // ============ КЕЙСЫ ============
-        function renderCases() {
-            const grid = document.getElementById('casesGrid');
-            grid.innerHTML = '';
-            
-            cases.forEach(c => {
-                const card = document.createElement('div');
-                card.className = 'case-card';
-                card.innerHTML = `
-                    <div class="case-icon">${c.icon}</div>
-                    <div class="case-name">${c.name}</div>
-                    <div class="case-price">💰 ${c.price}</div>
-                    <button class="open-case-btn" onclick="openCaseModal('${c.id}')">ОТКРЫТЬ</button>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function openCaseModal(caseId) {
-            if (balance < 2) {
-                showNotif('❌ Недостаточно монет! Используйте ключ на баланс', 'error');
+        function openCaseWithKey(caseType) {
+            currentCase = cases.find(c => c.id === caseType);
+            if (!currentCase) {
+                showNotif('❌ Кейс не найден', 'error');
                 return;
             }
             
-            currentCase = cases.find(c => c.id === caseId);
-            document.getElementById('modalCaseName').innerText = currentCase.name;
-            document.getElementById('caseModal').classList.add('active');
-        }
-
-        function openCaseWithKey(caseType) {
-            currentCase = cases.find(c => c.id === caseType);
+            if (!currentCase.available) {
+                showNotif('❌ Этот кейс сейчас не в сезоне', 'error');
+                return;
+            }
+            
             document.getElementById('modalCaseName').innerText = currentCase.name;
             document.getElementById('caseModal').classList.add('active');
             setTimeout(() => openCase(true), 500);
         }
 
+        // ============ ОТКРЫТИЕ КЕЙСА ============
         async function openCase(isFromKey = false) {
             if (isSpinning) return;
 
@@ -640,14 +702,15 @@
             const roulette = document.getElementById('rouletteItems');
             roulette.innerHTML = '';
             
-            for (let i = 0; i < 30; i++) {
+            // Добавляем предметы в рулетку (много для анимации)
+            for (let i = 0; i < 20; i++) {
                 for (let j = 0; j < currentCase.items.length; j++) {
                     const item = currentCase.items[j];
                     roulette.innerHTML += `<div class="roulette-item">${item.icon}</div>`;
                 }
             }
 
-            // Выбираем выигрыш
+            // Выбираем выигрыш по шансам
             let r = Math.random() * 100;
             let cumulative = 0;
             let winItem = currentCase.items[0];
@@ -660,17 +723,28 @@
                 }
             }
 
-            // Анимация
+            // Запускаем анимацию
             setTimeout(() => {
                 roulette.style.transform = `translateX(-${45 * 130}px)`;
             }, 100);
 
-            // Результат
+            // Показываем результат
             setTimeout(() => {
                 document.getElementById('winIcon').innerText = winItem.icon;
                 document.getElementById('winName').innerText = winItem.name;
                 document.getElementById('winRarity').innerText = winItem.rarity;
                 document.getElementById('result').style.display = 'block';
+                
+                // Отправляем в Discord через сервер
+                fetch(`${SERVER}/api/log`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'case_open',
+                        username: currentUser,
+                        details: `${currentCase.name} - ${winItem.name} (${winItem.rarity})`
+                    })
+                });
                 
                 isSpinning = false;
             }, 5100);
@@ -691,7 +765,7 @@
         // ============ АДМИНКА ============
         function openAdmin() {
             document.getElementById('adminPanel').classList.add('active');
-            loadStats();
+            loadAdminStats();
         }
 
         function closeAdmin() {
@@ -707,6 +781,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     password: ADMIN_PASS,
+                    admin_name: currentUser,
                     key_type: 'balance',
                     value: parseInt(value)
                 })
@@ -717,21 +792,24 @@
                 lastCreatedKey = data.key;
                 document.getElementById('newKey').innerText = data.key;
                 document.getElementById('keyDisplay').style.display = 'block';
-                showNotif(data.message, 'success');
-                loadStats();
+                showNotif('✅ Ключ создан!', 'success');
+                loadAdminStats();
             }
         }
 
         async function createCaseKey() {
             const caseType = document.getElementById('caseType').value;
+            const season = document.getElementById('caseSeason').value;
             
             const response = await fetch(`${SERVER}/api/admin/create_key`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     password: ADMIN_PASS,
+                    admin_name: currentUser,
                     key_type: 'case',
-                    case_type: caseType
+                    case_type: caseType,
+                    season: season
                 })
             });
 
@@ -740,25 +818,36 @@
                 lastCreatedKey = data.key;
                 document.getElementById('newKey').innerText = data.key;
                 document.getElementById('keyDisplay').style.display = 'block';
-                showNotif(data.message, 'success');
-                loadStats();
+                showNotif('✅ Ключ создан!', 'success');
+                loadAdminStats();
             }
         }
 
-        async function loadStats() {
-            const response = await fetch(`${SERVER}/api/admin/stats`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ password: ADMIN_PASS })
-            });
+        async function loadAdminStats() {
+            try {
+                const response = await fetch(`${SERVER}/api/admin/stats`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: ADMIN_PASS })
+                });
 
-            const data = await response.json();
-            if (data.success) {
-                document.getElementById('stats').innerHTML = `
-                    <p>📊 Доступно ключей: ${data.available}</p>
-                    <p>📊 Использовано: ${data.used}</p>
-                    <p>👥 Всего пользователей: ${data.top_users.length}</p>
-                `;
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('stats').innerHTML = `
+                        <p>📊 Доступно ключей: ${data.available}</p>
+                        <p>📊 Использовано: ${data.used}</p>
+                        <p>💰 Всего пользователей: ${data.top_users.length}</p>
+                    `;
+                    
+                    // Показываем логи
+                    let logsHtml = '';
+                    data.recent_logs.forEach(log => {
+                        logsHtml += `<div class="log-item">[${log[3]}] ${log[0]}: ${log[1]} - ${log[2]}</div>`;
+                    });
+                    document.getElementById('logsList').innerHTML = logsHtml || '<div class="log-item">Нет логов</div>';
+                }
+            } catch (e) {
+                console.error('Failed to load stats:', e);
             }
         }
 
