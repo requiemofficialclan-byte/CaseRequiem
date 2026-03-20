@@ -2,456 +2,230 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLAN CASE | ПРЕМИУМ КЕЙСЫ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>CLAN CASE</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', 'Arial', sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
         }
 
         body {
             background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
             color: white;
             min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* Анимированные частицы */
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .particle {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 50%;
-            animation: float 20s infinite linear;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.5;
-            }
-            90% {
-                opacity: 0.5;
-            }
-            100% {
-                transform: translateY(-100vh) rotate(360deg);
-                opacity: 0;
-            }
+            padding: 20px;
         }
 
         /* Шапка */
         .header {
             background: rgba(17, 17, 17, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 20px 30px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 20px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+            gap: 15px;
         }
 
         .balance {
             background: linear-gradient(135deg, #1a1a1a, #222);
-            padding: 12px 35px;
-            border-radius: 50px;
+            padding: 12px 25px;
+            border-radius: 40px;
             border: 2px solid #ffd700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
             font-size: 24px;
             font-weight: bold;
             color: #ffd700;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
-            50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.6); }
         }
 
         .user-info {
             display: flex;
             align-items: center;
-            gap: 15px;
-            background: rgba(35, 35, 35, 0.9);
-            padding: 8px 25px;
-            border-radius: 50px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
+            gap: 12px;
+            background: #1a1a1a;
+            padding: 8px 20px;
+            border-radius: 40px;
         }
 
         .username {
             font-size: 16px;
             font-weight: 500;
-            background: linear-gradient(45deg, #fff, #aaa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
         }
 
         .logout-btn {
-            background: linear-gradient(135deg, #ff4757, #ff6b81);
+            background: #ff4757;
             color: white;
             border: none;
-            padding: 6px 18px;
+            padding: 6px 15px;
             border-radius: 30px;
             cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-
-        .logout-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px #ff4757;
         }
 
         .auth-buttons {
             display: flex;
-            gap: 12px;
+            gap: 10px;
         }
 
         .auth-btn {
-            background: linear-gradient(135deg, #5865F2, #4752c4);
+            background: #5865F2;
             color: white;
             border: none;
-            padding: 10px 28px;
+            padding: 10px 20px;
             border-radius: 40px;
             cursor: pointer;
             font-weight: bold;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .auth-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .auth-btn:hover::before {
-            width: 300px;
-            height: 300px;
         }
 
         .key-section {
-            background: rgba(35, 35, 35, 0.9);
-            padding: 10px 20px;
+            background: #1a1a1a;
+            padding: 10px 15px;
             border-radius: 50px;
             display: flex;
-            gap: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
+            gap: 10px;
+            flex: 1;
+            min-width: 250px;
         }
 
         .key-input {
-            background: rgba(10, 10, 10, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: #0a0a0a;
+            border: 1px solid #333;
             color: white;
-            padding: 10px 20px;
+            padding: 10px 15px;
             border-radius: 30px;
-            width: 260px;
+            flex: 1;
             font-family: monospace;
             font-size: 14px;
-            transition: all 0.3s;
-        }
-
-        .key-input:focus {
-            outline: none;
-            border-color: #5865F2;
-            box-shadow: 0 0 20px rgba(88, 101, 242, 0.3);
         }
 
         .key-btn {
-            background: linear-gradient(135deg, #5865F2, #4752c4);
+            background: #5865F2;
             color: white;
             border: none;
-            padding: 10px 28px;
+            padding: 10px 20px;
             border-radius: 30px;
-            font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .key-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(88, 101, 242, 0.5);
+            font-weight: bold;
         }
 
         .container {
-            max-width: 1400px;
-            margin: 50px auto;
-            padding: 0 20px;
-            position: relative;
-            z-index: 10;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         h1 {
             text-align: center;
-            margin-bottom: 20px;
-            font-size: 3.5em;
-            background: linear-gradient(45deg, #5865F2, #ffd700, #5865F2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradient 5s ease infinite;
-            background-size: 300% 300%;
-        }
-
-        @keyframes gradient {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        .subtitle {
-            text-align: center;
-            color: #888;
-            margin-bottom: 50px;
-            font-size: 1.2em;
-            letter-spacing: 1px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            color: #5865F2;
         }
 
         /* Кейсы */
         .cases-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            margin-top: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
         }
 
         .case-card {
-            background: linear-gradient(135deg, rgba(26, 26, 26, 0.95), rgba(34, 34, 34, 0.95));
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 30px;
-            padding: 30px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: linear-gradient(135deg, #111, #1a1a1a);
+            border: 2px solid #333;
+            border-radius: 20px;
+            padding: 20px;
+            transition: 0.3s;
             position: relative;
-            overflow: hidden;
-            animation: fadeInUp 0.6s ease backwards;
-        }
-
-        .case-card:nth-child(1) { animation-delay: 0.1s; }
-        .case-card:nth-child(2) { animation-delay: 0.2s; }
-        .case-card:nth-child(3) { animation-delay: 0.3s; }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .case-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.03), transparent);
-            transform: rotate(45deg);
-            animation: shine 8s infinite;
-        }
-
-        @keyframes shine {
-            0% { transform: translateX(-100%) rotate(45deg); }
-            20% { transform: translateX(100%) rotate(45deg); }
-            100% { transform: translateX(100%) rotate(45deg); }
         }
 
         .case-card:hover {
-            transform: translateY(-15px) scale(1.02);
+            transform: translateY(-5px);
             border-color: var(--case-color);
-            box-shadow: 0 0 40px var(--case-color);
+            box-shadow: 0 0 20px var(--case-color);
         }
 
         .case-badge {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            padding: 8px 20px;
-            border-radius: 30px;
-            font-size: 12px;
+            top: 15px;
+            right: 15px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
             font-weight: bold;
-            z-index: 10;
-            animation: badgeGlow 2s infinite;
-        }
-
-        @keyframes badgeGlow {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
         }
 
         .badge-key {
-            background: linear-gradient(135deg, #ff4757, #ff6b81);
+            background: #ff4757;
             color: white;
-            box-shadow: 0 0 15px #ff4757;
         }
 
         .badge-money {
-            background: linear-gradient(135deg, #00ffcc, #00d4ff);
+            background: #00ffcc;
             color: black;
-            box-shadow: 0 0 15px #00ffcc;
         }
 
         .case-icon {
-            font-size: 80px;
+            font-size: 60px;
             text-align: center;
-            margin-bottom: 20px;
-            filter: drop-shadow(0 0 20px var(--case-color));
-            animation: floatIcon 3s infinite;
-        }
-
-        @keyframes floatIcon {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            margin-bottom: 15px;
         }
 
         .case-name {
-            font-size: 26px;
+            font-size: 22px;
             font-weight: bold;
             text-align: center;
             color: var(--case-color);
-            margin-bottom: 15px;
-            text-shadow: 0 0 10px var(--case-color);
+            margin-bottom: 10px;
         }
 
         .case-price {
             text-align: center;
-            font-size: 24px;
+            font-size: 20px;
             color: #ffd700;
-            margin: 20px 0;
+            margin: 15px 0;
             font-weight: bold;
-            animation: pricePulse 2s infinite;
-        }
-
-        @keyframes pricePulse {
-            0%, 100% { text-shadow: 0 0 10px #ffd700; }
-            50% { text-shadow: 0 0 20px #ffd700; }
         }
 
         .items-list {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            margin: 20px 0;
+            gap: 6px;
+            margin: 15px 0;
         }
 
         .item {
-            background: rgba(30, 30, 30, 0.8);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 12px 15px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 8px 12px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            transition: all 0.3s;
-        }
-
-        .item:hover {
-            border-color: var(--case-color);
-            transform: translateX(8px);
-            box-shadow: 0 0 15px var(--case-color);
-        }
-
-        .item-name {
-            font-size: 15px;
-            font-weight: 500;
+            font-size: 13px;
         }
 
         .item-rarity {
-            font-size: 12px;
-            padding: 4px 12px;
-            border-radius: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            font-weight: bold;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 15px;
+            background: #333;
         }
 
-        .rarity-legendary {
-            color: #ffae00;
-            text-shadow: 0 0 5px #ffae00;
-        }
-
-        .rarity-epic {
-            color: #9c27b0;
-            text-shadow: 0 0 5px #9c27b0;
-        }
-
-        .rarity-rare {
-            color: #2196f3;
-            text-shadow: 0 0 5px #2196f3;
-        }
+        .rarity-legendary { color: #ffae00; }
+        .rarity-epic { color: #9c27b0; }
+        .rarity-rare { color: #2196f3; }
 
         .open-btn {
             background: var(--case-color);
             color: black;
             border: none;
-            padding: 15px;
-            border-radius: 40px;
+            padding: 12px;
+            border-radius: 30px;
             font-weight: bold;
-            font-size: 16px;
             cursor: pointer;
             width: 100%;
-            margin-top: 20px;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .open-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .open-btn:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-
-        .open-btn:hover:not(:disabled) {
-            transform: scale(1.02);
-            box-shadow: 0 0 30px var(--case-color);
+            margin-top: 15px;
         }
 
         .open-btn:disabled {
@@ -467,11 +241,10 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.96);
-            z-index: 2000;
+            background: rgba(0,0,0,0.95);
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(10px);
+            z-index: 1000;
         }
 
         .modal.active {
@@ -479,363 +252,155 @@
         }
 
         .modal-content {
-            background: linear-gradient(135deg, #1a1a1a, #222);
-            padding: 50px;
-            border-radius: 40px;
+            background: #111;
+            padding: 30px;
+            border-radius: 20px;
             width: 90%;
-            max-width: 450px;
-            border: 3px solid #5865F2;
-            animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 0 60px rgba(88, 101, 242, 0.3);
-        }
-
-        @keyframes modalPop {
-            from {
-                transform: scale(0.8);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
+            max-width: 350px;
         }
 
         .modal h2 {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             color: #5865F2;
-            font-size: 2.2em;
-            text-shadow: 0 0 20px #5865F2;
         }
 
         .modal input {
             width: 100%;
-            padding: 15px 20px;
-            margin: 12px 0;
-            background: rgba(10, 10, 10, 0.9);
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            margin: 10px 0;
+            background: #1a1a1a;
+            border: 1px solid #333;
             color: white;
-            border-radius: 20px;
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-
-        .modal input:focus {
-            outline: none;
-            border-color: #5865F2;
-            box-shadow: 0 0 20px rgba(88, 101, 242, 0.3);
+            border-radius: 10px;
         }
 
         .remember-me {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin: 20px 0;
+            gap: 10px;
+            margin: 15px 0;
             color: #aaa;
-            cursor: pointer;
         }
 
         .remember-me input {
             width: auto;
             margin: 0;
-            accent-color: #5865F2;
-            transform: scale(1.2);
         }
 
         .modal-btn {
             width: 100%;
-            padding: 15px;
-            margin: 12px 0;
-            background: linear-gradient(135deg, #5865F2, #4752c4);
+            padding: 12px;
+            margin: 8px 0;
+            background: #5865F2;
             color: white;
             border: none;
-            border-radius: 20px;
-            font-size: 16px;
-            font-weight: bold;
+            border-radius: 10px;
             cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .modal-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .modal-btn:hover::before {
-            width: 300px;
-            height: 300px;
+            font-weight: bold;
         }
 
         .modal-btn.secondary {
-            background: linear-gradient(135deg, #333, #444);
+            background: #333;
         }
 
         .error-message {
             color: #ff4757;
-            font-size: 14px;
-            margin: 12px 0;
-            text-align: center;
-            text-shadow: 0 0 10px #ff4757;
+            font-size: 13px;
+            margin: 10px 0;
             display: none;
+            text-align: center;
         }
 
-        /* Админ кнопка */
         .admin-btn {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 65px;
-            height: 65px;
-            background: linear-gradient(135deg, #ff4757, #ff6b81);
+            bottom: 20px;
+            right: 20px;
+            width: 55px;
+            height: 55px;
+            background: #ff4757;
             border: none;
             border-radius: 50%;
             color: white;
-            font-size: 30px;
+            font-size: 26px;
             cursor: pointer;
-            z-index: 1000;
-            box-shadow: 0 0 25px rgba(255, 71, 87, 0.5);
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: adminPulse 2s infinite;
+            box-shadow: 0 0 15px rgba(255,71,87,0.5);
+            z-index: 100;
         }
 
-        @keyframes adminPulse {
-            0%, 100% {
-                transform: scale(1);
-                box-shadow: 0 0 25px rgba(255, 71, 87, 0.5);
-            }
-            50% {
-                transform: scale(1.1);
-                box-shadow: 0 0 45px rgba(255, 71, 87, 0.8);
-            }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 25px;
+            border-radius: 10px;
+            display: none;
+            z-index: 2000;
+            font-weight: bold;
         }
 
-        .admin-btn:hover {
-            transform: rotate(180deg) scale(1.15);
-            background: linear-gradient(135deg, #ff6b81, #ff4757);
-        }
-
-        /* Анимация открытия кейса */
-        .case-opening {
+        /* Анимация */
+        .animation-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.98);
-            z-index: 3000;
+            background: rgba(0,0,0,0.98);
             display: none;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(15px);
+            z-index: 3000;
         }
 
-        .case-opening.active {
-            display: flex;
-        }
-
-        .case-opening-container {
-            background: linear-gradient(135deg, #111, #1a1a1a);
-            border: 4px solid var(--color);
-            border-radius: 50px;
-            padding: 50px;
+        .animation-box {
+            background: #111;
+            border: 3px solid var(--color);
+            border-radius: 30px;
+            padding: 30px;
             width: 90%;
-            max-width: 700px;
+            max-width: 450px;
             text-align: center;
-            box-shadow: 0 0 100px var(--color);
-            animation: containerPop 0.5s ease-out;
         }
 
-        @keyframes containerPop {
-            from {
-                transform: scale(0.7);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        .case-opening-title {
-            font-size: 36px;
-            color: var(--color);
-            text-shadow: 0 0 30px var(--color);
-            margin-bottom: 40px;
-            animation: titleBlink 2s infinite;
-        }
-
-        @keyframes titleBlink {
-            0%, 100% {
-                text-shadow: 0 0 30px var(--color);
-            }
-            50% {
-                text-shadow: 0 0 60px var(--color);
-            }
-        }
-
-        .slots-container {
+        .animation-slots {
             display: flex;
-            gap: 25px;
+            gap: 12px;
             justify-content: center;
-            margin: 40px 0;
-            perspective: 500px;
+            margin: 30px 0;
         }
 
         .slot {
-            width: 140px;
-            height: 140px;
-            background: linear-gradient(135deg, #1a1a1a, #222);
-            border: 3px solid var(--color);
-            border-radius: 25px;
+            width: 90px;
+            height: 90px;
+            background: #1a1a1a;
+            border: 2px solid var(--color);
+            border-radius: 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            animation: slotSpin 0.2s infinite linear;
-            box-shadow: 0 0 30px var(--color);
+            font-size: 35px;
+            animation: spin 0.2s infinite linear;
         }
 
-        @keyframes slotSpin {
-            0% {
-                transform: rotateX(0deg);
-            }
-            100% {
-                transform: rotateX(360deg);
-            }
+        @keyframes spin {
+            0% { transform: rotateX(0deg); }
+            100% { transform: rotateX(360deg); }
         }
 
-        .slot-icon {
-            font-size: 55px;
-            margin-bottom: 8px;
-        }
+        .slot:nth-child(1) { animation-duration: 0.1s; }
+        .slot:nth-child(2) { animation-duration: 0.15s; }
+        .slot:nth-child(3) { animation-duration: 0.2s; }
 
-        .slot-name {
-            font-size: 12px;
-            color: #aaa;
-        }
-
-        .slot:nth-child(1) {
-            animation-duration: 0.1s;
-        }
-
-        .slot:nth-child(2) {
-            animation-duration: 0.13s;
-        }
-
-        .slot:nth-child(3) {
-            animation-duration: 0.16s;
-        }
-
-        .opening-result {
-            margin-top: 40px;
-            padding: 25px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 30px;
-            display: none;
-            animation: resultShow 0.5s ease-out;
-        }
-
-        @keyframes resultShow {
-            from {
-                transform: scale(0.8);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        .result-icon {
-            font-size: 70px;
-            margin-bottom: 15px;
-        }
-
-        .result-name {
-            font-size: 28px;
-            font-weight: bold;
+        .animation-result {
+            font-size: 22px;
+            margin-top: 20px;
             color: var(--color);
-            margin-bottom: 10px;
-        }
-
-        .result-rarity {
-            font-size: 18px;
-            color: #aaa;
-        }
-
-        .close-opening {
-            background: var(--color);
-            color: black;
-            border: none;
-            padding: 12px 35px;
-            border-radius: 40px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 30px;
-            transition: 0.3s;
-        }
-
-        .close-opening:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px var(--color);
-        }
-
-        /* Уведомления */
-        .notification {
-            position: fixed;
-            top: 100px;
-            right: 30px;
-            padding: 15px 30px;
-            border-radius: 50px;
             display: none;
-            z-index: 4000;
-            animation: slideIn 0.3s ease-out;
-            font-weight: bold;
-            box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
         }
 
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        @media (max-width: 1024px) {
-            .cases-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .slot {
-                width: 100px;
-                height: 100px;
-            }
-            .slot-icon {
-                font-size: 40px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .cases-grid {
-                grid-template-columns: 1fr;
-            }
+        @media (max-width: 600px) {
             .header {
                 flex-direction: column;
                 align-items: stretch;
@@ -843,31 +408,22 @@
             .key-section {
                 width: 100%;
             }
-            .key-input {
-                flex: 1;
-            }
             .slot {
-                width: 80px;
-                height: 80px;
+                width: 70px;
+                height: 70px;
+                font-size: 28px;
             }
-            .slot-icon {
-                font-size: 30px;
-            }
-            .case-opening-title {
-                font-size: 24px;
+            .balance {
+                font-size: 20px;
+                padding: 8px 20px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="particles" id="particles"></div>
-
     <div class="header">
-        <div class="balance">
-            <span>💰</span>
-            <span id="balance">0</span>
-        </div>
-
+        <div class="balance">💰 <span id="balance">0</span></div>
+        
         <div id="userInfo" class="user-info" style="display: none;">
             <span class="username" id="username"></span>
             <button class="logout-btn" onclick="logout()">Выйти</button>
@@ -879,27 +435,26 @@
         </div>
 
         <div class="key-section">
-            <input type="text" class="key-input" id="keyInput" placeholder="ВВЕДИТЕ КЛЮЧ" autocomplete="off">
+            <input type="text" class="key-input" id="keyInput" placeholder="ВВЕДИТЕ КЛЮЧ">
             <button class="key-btn" onclick="useKey()">Активировать</button>
         </div>
     </div>
 
     <div class="container" id="mainContent" style="display: none;">
-        <h1>🎲 CLAN CASE</h1>
-        <div class="subtitle">❄️ ЗИМНИЙ • 🌱 ВЕСЕННИЙ • 🎲 РОЛЕВОЙ</div>
-
+        <h1>🎲 КЕЙСЫ CLAN CASE</h1>
+        
         <div class="cases-grid">
             <!-- Зимний кейс -->
             <div class="case-card" style="--case-color: #00d4ff">
                 <div class="case-badge badge-key">🔑 ПО КЛЮЧУ</div>
                 <div class="case-icon">❄️</div>
-                <div class="case-name">❄️ ЗИМНИЙ КЕЙС 2025</div>
+                <div class="case-name">❄️ ЗИМНИЙ КЕЙС</div>
                 <div class="case-price">🔑 ТОЛЬКО ПО КЛЮЧУ</div>
                 <div class="items-list">
-                    <div class="item"><span class="item-name">NY Limited</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
-                    <div class="item"><span class="item-name">HOLIDAY</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
-                    <div class="item"><span class="item-name">WINTER</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
-                    <div class="item"><span class="item-name">Snow Reaper</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
+                    <div class="item"><span>NY Limited</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
+                    <div class="item"><span>HOLIDAY</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
+                    <div class="item"><span>WINTER</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
+                    <div class="item"><span>Snow Reaper</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
                 </div>
                 <button class="open-btn" style="background: #00d4ff" disabled>ТОЛЬКО ПО КЛЮЧУ</button>
             </div>
@@ -908,14 +463,14 @@
             <div class="case-card" style="--case-color: #00ffcc">
                 <div class="case-badge badge-money">💰 ЗА МОНЕТЫ</div>
                 <div class="case-icon">🌸</div>
-                <div class="case-name">🌱 ВЕСЕННИЙ КЕЙС 2026</div>
+                <div class="case-name">🌱 ВЕСЕННИЙ КЕЙС</div>
                 <div class="case-price">💰 55,000</div>
                 <div class="items-list">
-                    <div class="item"><span class="item-name">FrostBolt</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
-                    <div class="item"><span class="item-name">NeonCloud</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
-                    <div class="item"><span class="item-name">AbyssalThunder</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
+                    <div class="item"><span>FrostBolt</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
+                    <div class="item"><span>NeonCloud</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
+                    <div class="item"><span>AbyssalThunder</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
                 </div>
-                <button class="open-btn" style="background: #00ffcc" onclick="openSpringCase()">ОТКРЫТЬ КЕЙС</button>
+                <button class="open-btn" style="background: #00ffcc" onclick="openSpringCase()">ОТКРЫТЬ</button>
             </div>
 
             <!-- Ролевой кейс -->
@@ -925,12 +480,12 @@
                 <div class="case-name">🎲 РОЛЕВОЙ КЕЙС</div>
                 <div class="case-price">🔑 ТОЛЬКО ПО КЛЮЧУ</div>
                 <div class="items-list">
-                    <div class="item"><span class="item-name">Bloodbound</span><span class="item-rarity rarity-legendary">23% XP</span></div>
-                    <div class="item"><span class="item-name">Shadow</span><span class="item-rarity rarity-epic">12% XP / 25% Money</span></div>
-                    <div class="item"><span class="item-name">Veteran</span><span class="item-rarity rarity-rare">7% XP / 12% Money</span></div>
-                    <div class="item"><span class="item-name">Eternal</span><span class="item-rarity rarity-rare">3% XP / 6% Money</span></div>
-                    <div class="item"><span class="item-name">Phantom</span><span class="item-rarity rarity-rare">3% XP / 4% Money</span></div>
-                    <div class="item"><span class="item-name">Chosen</span><span class="item-rarity rarity-legendary">2% Money</span></div>
+                    <div class="item"><span>Bloodbound</span><span class="item-rarity rarity-legendary">23% XP</span></div>
+                    <div class="item"><span>Shadow</span><span class="item-rarity rarity-epic">12% XP / 25% Money</span></div>
+                    <div class="item"><span>Veteran</span><span class="item-rarity rarity-rare">7% XP / 12% Money</span></div>
+                    <div class="item"><span>Eternal</span><span class="item-rarity rarity-rare">3% XP / 6% Money</span></div>
+                    <div class="item"><span>Phantom</span><span class="item-rarity rarity-rare">3% XP / 4% Money</span></div>
+                    <div class="item"><span>Chosen</span><span class="item-rarity rarity-legendary">2% Money</span></div>
                 </div>
                 <button class="open-btn" style="background: #ff4757" disabled>ТОЛЬКО ПО КЛЮЧУ</button>
             </div>
@@ -966,30 +521,16 @@
         </div>
     </div>
 
-    <!-- Анимация открытия кейса -->
-    <div class="case-opening" id="caseOpening">
-        <div class="case-opening-container" id="caseOpeningContainer">
-            <div class="case-opening-title" id="openingTitle">ОТКРЫТИЕ КЕЙСА</div>
-            <div class="slots-container" id="slotsContainer">
-                <div class="slot">
-                    <div class="slot-icon">🎲</div>
-                    <div class="slot-name">???</div>
-                </div>
-                <div class="slot">
-                    <div class="slot-icon">🎲</div>
-                    <div class="slot-name">???</div>
-                </div>
-                <div class="slot">
-                    <div class="slot-icon">🎲</div>
-                    <div class="slot-name">???</div>
-                </div>
+    <!-- Анимация открытия -->
+    <div class="animation-overlay" id="animation">
+        <div class="animation-box" id="animBox">
+            <h2 id="animTitle">ОТКРЫТИЕ КЕЙСА</h2>
+            <div class="animation-slots" id="slots">
+                <div class="slot"><div class="slot-icon">🎲</div><div class="slot-name"></div></div>
+                <div class="slot"><div class="slot-icon">🎲</div><div class="slot-name"></div></div>
+                <div class="slot"><div class="slot-icon">🎲</div><div class="slot-name"></div></div>
             </div>
-            <div class="opening-result" id="openingResult">
-                <div class="result-icon" id="resultIcon">🎁</div>
-                <div class="result-name" id="resultName"></div>
-                <div class="result-rarity" id="resultRarity"></div>
-            </div>
-            <button class="close-opening" onclick="closeOpening()">ПРОДОЛЖИТЬ</button>
+            <div class="animation-result" id="animResult"></div>
         </div>
     </div>
 
@@ -997,45 +538,28 @@
     <div class="notification" id="notification"></div>
 
     <script>
-        // ============ ДАННЫЕ ============
+        // ============ НАСТРОЙКИ ============
+        // ВАЖНО: ЗАМЕНИТЕ IP НА ТОТ, КОТОРЫЙ ПОКАЖЕТ СЕРВЕР
+        const SERVER = 'http://192.168.1.100:5000'; // ЗАМЕНИТЕ НА ВАШ IP
         const ADMIN_PASS = '34125';
-        let users = JSON.parse(localStorage.getItem('clan_users')) || {};
         let currentUser = null;
         let balance = 0;
 
-        // Создание частиц
-        function createParticles() {
-            const container = document.getElementById('particles');
-            for (let i = 0; i < 50; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                const size = Math.random() * 6 + 2;
-                particle.style.width = size + 'px';
-                particle.style.height = size + 'px';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 20 + 's';
-                particle.style.animationDuration = Math.random() * 15 + 10 + 's';
-                container.appendChild(particle);
-            }
-        }
-
         // Загрузка
         window.onload = function() {
-            createParticles();
-            
-            const savedLogin = localStorage.getItem('clan_saved_login');
+            const savedLogin = localStorage.getItem('savedLogin');
             if (savedLogin) {
                 document.getElementById('loginUsername').value = savedLogin;
             }
-
-            const session = localStorage.getItem('clan_session');
+            
+            const session = localStorage.getItem('clanSession');
             if (session) {
-                const data = JSON.parse(session);
-                if (users[data.username]) {
+                try {
+                    const data = JSON.parse(session);
                     currentUser = data.username;
-                    balance = users[data.username].balance;
+                    balance = data.balance;
                     updateUIForAuth();
-                }
+                } catch(e) {}
             }
         };
 
@@ -1057,240 +581,211 @@
             document.getElementById('registerModal').classList.remove('active');
         }
 
-        function login() {
+        async function login() {
             const username = document.getElementById('loginUsername').value.trim();
             const password = document.getElementById('loginPassword').value;
             const remember = document.getElementById('rememberMe').checked;
 
             if (!username || !password) {
-                showError('loginError', 'Заполните все поля');
+                document.getElementById('loginError').innerText = 'Заполните все поля';
+                document.getElementById('loginError').style.display = 'block';
                 return;
             }
 
-            if (users[username] && users[username].password === password) {
-                currentUser = username;
-                balance = users[username].balance;
+            try {
+                const res = await fetch(`${SERVER}/api/login`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({username, password})
+                });
+                const data = await res.json();
 
-                localStorage.setItem('clan_session', JSON.stringify({
-                    username: currentUser,
-                    balance: balance
-                }));
-
-                if (remember) {
-                    localStorage.setItem('clan_saved_login', username);
+                if (data.success) {
+                    currentUser = username;
+                    balance = data.balance;
+                    
+                    localStorage.setItem('clanSession', JSON.stringify({username: currentUser, balance}));
+                    if (remember) localStorage.setItem('savedLogin', username);
+                    else localStorage.removeItem('savedLogin');
+                    
+                    closeModals();
+                    updateUIForAuth();
+                    showNotification('✅ Успешный вход!');
                 } else {
-                    localStorage.removeItem('clan_saved_login');
+                    document.getElementById('loginError').innerText = data.message;
+                    document.getElementById('loginError').style.display = 'block';
                 }
-
-                closeModals();
-                updateUIForAuth();
-                showNotification('✅ Успешный вход!');
-            } else {
-                showError('loginError', 'Неверный логин или пароль');
+            } catch (e) {
+                showNotification('❌ Ошибка соединения с сервером', 'error');
             }
         }
 
-        function register() {
+        async function register() {
             const username = document.getElementById('regUsername').value.trim();
             const password = document.getElementById('regPassword').value;
             const confirm = document.getElementById('regConfirm').value;
 
             if (!username || !password || !confirm) {
-                showError('registerError', 'Заполните все поля');
+                document.getElementById('registerError').innerText = 'Заполните все поля';
+                document.getElementById('registerError').style.display = 'block';
                 return;
             }
 
             if (password !== confirm) {
-                showError('registerError', 'Пароли не совпадают');
+                document.getElementById('registerError').innerText = 'Пароли не совпадают';
+                document.getElementById('registerError').style.display = 'block';
                 return;
             }
 
-            if (username.length < 3) {
-                showError('registerError', 'Логин минимум 3 символа');
-                return;
+            try {
+                const res = await fetch(`${SERVER}/api/register`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({username, password})
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    showNotification('✅ Регистрация успешна! Войдите');
+                    closeModals();
+                    showModal('login');
+                } else {
+                    document.getElementById('registerError').innerText = data.message;
+                    document.getElementById('registerError').style.display = 'block';
+                }
+            } catch (e) {
+                showNotification('❌ Ошибка соединения с сервером', 'error');
             }
-
-            if (password.length < 4) {
-                showError('registerError', 'Пароль минимум 4 символа');
-                return;
-            }
-
-            if (users[username]) {
-                showError('registerError', 'Пользователь уже существует');
-                return;
-            }
-
-            users[username] = {
-                password: password,
-                balance: 0
-            };
-
-            localStorage.setItem('clan_users', JSON.stringify(users));
-
-            showNotification('✅ Регистрация успешна! Войдите');
-            closeModals();
-            showModal('login');
-        }
-
-        function showError(elementId, message) {
-            const errorEl = document.getElementById(elementId);
-            errorEl.innerText = message;
-            errorEl.style.display = 'block';
-            setTimeout(() => {
-                errorEl.style.display = 'none';
-            }, 3000);
         }
 
         function logout() {
-            localStorage.removeItem('clan_session');
+            localStorage.removeItem('clanSession');
             currentUser = null;
             balance = 0;
-
             document.getElementById('authButtons').style.display = 'flex';
             document.getElementById('userInfo').style.display = 'none';
             document.getElementById('mainContent').style.display = 'none';
-
-            showNotification('👋 Вы вышли из системы');
+            showNotification('👋 Вы вышли');
         }
 
-        function useKey() {
+        async function useKey() {
             if (!currentUser) {
                 showNotification('❌ Сначала войдите', 'error');
                 return;
             }
 
             const key = document.getElementById('keyInput').value.trim().toUpperCase();
-            if (!key) {
-                showNotification('❌ Введите ключ', 'error');
-                return;
-            }
+            if (!key) return;
 
-            if (key.startsWith('BAL-')) {
-                const parts = key.split('-');
-                const value = parseInt(parts[1]) || 1000;
-                balance += value;
-                users[currentUser].balance = balance;
-                localStorage.setItem('clan_users', JSON.stringify(users));
-                document.getElementById('balance').innerText = balance.toLocaleString();
-                showNotification(`✅ +${value} монет!`);
-            } else if (key.startsWith('WINTER-')) {
-                showOpeningAnimation('winter');
-            } else if (key.startsWith('ROLE-')) {
-                showOpeningAnimation('role');
-            } else {
-                showNotification('❌ Неверный ключ', 'error');
-            }
+            try {
+                const res = await fetch(`${SERVER}/api/use_key`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({key, username: currentUser})
+                });
+                const data = await res.json();
 
-            document.getElementById('keyInput').value = '';
+                if (data.success) {
+                    if (data.type === 'balance') {
+                        balance = data.balance;
+                        document.getElementById('balance').innerText = balance;
+                        localStorage.setItem('clanSession', JSON.stringify({username: currentUser, balance}));
+                        showNotification(`✅ +${data.value} монет!`);
+                    } else if (data.type === 'winter') {
+                        showOpeningAnimation('winter');
+                    } else if (data.type === 'role') {
+                        showOpeningAnimation('role');
+                    }
+                    document.getElementById('keyInput').value = '';
+                } else {
+                    showNotification(data.message, 'error');
+                }
+            } catch (e) {
+                showNotification('❌ Ошибка сервера', 'error');
+            }
         }
 
-        function openSpringCase() {
+        async function openSpringCase() {
             if (!currentUser) {
                 showNotification('❌ Сначала войдите', 'error');
                 return;
             }
-
             if (balance < 55000) {
                 showNotification('❌ Нужно 55,000 монет', 'error');
                 return;
             }
 
-            balance -= 55000;
-            users[currentUser].balance = balance;
-            localStorage.setItem('clan_users', JSON.stringify(users));
-            document.getElementById('balance').innerText = balance.toLocaleString();
+            const newBalance = balance - 55000;
+            
+            await fetch(`${SERVER}/api/update_balance`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username: currentUser, balance: newBalance})
+            });
 
+            balance = newBalance;
+            document.getElementById('balance').innerText = balance;
+            localStorage.setItem('clanSession', JSON.stringify({username: currentUser, balance}));
             showOpeningAnimation('spring');
         }
 
         function showOpeningAnimation(caseType) {
             const items = {
-                winter: [
-                    { name: 'NY Limited', rarity: 'LEGENDARY', icon: '❄️' },
-                    { name: 'HOLIDAY', rarity: 'LEGENDARY', icon: '🎁' },
-                    { name: 'WINTER', rarity: 'LEGENDARY', icon: '🎄' },
-                    { name: 'Snow Reaper', rarity: 'LEGENDARY', icon: '🌨️' }
-                ],
-                spring: [
-                    { name: 'FrostBolt', rarity: 'LEGENDARY', icon: '❄️⚡' },
-                    { name: 'NeonCloud', rarity: 'LEGENDARY', icon: '☁️' },
-                    { name: 'AbyssalThunder', rarity: 'LEGENDARY', icon: '🌩️' }
-                ],
-                role: [
-                    { name: 'Bloodbound', rarity: 'LEGENDARY', icon: '🩸' },
-                    { name: 'Shadow', rarity: 'EPIC', icon: '👤' },
-                    { name: 'Veteran', rarity: 'RARE', icon: '⚔️' },
-                    { name: 'Eternal', rarity: 'RARE', icon: '∞' },
-                    { name: 'Phantom', rarity: 'RARE', icon: '👻' },
-                    { name: 'Chosen', rarity: 'LEGENDARY', icon: '⭐' }
-                ]
+                winter: ['NY Limited', 'HOLIDAY', 'WINTER', 'Snow Reaper'],
+                spring: ['FrostBolt', 'NeonCloud', 'AbyssalThunder'],
+                role: ['Bloodbound', 'Shadow', 'Veteran', 'Eternal', 'Phantom', 'Chosen']
             };
-
-            const caseItems = items[caseType];
-            const winItem = caseItems[Math.floor(Math.random() * caseItems.length)];
-            const colors = {
-                winter: '#00d4ff',
-                spring: '#00ffcc',
-                role: '#ff4757'
-            };
-            const titles = {
-                winter: '❄️ ЗИМНИЙ КЕЙС',
-                spring: '🌸 ВЕСЕННИЙ КЕЙС',
-                role: '🎲 РОЛЕВОЙ КЕЙС'
-            };
-
-            const container = document.getElementById('caseOpeningContainer');
-            const titleEl = document.getElementById('openingTitle');
+            
+            const winItem = items[caseType][Math.floor(Math.random() * items[caseType].length)];
+            
+            const colors = { winter: '#00d4ff', spring: '#00ffcc', role: '#ff4757' };
+            const titles = { winter: '❄️ ЗИМНИЙ КЕЙС', spring: '🌸 ВЕСЕННИЙ КЕЙС', role: '🎲 РОЛЕВОЙ КЕЙС' };
+            
+            const anim = document.getElementById('animation');
+            const box = document.getElementById('animBox');
             const slots = document.querySelectorAll('.slot');
-
-            container.style.setProperty('--color', colors[caseType]);
+            const result = document.getElementById('animResult');
+            const titleEl = document.getElementById('animTitle');
+            
+            box.style.setProperty('--color', colors[caseType]);
             titleEl.style.color = colors[caseType];
             titleEl.innerText = titles[caseType];
-
-            // Случайные иконки в слотах
-            const allIcons = ['❄️', '🌸', '🎲', '🎁', '⚔️', '👤', '⭐', '🩸', '∞', '👻'];
+            
+            const icons = ['❄️', '🌸', '🎲', '🎁', '⚔️', '👤'];
             slots.forEach(slot => {
-                const randomIcon = allIcons[Math.floor(Math.random() * allIcons.length)];
-                slot.querySelector('.slot-icon').innerText = randomIcon;
-                slot.querySelector('.slot-name').innerText = '???';
-                slot.style.animation = '';
-                slot.style.animation = 'slotSpin 0.2s infinite linear';
+                const slotIcon = slot.querySelector('.slot-icon');
+                const slotName = slot.querySelector('.slot-name');
+                slotIcon.innerText = icons[Math.floor(Math.random() * icons.length)];
+                slotName.innerText = '???';
+                slot.style.animation = 'spin 0.2s infinite linear';
             });
-
-            const opening = document.getElementById('caseOpening');
-            const resultDiv = document.getElementById('openingResult');
-            const resultIcon = document.getElementById('resultIcon');
-            const resultName = document.getElementById('resultName');
-            const resultRarity = document.getElementById('resultRarity');
-
-            opening.classList.add('active');
-            resultDiv.style.display = 'none';
-
-            // Останавливаем слоты
+            
+            anim.style.display = 'flex';
+            result.style.display = 'none';
+            
             setTimeout(() => {
-                slots.forEach((slot, i) => {
+                slots.forEach(slot => {
                     slot.style.animation = 'none';
-                    slot.querySelector('.slot-icon').innerText = winItem.icon;
-                    slot.querySelector('.slot-name').innerText = winItem.name;
+                    const slotIcon = slot.querySelector('.slot-icon');
+                    const slotName = slot.querySelector('.slot-name');
+                    slotIcon.innerText = winItem[0] || '🎁';
+                    slotName.innerText = winItem;
                 });
             }, 2000);
-
-            // Показываем результат
+            
             setTimeout(() => {
-                resultIcon.innerText = winItem.icon;
-                resultName.innerText = winItem.name;
-                resultRarity.innerText = winItem.rarity;
-                resultDiv.style.display = 'block';
+                result.innerText = `🎉 ${winItem} !`;
+                result.style.display = 'block';
             }, 2500);
-        }
-
-        function closeOpening() {
-            document.getElementById('caseOpening').classList.remove('active');
+            
+            setTimeout(() => {
+                anim.style.display = 'none';
+            }, 4500);
         }
 
         function openAdmin() {
             const pass = prompt('🔐 Пароль администратора:');
-
+            
             if (pass === ADMIN_PASS) {
                 const action = prompt(
                     'Выберите действие:\n' +
@@ -1300,44 +795,67 @@
                     '4 - Добавить баланс пользователю\n' +
                     '5 - Список пользователей'
                 );
-
+                
                 if (action === '1') {
                     const amount = prompt('Сумма:', '1000');
                     if (amount) {
-                        const key = `BAL-${amount}-${Math.floor(Math.random() * 9000 + 1000)}`;
-                        showNotification(`✅ Ключ создан: ${key}`);
-                        navigator.clipboard.writeText(key);
+                        fetch(`${SERVER}/api/admin/create_key`, {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({password: ADMIN_PASS, key_type: 'balance', value: parseInt(amount)})
+                        }).then(res => res.json()).then(data => {
+                            if (data.success) {
+                                showNotification(`✅ Ключ: ${data.key}`);
+                                navigator.clipboard.writeText(data.key);
+                            }
+                        });
                     }
                 } else if (action === '2') {
-                    const key = `WINTER-${Math.floor(Math.random() * 9000 + 1000)}`;
-                    showNotification(`✅ Ключ создан: ${key}`);
-                    navigator.clipboard.writeText(key);
+                    fetch(`${SERVER}/api/admin/create_key`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({password: ADMIN_PASS, key_type: 'winter'})
+                    }).then(res => res.json()).then(data => {
+                        if (data.success) {
+                            showNotification(`✅ Ключ: ${data.key}`);
+                            navigator.clipboard.writeText(data.key);
+                        }
+                    });
                 } else if (action === '3') {
-                    const key = `ROLE-${Math.floor(Math.random() * 9000 + 1000)}`;
-                    showNotification(`✅ Ключ создан: ${key}`);
-                    navigator.clipboard.writeText(key);
+                    fetch(`${SERVER}/api/admin/create_key`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({password: ADMIN_PASS, key_type: 'role'})
+                    }).then(res => res.json()).then(data => {
+                        if (data.success) {
+                            showNotification(`✅ Ключ: ${data.key}`);
+                            navigator.clipboard.writeText(data.key);
+                        }
+                    });
                 } else if (action === '4') {
                     const username = prompt('Имя пользователя:');
-                    if (username && users[username]) {
-                        const amount = prompt('Сумма:', '1000');
-                        if (amount) {
-                            users[username].balance += parseInt(amount);
-                            localStorage.setItem('clan_users', JSON.stringify(users));
-                            if (username === currentUser) {
-                                balance = users[username].balance;
-                                document.getElementById('balance').innerText = balance.toLocaleString();
-                            }
-                            showNotification(`✅ Добавлено ${amount} пользователю ${username}`);
-                        }
-                    } else {
-                        showNotification('❌ Пользователь не найден', 'error');
+                    const amount = prompt('Сумма:', '1000');
+                    if (username && amount) {
+                        fetch(`${SERVER}/api/admin/add_balance`, {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({password: ADMIN_PASS, username, amount: parseInt(amount)})
+                        }).then(() => showNotification('✅ Баланс добавлен'));
                     }
                 } else if (action === '5') {
-                    let userList = '📋 СПИСОК ПОЛЬЗОВАТЕЛЕЙ:\n\n';
-                    for (const [name, data] of Object.entries(users)) {
-                        userList += `${name}: 💰 ${data.balance.toLocaleString()}\n`;
-                    }
-                    alert(userList || 'Нет пользователей');
+                    fetch(`${SERVER}/api/admin/get_users`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({password: ADMIN_PASS})
+                    }).then(res => res.json()).then(data => {
+                        if (data.success) {
+                            let list = '📋 ПОЛЬЗОВАТЕЛИ:\n\n';
+                            data.users.forEach(u => {
+                                list += `${u.username}: 💰 ${u.balance}\n`;
+                            });
+                            alert(list);
+                        }
+                    });
                 }
             } else {
                 showNotification('❌ Неверный пароль', 'error');
@@ -1346,12 +864,10 @@
 
         function showNotification(text, type = 'success') {
             const notif = document.getElementById('notification');
-            notif.style.background = type === 'success' ? 'linear-gradient(135deg, #5865F2, #4752c4)' : 'linear-gradient(135deg, #ff4757, #ff6b81)';
+            notif.style.background = type === 'success' ? '#5865F2' : '#ff4757';
             notif.innerText = text;
             notif.style.display = 'block';
-            setTimeout(() => {
-                notif.style.display = 'none';
-            }, 3000);
+            setTimeout(() => notif.style.display = 'none', 3000);
         }
     </script>
 </body>
