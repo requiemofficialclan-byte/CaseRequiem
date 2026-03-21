@@ -1221,11 +1221,11 @@
                     const div = document.createElement('div');
                     div.className = 'multi-item';
                     div.style.animationDelay = (i * 0.05) + 's';
-                    div.innerHTML = \`
-                        <div class="multi-item-icon">\${winItem.icon}</div>
-                        <div class="multi-item-name">\${winItem.name}</div>
-                        <div class="multi-item-rarity">\${winItem.rarity}</div>
-                    \`;
+                    div.innerHTML = `
+                        <div class="multi-item-icon">${winItem.icon}</div>
+                        <div class="multi-item-name">${winItem.name}</div>
+                        <div class="multi-item-rarity">${winItem.rarity}</div>
+                    `;
                     resultsEl.appendChild(div);
                 }, i * 120);
             }
