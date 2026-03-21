@@ -221,6 +221,101 @@
 
         .open-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
+        /* Счётчик количества */
+        .case-counter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        .counter-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid var(--case-color);
+            background: rgba(0,0,0,0.4);
+            color: var(--case-color);
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            transition: all 0.2s;
+        }
+        .counter-btn:hover { background: var(--case-color); color: black; }
+        .counter-value {
+            font-size: 22px;
+            font-weight: bold;
+            color: white;
+            min-width: 30px;
+            text-align: center;
+        }
+        .counter-max {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            margin-top: 4px;
+        }
+
+        /* Мульти-результат оверлей */
+        .multi-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.97);
+            z-index: 5500;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .multi-overlay.active { display: flex; }
+        .multi-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            color: var(--color);
+        }
+        .multi-results {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            max-width: 900px;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        .multi-item {
+            background: rgba(30,30,30,0.9);
+            border: 2px solid var(--color);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            min-width: 140px;
+            animation: popIn 0.3s ease;
+        }
+        @keyframes popIn {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .multi-item-icon { font-size: 40px; }
+        .multi-item-name { font-size: 14px; font-weight: bold; margin-top: 8px; color: white; }
+        .multi-item-rarity { font-size: 11px; color: #aaa; margin-top: 4px; }
+        .multi-close {
+            margin-top: 25px;
+            padding: 14px 50px;
+            border-radius: 50px;
+            border: none;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            background: var(--color);
+            color: black;
+        }
+
         /* CS2 СТИЛЬ РУЛЕТКА */
         .roulette-overlay {
             position: fixed;
@@ -640,7 +735,15 @@
                     <div class="item"><span>NeonCloud</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
                     <div class="item"><span>AbyssalThunder</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
                 </div>
-                <button class="open-btn" style="background: #00ffcc" onclick="openSpringCase()">ОТКРЫТЬ ЗА 💰 55,000</button>
+                <div class="case-counter">
+                    <button class="counter-btn" onclick="changeCount('spring', -1)">−</button>
+                    <div>
+                        <div class="counter-value" id="spring-count">1</div>
+                        <div class="counter-max" id="spring-max">макс: ?</div>
+                    </div>
+                    <button class="counter-btn" onclick="changeCount('spring', +1)">+</button>
+                </div>
+                <button class="open-btn" style="background: #00ffcc" onclick="openSpringCase()">ОТКРЫТЬ ЗА 💰 <span id="spring-total">55,000</span></button>
             </div>
 
             <div class="case-card" style="--case-color: #ff4757">
@@ -665,16 +768,24 @@
                 <div class="case-name">🏆 ОБЫЧНЫЙ КЕЙС</div>
                 <div class="case-price">💰 5,000 или 🔑 ключ</div>
                 <div class="items-list">
-                    <div class="item"><span>NY Limited</span><span class="item-rarity rarity-legendary">3ч • LEGENDARY</span></div>
-                    <div class="item"><span>HOLIDAY</span><span class="item-rarity rarity-legendary">3ч • LEGENDARY</span></div>
-                    <div class="item"><span>WINTER</span><span class="item-rarity rarity-legendary">3ч • LEGENDARY</span></div>
-                    <div class="item"><span>Snow Reaper</span><span class="item-rarity rarity-legendary">3ч • LEGENDARY</span></div>
+                    <div class="item"><span>NY Limited</span><span class="item-rarity rarity-legendary">2ч • LEGENDARY</span></div>
+                    <div class="item"><span>HOLIDAY</span><span class="item-rarity rarity-legendary">2ч • LEGENDARY</span></div>
+                    <div class="item"><span>WINTER</span><span class="item-rarity rarity-legendary">2ч • LEGENDARY</span></div>
+                    <div class="item"><span>Snow Reaper</span><span class="item-rarity rarity-legendary">2ч • LEGENDARY</span></div>
                     <div class="item"><span>FrostBolt</span><span class="item-rarity rarity-epic">4ч • EPIC</span></div>
                     <div class="item"><span>NeonCloud</span><span class="item-rarity rarity-epic">4ч • EPIC</span></div>
                     <div class="item"><span>AbyssalThunder</span><span class="item-rarity rarity-epic">4ч • EPIC</span></div>
                     <div class="item"><span>Bloodbound / Shadow / Veteran / Eternal / Phantom / Chosen</span><span class="item-rarity rarity-rare">1ч • RARE</span></div>
                 </div>
-                <button class="open-btn" style="background: #ffd700; color: black;" onclick="openNormalCase()">ОТКРЫТЬ ЗА 💰 5,000</button>
+                <div class="case-counter">
+                    <button class="counter-btn" onclick="changeCount('normal', -1)">−</button>
+                    <div>
+                        <div class="counter-value" id="normal-count">1</div>
+                        <div class="counter-max" id="normal-max">макс: ?</div>
+                    </div>
+                    <button class="counter-btn" onclick="changeCount('normal', +1)">+</button>
+                </div>
+                <button class="open-btn" style="background: #ffd700; color: black;" onclick="openNormalCase()">ОТКРЫТЬ ЗА 💰 <span id="normal-total">5,000</span></button>
             </div>
         </div>
     </div>
@@ -787,6 +898,13 @@
         </div>
     </div>
 
+    <!-- Мульти-результат -->
+    <div class="multi-overlay" id="multiOverlay">
+        <div class="multi-title" id="multiTitle">🎁 РЕЗУЛЬТАТЫ</div>
+        <div class="multi-results" id="multiResults"></div>
+        <button class="multi-close" id="multiClose" onclick="closeMulti()">ЗАБРАТЬ ВСЁ</button>
+    </div>
+
     <button class="admin-btn" onclick="openAdmin()">⚙️</button>
     <div class="notification" id="notification"></div>
 
@@ -849,6 +967,8 @@
             document.getElementById('username').innerText = currentUser;
             document.getElementById('balance').innerText = balance;
             document.getElementById('mainContent').style.display = 'block';
+            // Обновляем счётчики кейсов
+            setTimeout(updateAllCounters, 100);
         }
 
         // ============ МОДАЛКИ ============
@@ -997,14 +1117,45 @@
             document.getElementById('keyInput').value = '';
         }
 
-        // ============ ВЕСЕННИЙ КЕЙС ============
-        let springOpenMethod = 'coins'; // 'coins' или 'key'
+        // ============ КЕЙСЫ ЗА МОНЕТЫ ============
+        let springOpenMethod = 'coins';
         let normalOpenMethod = 'coins';
+
+        const CASE_PRICES = { spring: 55000, normal: 5000 };
+        const caseCounts = { spring: 1, normal: 1 };
+
+        function changeCount(caseType, delta) {
+            const price = CASE_PRICES[caseType];
+            const maxCount = Math.max(1, Math.floor(balance / price));
+            caseCounts[caseType] = Math.min(maxCount, Math.max(1, caseCounts[caseType] + delta));
+            updateCounterUI(caseType);
+        }
+
+        function updateCounterUI(caseType) {
+            const price = CASE_PRICES[caseType];
+            const count = caseCounts[caseType];
+            const maxCount = Math.max(1, Math.floor(balance / price));
+            caseCounts[caseType] = Math.min(count, maxCount);
+
+            const countEl = document.getElementById(caseType + '-count');
+            const maxEl = document.getElementById(caseType + '-max');
+            const totalEl = document.getElementById(caseType + '-total');
+            if (countEl) countEl.innerText = caseCounts[caseType];
+            if (maxEl) maxEl.innerText = 'макс: ' + maxCount;
+            if (totalEl) totalEl.innerText = (caseCounts[caseType] * price).toLocaleString('ru-RU');
+        }
+
+        function updateAllCounters() {
+            updateCounterUI('spring');
+            updateCounterUI('normal');
+        }
 
         async function openNormalCase() {
             if (!currentUser) { showNotification('❌ Сначала войдите', 'error'); return; }
-            if (balance < 5000) { showNotification('❌ Нужно 5,000 монет', 'error'); return; }
-            const newBalance = balance - 5000;
+            const count = caseCounts['normal'];
+            const total = count * 5000;
+            if (balance < total) { showNotification('❌ Недостаточно монет', 'error'); return; }
+            const newBalance = balance - total;
             const res = await api('/api/update_balance', {username: currentUser, balance: newBalance});
             if (res.success) {
                 balance = newBalance;
@@ -1012,20 +1163,21 @@
                 localStorage.setItem('clan_session', JSON.stringify({username: currentUser, balance}));
                 normalOpenMethod = 'coins';
                 lastUsedKey = '';
-                startRoulette('normal');
+                if (count === 1) {
+                    startRoulette('normal');
+                } else {
+                    openMultiCase('normal', count, 5000);
+                }
+                updateAllCounters();
             }
         }
 
         async function openSpringCase() {
-            if (!currentUser) {
-                showNotification('❌ Сначала войдите', 'error');
-                return;
-            }
-            if (balance < 55000) {
-                showNotification('❌ Нужно 55,000 монет', 'error');
-                return;
-            }
-            const newBalance = balance - 55000;
+            if (!currentUser) { showNotification('❌ Сначала войдите', 'error'); return; }
+            const count = caseCounts['spring'];
+            const total = count * 55000;
+            if (balance < total) { showNotification('❌ Недостаточно монет', 'error'); return; }
+            const newBalance = balance - total;
             const res = await api('/api/update_balance', {username: currentUser, balance: newBalance});
             if (res.success) {
                 balance = newBalance;
@@ -1033,8 +1185,90 @@
                 localStorage.setItem('clan_session', JSON.stringify({username: currentUser, balance}));
                 springOpenMethod = 'coins';
                 lastUsedKey = '';
-                startRoulette('spring');
+                if (count === 1) {
+                    startRoulette('spring');
+                } else {
+                    openMultiCase('spring', count, 55000);
+                }
+                updateAllCounters();
             }
+        }
+
+        function openMultiCase(caseType, count, priceEach) {
+            const items = caseItems[caseType];
+            const colors = { winter: '#00d4ff', spring: '#00ffcc', role: '#ff4757', normal: '#ffd700' };
+            const titles = { winter: '❄️ ЗИМНИЙ', spring: '🌸 ВЕСЕННИЙ', role: '🎲 РОЛЕВОЙ', normal: '🏆 ОБЫЧНЫЙ' };
+            const color = colors[caseType];
+
+            const overlay = document.getElementById('multiOverlay');
+            const titleEl = document.getElementById('multiTitle');
+            const resultsEl = document.getElementById('multiResults');
+            const closeBtn = document.getElementById('multiClose');
+
+            overlay.style.setProperty('--color', color);
+            titleEl.style.color = color;
+            titleEl.innerText = titles[caseType] + ' — ' + count + ' КЕЙСОВ';
+            resultsEl.innerHTML = '';
+            closeBtn.style.background = color;
+            overlay.classList.add('active');
+
+            const wonItems = [];
+            // Показываем результаты с задержкой для эффекта
+            for (let i = 0; i < count; i++) {
+                const winItem = items[Math.floor(Math.random() * items.length)];
+                wonItems.push(winItem);
+                setTimeout(() => {
+                    const div = document.createElement('div');
+                    div.className = 'multi-item';
+                    div.style.animationDelay = (i * 0.05) + 's';
+                    div.innerHTML = \`
+                        <div class="multi-item-icon">\${winItem.icon}</div>
+                        <div class="multi-item-name">\${winItem.name}</div>
+                        <div class="multi-item-rarity">\${winItem.rarity}</div>
+                    \`;
+                    resultsEl.appendChild(div);
+                }, i * 120);
+            }
+
+            // Отправляем все результаты на сервер одним запросом
+            setTimeout(() => {
+                // Суммируем время по каждому уникальному предмету
+                const itemTotals = {}; // { 'Bloodbound': 120, 'FrostBolt': 240, ... } минуты
+                wonItems.forEach(item => {
+                    if (item.duration) {
+                        const hours = parseFloat(item.duration.replace('ч', ''));
+                        itemTotals[item.name] = (itemTotals[item.name] || 0) + hours * 60;
+                    }
+                });
+
+                // Строим итог по каждому предмету отдельно
+                const summaryLines = Object.entries(itemTotals).map(([name, mins]) => {
+                    const h = Math.floor(mins / 60);
+                    const m = Math.round(mins % 60);
+                    const timeStr = h > 0 && m > 0 ? h + 'ч ' + m + 'мин' : h > 0 ? h + 'ч' : m + 'мин';
+                    return '• ' + name + ' — ' + timeStr;
+                });
+
+                // Список всех выпавших предметов
+                const dropLines = wonItems.map((item, idx) =>
+                    (idx + 1) + '. ' + item.name + (item.duration ? ' (' + item.duration + ')' : '')
+                );
+
+                const wonText = '[' + count + ' кейсов]\n'
+                    + dropLines.join('\n')
+                    + (summaryLines.length > 0 ? '\n\n⏱ ИТОГО ВЫДАТЬ:\n' + summaryLines.join('\n') : '');
+
+                api('/api/report_win', {
+                    username: currentUser,
+                    won_item: wonText,
+                    case_type: caseType,
+                    paid_coins: count * priceEach
+                });
+            }, count * 120 + 200);
+        }
+
+        function closeMulti() {
+            document.getElementById('multiOverlay').classList.remove('active');
         }
 
         // ============ РУЛЕТКА ============
