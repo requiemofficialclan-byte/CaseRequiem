@@ -1232,31 +1232,45 @@
 
             // Отправляем все результаты на сервер одним запросом
             setTimeout(() => {
-                // Суммируем время по каждому уникальному предмету
-                const itemTotals = {}; // { 'Bloodbound': 120, 'FrostBolt': 240, ... } минуты
-                wonItems.forEach(item => {
-                    if (item.duration) {
-                        const hours = parseFloat(item.duration.replace('ч', ''));
-                        itemTotals[item.name] = (itemTotals[item.name] || 0) + hours * 60;
-                    }
-                });
-
-                // Строим итог по каждому предмету отдельно
-                const summaryLines = Object.entries(itemTotals).map(([name, mins]) => {
-                    const h = Math.floor(mins / 60);
-                    const m = Math.round(mins % 60);
-                    const timeStr = h > 0 && m > 0 ? h + 'ч ' + m + 'мин' : h > 0 ? h + 'ч' : m + 'мин';
-                    return '• ' + name + ' — ' + timeStr;
-                });
-
                 // Список всех выпавших предметов
                 const dropLines = wonItems.map((item, idx) =>
                     (idx + 1) + '. ' + item.name + (item.duration ? ' (' + item.duration + ')' : '')
                 );
 
+                // Считаем итог — для предметов с duration суммируем время,
+                // для предметов без duration считаем количество
+                const hasDuration = wonItems.some(i => i.duration);
+
+                let summaryLines = [];
+                if (hasDuration) {
+                    // Суммируем время по каждому уникальному предмету
+                    const itemTotals = {};
+                    wonItems.forEach(item => {
+                        if (item.duration) {
+                            const hours = parseFloat(item.duration.replace('ч', ''));
+                            itemTotals[item.name] = (itemTotals[item.name] || 0) + hours * 60;
+                        }
+                    });
+                    summaryLines = Object.entries(itemTotals).map(([name, mins]) => {
+                        const h = Math.floor(mins / 60);
+                        const m = Math.round(mins % 60);
+                        const timeStr = h > 0 && m > 0 ? h + 'ч ' + m + 'мин' : h > 0 ? h + 'ч' : m + 'мин';
+                        return '• ' + name + ' — ' + timeStr;
+                    });
+                } else {
+                    // Считаем количество каждого уникального предмета
+                    const itemCounts = {};
+                    wonItems.forEach(item => {
+                        itemCounts[item.name] = (itemCounts[item.name] || 0) + 1;
+                    });
+                    summaryLines = Object.entries(itemCounts).map(([name, cnt]) =>
+                        '• ' + name + ' — ' + cnt + ' шт.'
+                    );
+                }
+
                 const wonText = '[' + count + ' кейсов]\n'
                     + dropLines.join('\n')
-                    + (summaryLines.length > 0 ? '\n\n⏱ ИТОГО ВЫДАТЬ:\n' + summaryLines.join('\n') : '');
+                    + (summaryLines.length > 0 ? '\n\n📋 ИТОГО ВЫДАТЬ:\n' + summaryLines.join('\n') : '');
 
                 api('/api/report_win', {
                     username: currentUser,
