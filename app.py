@@ -11,7 +11,7 @@ app = Flask(__name__, static_folder='.')
 CORS(app)
 
 ADMIN_PASS = "34125"
-DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1485332673080590429/0ZD2pBkATVamUPhpdriBzBUzvMP5oOKo4H91JO4maCaRGIty1ipE7ZYnrGjL2dSa7-0d"
+DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1483941280248496210/QHWJYcnhPD8Voht5mElw7KVNX-vr4yU5gHQrFoAwTE14vqB9MNnIISuTCjOfMYCEq0cA"
 DATABASE_URL = os.environ.get('DATABASE_URL', '')
 # Railway даёт postgres://, psycopg2 требует postgresql://
 if DATABASE_URL.startswith('postgres://'):
@@ -185,7 +185,7 @@ def admin_create_key():
         send_discord('🔑 КЛЮЧ СОЗДАН', f'**Тип:** Баланс\n**Сумма:** {value} монет\n**Ключ:** ||`{key_text}`||', color=0xFFD700)
         return jsonify({'success': True, 'key': key_text})
     elif key_type in prefixes:
-        key_count = data.get('key_count', 1)
+        key_count = min(10, max(1, int(data.get('key_count', 1) or 1)))
         key_text = gen_key(prefixes[key_type], c)
         # Сохраняем key_count в поле value
         c.execute("INSERT INTO keys (key_text, key_type, value) VALUES (%s, %s, %s)", (key_text, key_type, key_count))
