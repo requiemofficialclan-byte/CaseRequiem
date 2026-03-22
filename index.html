@@ -898,7 +898,7 @@
                                 <input type="number" class="admin-input" id="keyValue" placeholder="Сумма (для баланса)" value="1000">
                             </div>
                             <div id="keyCountInput" style="display:none; margin-top:8px;">
-                                <input type="number" class="admin-input" id="keyCount" placeholder="Кол-во кейсов в ключе" value="1" min="1" max="10">
+                                <input type="number" class="admin-input" id="keyCount" placeholder="Кол-во кейсов (макс 10)" value="1" min="1" max="10">
                             </div>
                         </div>
                         <div><button class="admin-btn-small" onclick="createKey()">СОЗДАТЬ</button></div>
@@ -1161,7 +1161,7 @@
         function changeCount(caseType, delta) {
             const price = CASE_PRICES[caseType];
             const maxCount = Math.max(1, Math.floor(balance / price));
-            caseCounts[caseType] = Math.min(maxCount, Math.max(1, caseCounts[caseType] + delta));
+            caseCounts[caseType] = Math.min(Math.min(maxCount, 10), Math.max(1, caseCounts[caseType] + delta));
             updateCounterUI(caseType);
         }
 
@@ -1175,7 +1175,7 @@
             const maxEl = document.getElementById(caseType + '-max');
             const totalEl = document.getElementById(caseType + '-total');
             if (countEl) countEl.innerText = caseCounts[caseType];
-            if (maxEl) maxEl.innerText = 'макс: ' + maxCount;
+            if (maxEl) maxEl.innerText = 'макс: ' + Math.min(maxCount, 10);
             if (totalEl) totalEl.innerText = (caseCounts[caseType] * price).toLocaleString('ru-RU');
         }
 
@@ -1712,7 +1712,7 @@
             if (!adminLoggedIn) return;
             const type = document.getElementById('keyType').value;
             const value = parseInt(document.getElementById('keyValue').value) || 1000;
-            const keyCount = parseInt(document.getElementById('keyCount').value) || 1;
+            const keyCount = Math.min(10, Math.max(1, parseInt(document.getElementById('keyCount').value) || 1));
             const res = await api('/api/admin/create_key', {
                 password: adminPass,
                 key_type: type,
