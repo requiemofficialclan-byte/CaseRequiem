@@ -112,7 +112,7 @@ def use_key():
     if not key:
         conn.close()
         return jsonify({'success': False, 'message': '❌ Ключ не найден'})
-    key_type, value, used = key
+    key_type, key_value, used = key
     if used:
         conn.close()
         return jsonify({'success': False, 'message': '❌ Ключ уже использован'})
@@ -120,7 +120,7 @@ def use_key():
     c.execute("UPDATE keys SET used = 1, used_by = %s, used_at = CURRENT_TIMESTAMP WHERE key_text = %s", (username, key_text))
 
     if key_type == 'balance':
-        c.execute("UPDATE users SET balance = balance + %s WHERE username = %s", (value, username))
+        c.execute("UPDATE users SET balance = balance + %s WHERE username = %s", (key_value, username))
         conn.commit()
         c.execute("SELECT balance FROM users WHERE username = %s", (username,))
         new_balance = c.fetchone()[0]
@@ -128,7 +128,7 @@ def use_key():
         send_discord('💰 КЛЮЧ ИСПОЛЬЗОВАН',
             f'**Пользователь:** {username}\n**Тип:** Баланс\n**Ключ:** ||`{key_text}`||\n**Получено:** +{value} монет\n**Новый баланс:** {new_balance} монет',
             color=0xFFD700)
-        return jsonify({'success': True, 'type': 'balance', 'value': value, 'balance': new_balance})
+        return jsonify({'success': True, 'type': 'balance', 'value': key_value, 'balance': new_balance})
 
     conn.commit()
     conn.close()
@@ -142,10 +142,12 @@ def use_key():
     }
     if key_type in msgs:
         title, type_name, color = msgs[key_type]
+        key_count = key_value if key_value and key_value > 0 else 1
+        count_str = f' x{key_count}' if key_count > 1 else ''
         send_discord(title,
-            f'**Пользователь:** {username}\n**Тип:** {type_name}\n**Ключ:** ||`{key_text}`||\n**Выпало:** {won_item or "неизвестно"}',
+            f'**Пользователь:** {username}\n**Тип:** {type_name}{count_str}\n**Ключ:** ||`{key_text}`||',
             color=color)
-        return jsonify({'success': True, 'type': key_type})
+        return jsonify({'success': True, 'type': key_type, 'key_count': key_count})
 
     return jsonify({'success': False})
 
@@ -183,11 +185,14 @@ def admin_create_key():
         send_discord('🔑 КЛЮЧ СОЗДАН', f'**Тип:** Баланс\n**Сумма:** {value} монет\n**Ключ:** ||`{key_text}`||', color=0xFFD700)
         return jsonify({'success': True, 'key': key_text})
     elif key_type in prefixes:
+        key_count = data.get('key_count', 1)
         key_text = gen_key(prefixes[key_type], c)
-        c.execute("INSERT INTO keys (key_text, key_type) VALUES (%s, %s)", (key_text, key_type))
+        # Сохраняем key_count в поле value
+        c.execute("INSERT INTO keys (key_text, key_type, value) VALUES (%s, %s, %s)", (key_text, key_type, key_count))
         conn.commit()
         conn.close()
-        send_discord('🔑 КЛЮЧ СОЗДАН', f'**Тип:** {names[key_type]}\n**Ключ:** ||`{key_text}`||', color=colors[key_type])
+        count_str = f' x{key_count}' if key_count > 1 else ''
+        send_discord('🔑 КЛЮЧ СОЗДАН', f'**Тип:** {names[key_type]}{count_str}\n**Ключ:** ||`{key_text}`||', color=colors[key_type])
         return jsonify({'success': True, 'key': key_text})
 
     conn.close()
