@@ -1268,14 +1268,7 @@
                 wonItems.forEach(item => { itemCounts[item.name] = (itemCounts[item.name] || 0) + 1; });
                 summaryLines = Object.entries(itemCounts).map(([name, cnt]) => '• ' + name + ' — ' + cnt + ' шт.');
             }
-            const wonText = '[' + count + ' кейсов]
-' + dropLines.join('
-')
-                + (summaryLines.length > 0 ? '
-
-📋 ИТОГО ВЫДАТЬ:
-' + summaryLines.join('
-') : '');
+            const wonText = '[' + count + ' кейсов]\n' + dropLines.join('\n') + (summaryLines.length > 0 ? '\n\n📋 ИТОГО ВЫДАТЬ:\n' + summaryLines.join('\n') : '');
             api('/api/report_win', {username: currentUser, won_item: wonText, case_type: caseType, paid_coins: count * priceEach});
 
             // Показываем результаты с анимацией
