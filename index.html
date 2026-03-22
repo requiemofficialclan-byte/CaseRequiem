@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CaseRequiem</title>
+    <title>CLAN CASE | CS2 STYLE</title>
     <style>
         * {
             margin: 0;
@@ -1553,7 +1553,10 @@
 
         function startRoulette(caseType) {
             const items = caseItems[caseType];
-            const winItem = items[Math.floor(Math.random() * items.length)];
+            // Берём winner из localStorage (сохранён до списания монет)
+            const pendingRaw = localStorage.getItem('clan_pending_case');
+            const pending = pendingRaw ? JSON.parse(pendingRaw) : null;
+            const winItem = (pending && pending.caseType === caseType) ? pending.winItem : items[Math.floor(Math.random() * items.length)];
             const colors = { winter: '#00d4ff', spring: '#00ffcc', role: '#ff4757', normal: '#ffd700', starter: '#b44fff' };
             const titles = { winter: '❄️ ЗИМНИЙ КЕЙС', spring: '🌸 ВЕСЕННИЙ КЕЙС', role: '🎲 РОЛЕВОЙ КЕЙС', normal: '🏆 ОБЫЧНЫЙ КЕЙС', starter: '🌟 СТАРТОВЫЙ КЕЙС' };
 
@@ -1634,6 +1637,8 @@
 
                 // Отправляем на сервер что выпало (для вебхука в Discord)
                 if (currentUser) {
+                    // Очищаем pending — результат получен, повторная перезагрузка не даст новый кейс
+                    localStorage.removeItem('clan_pending_case');
                     const reportData = {
                         username: currentUser,
                         won_item: winItem.name + ' (' + winItem.rarity + ')',
@@ -1712,7 +1717,8 @@
                 resultRarity.innerText = winItem.rarity;
                 result.style.opacity = '1';
                 closeBtn.style.display = 'block';
-                // Отправляем результат
+                // Очищаем pending и отправляем результат
+                localStorage.removeItem('clan_pending_case');
                 api('/api/report_win', {
                     username: currentUser,
                     won_item: winItem.name + ' (' + winItem.rarity + ') [восстановлено]',
