@@ -10,8 +10,8 @@ from datetime import datetime
 app = Flask(__name__, static_folder='.')
 CORS(app)
 
-ADMIN_PASS = "34125"
-DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1483941280248496210/QHWJYcnhPD8Voht5mElw7KVNX-vr4yU5gHQrFoAwTE14vqB9MNnIISuTCjOfMYCEq0cA"
+ADMIN_PASS = "34512"
+DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1485332673080590429/0ZD2pBkATVamUPhpdriBzBUzvMP5oOKo4H91JO4maCaRGIty1ipE7ZYnrGjL2dSa7-0d"
 DATABASE_URL = os.environ.get('DATABASE_URL', '')
 # Railway даёт postgres://, psycopg2 требует postgresql://
 if DATABASE_URL.startswith('postgres://'):
