@@ -1123,15 +1123,26 @@
                     localStorage.setItem('clan_session', JSON.stringify({username: currentUser, balance}));
                     showNotification('✅ +' + res.value + ' монет!');
                 } else {
-                    // Кейс — открываем нужное количество раз
+                    // Кейс — определяем что выпало, СРАЗУ шлём в Discord, потом рулетка
                     const keyCount = res.key_count || 1;
                     lastUsedKey = keyText;
+                    const caseType = res.type;
+                    const items = caseItems[caseType];
+
                     if (keyCount === 1) {
-                        showNotification('✅ Открываем ' + res.type + ' кейс!');
-                        startRoulette(res.type);
+                        const winItem = items[Math.floor(Math.random() * items.length)];
+                        // Сразу Discord
+                        api('/api/report_win', {
+                            username: currentUser,
+                            won_item: winItem.name + ' (' + winItem.rarity + ')',
+                            case_type: caseType,
+                            key: keyText
+                        });
+                        showNotification('✅ Открываем кейс!');
+                        startRoulette(caseType, winItem);
                     } else {
                         showNotification('✅ Открываем ' + keyCount + ' кейсов!');
-                        openMultiCase(res.type, keyCount, 0);
+                        openMultiCase(caseType, keyCount, 0);
                     }
                 }
             } else {
@@ -1567,16 +1578,7 @@
                 result.style.opacity = '1';
                 closeBtn.style.display = 'block'; // теперь можно закрыть
 
-                // report_win уже отправлен при открытии кейса за монеты
-                // для ключей — отправляем здесь
-                if (currentUser && lastUsedKey) {
-                    api('/api/report_win', {
-                        username: currentUser,
-                        won_item: winItem.name + ' (' + winItem.rarity + ')',
-                        case_type: caseType,
-                        key: lastUsedKey
-                    });
-                }
+                // report_win уже отправлен заранее для всех типов
             }, 6500);
         }
 
