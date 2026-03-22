@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CaseRequiem</title>
+    <title>CLAN CASE | CS2 STYLE</title>
     <style>
         * {
             margin: 0;
@@ -968,8 +968,25 @@
                     currentUser = data.username;
                     balance = data.balance || 0;
                     updateUIForAuth();
-                    // Синхронизируем баланс с сервером
                     refreshBalance();
+
+                    // Проверяем незавершённое открытие кейса
+                    const pending = localStorage.getItem('clan_pending_case');
+                    if (pending) {
+                        try {
+                            const p = JSON.parse(pending);
+                            // Показываем результат который уже был определён
+                            setTimeout(() => {
+                                showNotification('⚠️ Восстанавливаем прерванное открытие...');
+                                setTimeout(() => {
+                                    startRouletteWithWinner(p.caseType, p.winItem, p.key, p.paidCoins);
+                                    localStorage.removeItem('clan_pending_case');
+                                }, 1000);
+                            }, 500);
+                        } catch(e) {
+                            localStorage.removeItem('clan_pending_case');
+                        }
+                    }
                 } catch(e) {
                     localStorage.removeItem('clan_session');
                 }
@@ -1184,8 +1201,12 @@
         async function openNormalCase() {
             if (!currentUser) { showNotification('❌ Сначала войдите', 'error'); return; }
             const count = caseCounts['normal'];
-            const total = count * 5000;
+            const total = count * 3500;
             if (balance < total) { showNotification('❌ Недостаточно монет', 'error'); return; }
+            if (count === 1) {
+                const winItem = caseItems['normal'][Math.floor(Math.random() * caseItems['normal'].length)];
+                localStorage.setItem('clan_pending_case', JSON.stringify({caseType: 'normal', winItem, key: '', paidCoins: total}));
+            }
             const newBalance = balance - total;
             const res = await api('/api/update_balance', {username: currentUser, balance: newBalance});
             if (res.success) {
@@ -1194,11 +1215,8 @@
                 localStorage.setItem('clan_session', JSON.stringify({username: currentUser, balance}));
                 normalOpenMethod = 'coins';
                 lastUsedKey = '';
-                if (count === 1) {
-                    startRoulette('normal');
-                } else {
-                    openMultiCase('normal', count, 5000);
-                }
+                localStorage.removeItem('clan_pending_case');
+                if (count === 1) { startRoulette('normal'); } else { openMultiCase('normal', count, 3500); }
                 updateAllCounters();
             }
         }
@@ -1206,8 +1224,12 @@
         async function openSpringCase() {
             if (!currentUser) { showNotification('❌ Сначала войдите', 'error'); return; }
             const count = caseCounts['spring'];
-            const total = count * 55000;
+            const total = count * 45000;
             if (balance < total) { showNotification('❌ Недостаточно монет', 'error'); return; }
+            if (count === 1) {
+                const winItem = caseItems['spring'][Math.floor(Math.random() * caseItems['spring'].length)];
+                localStorage.setItem('clan_pending_case', JSON.stringify({caseType: 'spring', winItem, key: '', paidCoins: total}));
+            }
             const newBalance = balance - total;
             const res = await api('/api/update_balance', {username: currentUser, balance: newBalance});
             if (res.success) {
@@ -1216,11 +1238,8 @@
                 localStorage.setItem('clan_session', JSON.stringify({username: currentUser, balance}));
                 springOpenMethod = 'coins';
                 lastUsedKey = '';
-                if (count === 1) {
-                    startRoulette('spring');
-                } else {
-                    openMultiCase('spring', count, 55000);
-                }
+                localStorage.removeItem('clan_pending_case');
+                if (count === 1) { startRoulette('spring'); } else { openMultiCase('spring', count, 45000); }
                 updateAllCounters();
             }
         }
@@ -1321,6 +1340,14 @@
             const count = caseCounts['starter'];
             const total = count * 1500;
             if (balance < total) { showNotification('❌ Недостаточно монет', 'error'); return; }
+
+            if (count === 1) {
+                const winItem = caseItems['starter'][Math.floor(Math.random() * caseItems['starter'].length)];
+                localStorage.setItem('clan_pending_case', JSON.stringify({
+                    caseType: 'starter', winItem, key: '', paidCoins: total
+                }));
+            }
+
             const newBalance = balance - total;
             const res = await api('/api/update_balance', {username: currentUser, balance: newBalance});
             if (res.success) {
@@ -1328,6 +1355,7 @@
                 document.getElementById('balance').innerText = balance;
                 localStorage.setItem('clan_session', JSON.stringify({username: currentUser, balance}));
                 lastUsedKey = '';
+                localStorage.removeItem('clan_pending_case');
                 if (count === 1) {
                     startRoulette('starter');
                 } else {
@@ -1620,6 +1648,69 @@
             overlay.classList.remove('active');
             track.style.transition = 'none';
             track.style.transform = 'translateX(0)';
+        }
+
+        // Восстановление после обновления страницы — показываем уже определённый результат
+        function startRouletteWithWinner(caseType, winItem, key, paidCoins) {
+            const colors = { winter: '#00d4ff', spring: '#00ffcc', role: '#ff4757', normal: '#ffd700', starter: '#b44fff' };
+            const titles = { winter: '❄️ ЗИМНИЙ КЕЙС', spring: '🌸 ВЕСЕННИЙ КЕЙС', role: '🎲 РОЛЕВОЙ КЕЙС', normal: '🏆 ОБЫЧНЫЙ КЕЙС', starter: '🌟 СТАРТОВЫЙ КЕЙС' };
+            const items = caseItems[caseType];
+
+            const container = document.getElementById('rouletteContainer');
+            const machine = container.querySelector('.roulette-machine');
+            const titleEl = document.getElementById('rouletteTitle');
+            const track = document.getElementById('rouletteTrack');
+            const result = document.getElementById('rouletteResult');
+            const resultIcon = document.getElementById('resultIcon');
+            const resultName = document.getElementById('resultName');
+            const resultRarity = document.getElementById('resultRarity');
+            const closeBtn = document.getElementById('closeRouletteBtn');
+
+            container.style.setProperty('--color', colors[caseType]);
+            titleEl.style.color = colors[caseType];
+            titleEl.innerText = titles[caseType];
+            closeBtn.style.display = 'none';
+            result.style.opacity = '0';
+            track.style.transition = 'none';
+            track.style.transform = 'translateX(0)';
+
+            const ITEM_WIDTH = 180, ITEM_GAP = 10, ITEM_STEP = ITEM_WIDTH + ITEM_GAP;
+            const TOTAL_ITEMS = 60, WIN_POS = 45;
+
+            track.innerHTML = '';
+            for (let i = 0; i < TOTAL_ITEMS; i++) {
+                const randomItem = items[Math.floor(Math.random() * items.length)];
+                const div = document.createElement('div');
+                div.className = 'roulette-item';
+                div.innerHTML = '<div class="roulette-item-icon">' + randomItem.icon + '</div><div class="roulette-item-name">' + randomItem.name + '</div><div class="roulette-item-rarity">' + randomItem.rarity + '</div>';
+                track.appendChild(div);
+            }
+            track.children[WIN_POS].innerHTML = '<div class="roulette-item-icon">' + winItem.icon + '</div><div class="roulette-item-name">' + winItem.name + '</div><div class="roulette-item-rarity">' + winItem.rarity + '</div>';
+
+            document.getElementById('rouletteOverlay').classList.add('active');
+            const machineWidth = machine.offsetWidth;
+            const finalOffset = WIN_POS * ITEM_STEP + (machineWidth / 2) - (ITEM_WIDTH / 2);
+
+            setTimeout(() => {
+                track.style.transition = 'transform 6s cubic-bezier(0.05, 0.9, 0.3, 1)';
+                track.style.transform = 'translateX(-' + finalOffset + 'px)';
+            }, 100);
+
+            setTimeout(() => {
+                resultIcon.innerText = winItem.icon;
+                resultName.innerText = winItem.name;
+                resultRarity.innerText = winItem.rarity;
+                result.style.opacity = '1';
+                closeBtn.style.display = 'block';
+                // Отправляем результат
+                api('/api/report_win', {
+                    username: currentUser,
+                    won_item: winItem.name + ' (' + winItem.rarity + ') [восстановлено]',
+                    case_type: caseType,
+                    paid_coins: paidCoins,
+                    key: key || ''
+                });
+            }, 6500);
         }
 
         // ============ АДМИН ============
