@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLAN CASE | CS2 STYLE</title>
+    <title>CaseRequiem</title>
     <style>
         * {
             margin: 0;
@@ -729,7 +729,7 @@
                 <div class="case-badge badge-money">💰 ЗА МОНЕТЫ / 🔑 КЛЮЧ</div>
                 <div class="case-icon">🌸</div>
                 <div class="case-name">🌱 ВЕСЕННИЙ КЕЙС 2026</div>
-                <div class="case-price">💰 35,000 или 🔑 ключ</div>
+                <div class="case-price">💰 45,000 или 🔑 ключ</div>
                 <div class="items-list">
                     <div class="item"><span>FrostBolt</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
                     <div class="item"><span>NeonCloud</span><span class="item-rarity rarity-legendary">LEGENDARY</span></div>
@@ -743,7 +743,7 @@
                     </div>
                     <button class="counter-btn" onclick="changeCount('spring', +1)">+</button>
                 </div>
-                <button class="open-btn" style="background: #00ffcc" onclick="openSpringCase()">ОТКРЫТЬ ЗА 💰 <span id="spring-total">35,000</span></button>
+                <button class="open-btn" style="background: #00ffcc" onclick="openSpringCase()">ОТКРЫТЬ ЗА 💰 <span id="spring-total">45,000</span></button>
             </div>
 
             <div class="case-card" style="--case-color: #ff4757">
@@ -766,7 +766,7 @@
                 <div class="case-badge badge-money">💰 ЗА МОНЕТЫ / 🔑 КЛЮЧ</div>
                 <div class="case-icon">🏆</div>
                 <div class="case-name">🏆 ОБЫЧНЫЙ КЕЙС</div>
-                <div class="case-price">💰 2,500 или 🔑 ключ</div>
+                <div class="case-price">💰 3,500 или 🔑 ключ</div>
                 <div class="items-list">
                     <div class="item"><span>NY Limited</span><span class="item-rarity rarity-legendary">2ч • LEGENDARY</span></div>
                     <div class="item"><span>HOLIDAY</span><span class="item-rarity rarity-legendary">2ч • LEGENDARY</span></div>
@@ -785,7 +785,7 @@
                     </div>
                     <button class="counter-btn" onclick="changeCount('normal', +1)">+</button>
                 </div>
-                <button class="open-btn" style="background: #ffd700; color: black;" onclick="openNormalCase()">ОТКРЫТЬ ЗА 💰 <span id="normal-total">2,500</span></button>
+                <button class="open-btn" style="background: #ffd700; color: black;" onclick="openNormalCase()">ОТКРЫТЬ ЗА 💰 <span id="normal-total">3,500</span></button>
             </div>
 
             <div class="case-card" style="--case-color: #b44fff">
@@ -1147,7 +1147,7 @@
         let springOpenMethod = 'coins';
         let normalOpenMethod = 'coins';
 
-        const CASE_PRICES = { spring: 35000, normal: 2500, starter: 1500 };
+        const CASE_PRICES = { spring: 45000, normal: 3500, starter: 1500 };
         const caseCounts = { spring: 1, normal: 1, starter: 1 };
 
         function changeCount(caseType, delta) {
@@ -1601,7 +1601,7 @@
                     if (caseType === 'spring' && springOpenMethod === 'coins') {
                         reportData.paid_coins = 55000;
                     } else if (caseType === 'normal' && normalOpenMethod === 'coins') {
-                        reportData.paid_coins = 2500;
+                        reportData.paid_coins = 3500;
                     } else {
                         reportData.key = lastUsedKey;
                     }
