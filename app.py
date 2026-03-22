@@ -11,7 +11,7 @@ app = Flask(__name__, static_folder='.')
 CORS(app)
 
 ADMIN_PASS = "34125"
-DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1483941280248496210/QHWJYcnhPD8Voht5mElw7KVNX-vr4yU5gHQrFoAwTE14vqB9MNnIISuTCjOfMYCEq0cA"
+DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1485332673080590429/0ZD2pBkATVamUPhpdriBzBUzvMP5oOKo4H91JO4maCaRGIty1ipE7ZYnrGjL2dSa7-0d"
 DATABASE_URL = os.environ.get('DATABASE_URL', '')
 # Railway даёт postgres://, psycopg2 требует postgresql://
 if DATABASE_URL.startswith('postgres://'):
@@ -134,10 +134,11 @@ def use_key():
     conn.close()
 
     msgs = {
-        'winter': ('❄️ КЛЮЧ ИСПОЛЬЗОВАН', 'Зимний кейс', 0x00D4FF),
-        'role':   ('🎲 КЛЮЧ ИСПОЛЬЗОВАН', 'Ролевой кейс', 0xFF4757),
-        'spring': ('🌸 КЛЮЧ ИСПОЛЬЗОВАН', 'Весенний кейс', 0x00FFCC),
-        'normal': ('🏆 КЛЮЧ ИСПОЛЬЗОВАН', 'Обычный кейс', 0xFFD700),
+        'winter':  ('❄️ КЛЮЧ ИСПОЛЬЗОВАН', 'Зимний кейс', 0x00D4FF),
+        'role':    ('🎲 КЛЮЧ ИСПОЛЬЗОВАН', 'Ролевой кейс', 0xFF4757),
+        'spring':  ('🌸 КЛЮЧ ИСПОЛЬЗОВАН', 'Весенний кейс', 0x00FFCC),
+        'normal':  ('🏆 КЛЮЧ ИСПОЛЬЗОВАН', 'Обычный кейс', 0xFFD700),
+        'starter': ('🌟 КЛЮЧ ИСПОЛЬЗОВАН', 'Стартовый кейс', 0xB44FFF),
     }
     if key_type in msgs:
         title, type_name, color = msgs[key_type]
@@ -169,9 +170,9 @@ def admin_create_key():
     conn = get_conn()
     c = conn.cursor()
 
-    prefixes = {'winter': 'WINTER', 'role': 'ROLE', 'spring': 'SPRING', 'normal': 'NORMAL'}
-    colors   = {'winter': 0x00D4FF, 'role': 0xFF4757, 'spring': 0x00FFCC, 'normal': 0xFFD700}
-    names    = {'winter': 'Зимний кейс', 'role': 'Ролевой кейс', 'spring': 'Весенний кейс', 'normal': 'Обычный кейс'}
+    prefixes = {'winter': 'WINTER', 'role': 'ROLE', 'spring': 'SPRING', 'normal': 'NORMAL', 'starter': 'STARTER'}
+    colors   = {'winter': 0x00D4FF, 'role': 0xFF4757, 'spring': 0x00FFCC, 'normal': 0xFFD700, 'starter': 0xB44FFF}
+    names    = {'winter': 'Зимний кейс', 'role': 'Ролевой кейс', 'spring': 'Весенний кейс', 'normal': 'Обычный кейс', 'starter': 'Стартовый кейс'}
 
     if key_type == 'balance':
         value = data.get('value', 1000)
@@ -265,8 +266,8 @@ def report_win():
     won_item = data.get('won_item', '?')
     case_type = data.get('case_type', '?')
     paid_coins = data.get('paid_coins', 0)
-    icons  = {'winter': '❄️', 'role': '🎲', 'spring': '🌸', 'normal': '🏆'}
-    colors = {'winter': 0x00D4FF, 'role': 0xFF4757, 'spring': 0x00FFCC, 'normal': 0xFFD700}
+    icons  = {'winter': '❄️', 'role': '🎲', 'spring': '🌸', 'normal': '🏆', 'starter': '🌟'}
+    colors = {'winter': 0x00D4FF, 'role': 0xFF4757, 'spring': 0x00FFCC, 'normal': 0xFFD700, 'starter': 0xB44FFF}
     icon = icons.get(case_type, '🎁')
     color = colors.get(case_type, 0x00FFCC)
     if paid_coins:
