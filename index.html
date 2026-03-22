@@ -895,7 +895,10 @@
                                 <option value="role">🎲 На ролевой кейс</option>
                             </select>
                             <div id="balanceInput">
-                                <input type="number" class="admin-input" id="keyValue" placeholder="Сумма" value="1000">
+                                <input type="number" class="admin-input" id="keyValue" placeholder="Сумма (для баланса)" value="1000">
+                            </div>
+                            <div id="keyCountInput" style="display:none; margin-top:8px;">
+                                <input type="number" class="admin-input" id="keyCount" placeholder="Кол-во кейсов в ключе" value="1" min="1" max="10">
                             </div>
                         </div>
                         <div><button class="admin-btn-small" onclick="createKey()">СОЗДАТЬ</button></div>
@@ -1119,28 +1122,17 @@
                     document.getElementById('balance').innerText = balance;
                     localStorage.setItem('clan_session', JSON.stringify({username: currentUser, balance}));
                     showNotification('✅ +' + res.value + ' монет!');
-                } else if (res.type === 'winter') {
-                    showNotification('✅ Открываем зимний кейс!');
+                } else {
+                    // Кейс — открываем нужное количество раз
+                    const keyCount = res.key_count || 1;
                     lastUsedKey = keyText;
-                    startRoulette('winter');
-                } else if (res.type === 'role') {
-                    showNotification('✅ Открываем ролевой кейс!');
-                    lastUsedKey = keyText;
-                    startRoulette('role');
-                } else if (res.type === 'spring') {
-                    showNotification('✅ Открываем весенний кейс!');
-                    lastUsedKey = keyText;
-                    springOpenMethod = 'key';
-                    startRoulette('spring');
-                } else if (res.type === 'normal') {
-                    showNotification('✅ Открываем обычный кейс!');
-                    lastUsedKey = keyText;
-                    normalOpenMethod = 'key';
-                    startRoulette('normal');
-                } else if (res.type === 'starter') {
-                    showNotification('✅ Открываем стартовый кейс!');
-                    lastUsedKey = keyText;
-                    startRoulette('starter');
+                    if (keyCount === 1) {
+                        showNotification('✅ Открываем ' + res.type + ' кейс!');
+                        startRoulette(res.type);
+                    } else {
+                        showNotification('✅ Открываем ' + keyCount + ' кейсов!');
+                        openMultiCase(res.type, keyCount, 0);
+                    }
                 }
             } else {
                 showNotification(res.message || '❌ Ошибка', 'error');
@@ -1247,72 +1239,56 @@
             overlay.classList.add('active');
 
             const wonItems = [];
-            // Показываем результаты с задержкой для эффекта
             for (let i = 0; i < count; i++) {
-                const winItem = items[Math.floor(Math.random() * items.length)];
-                wonItems.push(winItem);
+                wonItems.push(items[Math.floor(Math.random() * items.length)]);
+            }
+
+            // Сразу шлём результат в Discord
+            const dropLines = wonItems.map((item, idx) =>
+                (idx + 1) + '. ' + item.name + (item.duration ? ' (' + item.duration + ')' : '')
+            );
+            const hasDuration = wonItems.some(i => i.duration);
+            let summaryLines = [];
+            if (hasDuration) {
+                const itemTotals = {};
+                wonItems.forEach(item => {
+                    if (item.duration) {
+                        const hours = parseFloat(item.duration.replace('ч', ''));
+                        itemTotals[item.name] = (itemTotals[item.name] || 0) + hours * 60;
+                    }
+                });
+                summaryLines = Object.entries(itemTotals).map(([name, mins]) => {
+                    const h = Math.floor(mins / 60);
+                    const m = Math.round(mins % 60);
+                    const timeStr = h > 0 && m > 0 ? h + 'ч ' + m + 'мин' : h > 0 ? h + 'ч' : m + 'мин';
+                    return '• ' + name + ' — ' + timeStr;
+                });
+            } else {
+                const itemCounts = {};
+                wonItems.forEach(item => { itemCounts[item.name] = (itemCounts[item.name] || 0) + 1; });
+                summaryLines = Object.entries(itemCounts).map(([name, cnt]) => '• ' + name + ' — ' + cnt + ' шт.');
+            }
+            const wonText = '[' + count + ' кейсов]
+' + dropLines.join('
+')
+                + (summaryLines.length > 0 ? '
+
+📋 ИТОГО ВЫДАТЬ:
+' + summaryLines.join('
+') : '');
+            api('/api/report_win', {username: currentUser, won_item: wonText, case_type: caseType, paid_coins: count * priceEach});
+
+            // Показываем результаты с анимацией
+            for (let i = 0; i < count; i++) {
+                const winItem = wonItems[i];
                 setTimeout(() => {
                     const div = document.createElement('div');
                     div.className = 'multi-item';
-                    div.style.animationDelay = (i * 0.05) + 's';
-                    div.innerHTML = `
-                        <div class="multi-item-icon">${winItem.icon}</div>
-                        <div class="multi-item-name">${winItem.name}</div>
-                        <div class="multi-item-rarity">${winItem.rarity}</div>
-                    `;
+                    div.innerHTML = '<div class="multi-item-icon">' + winItem.icon + '</div><div class="multi-item-name">' + winItem.name + '</div><div class="multi-item-rarity">' + winItem.rarity + '</div>';
                     resultsEl.appendChild(div);
                 }, i * 120);
             }
 
-            // Отправляем все результаты на сервер одним запросом
-            setTimeout(() => {
-                // Список всех выпавших предметов
-                const dropLines = wonItems.map((item, idx) =>
-                    (idx + 1) + '. ' + item.name + (item.duration ? ' (' + item.duration + ')' : '')
-                );
-
-                // Считаем итог — для предметов с duration суммируем время,
-                // для предметов без duration считаем количество
-                const hasDuration = wonItems.some(i => i.duration);
-
-                let summaryLines = [];
-                if (hasDuration) {
-                    // Суммируем время по каждому уникальному предмету
-                    const itemTotals = {};
-                    wonItems.forEach(item => {
-                        if (item.duration) {
-                            const hours = parseFloat(item.duration.replace('ч', ''));
-                            itemTotals[item.name] = (itemTotals[item.name] || 0) + hours * 60;
-                        }
-                    });
-                    summaryLines = Object.entries(itemTotals).map(([name, mins]) => {
-                        const h = Math.floor(mins / 60);
-                        const m = Math.round(mins % 60);
-                        const timeStr = h > 0 && m > 0 ? h + 'ч ' + m + 'мин' : h > 0 ? h + 'ч' : m + 'мин';
-                        return '• ' + name + ' — ' + timeStr;
-                    });
-                } else {
-                    // Считаем количество каждого уникального предмета
-                    const itemCounts = {};
-                    wonItems.forEach(item => {
-                        itemCounts[item.name] = (itemCounts[item.name] || 0) + 1;
-                    });
-                    summaryLines = Object.entries(itemCounts).map(([name, cnt]) =>
-                        '• ' + name + ' — ' + cnt + ' шт.'
-                    );
-                }
-
-                const wonText = '[' + count + ' кейсов]\n'
-                    + dropLines.join('\n')
-                    + (summaryLines.length > 0 ? '\n\n📋 ИТОГО ВЫДАТЬ:\n' + summaryLines.join('\n') : '');
-
-                api('/api/report_win', {
-                    username: currentUser,
-                    won_item: wonText,
-                    case_type: caseType,
-                    paid_coins: count * priceEach
-                });
-            }, count * 120 + 200);
         }
 
         function closeMulti() {
@@ -1741,10 +1717,12 @@
             if (!adminLoggedIn) return;
             const type = document.getElementById('keyType').value;
             const value = parseInt(document.getElementById('keyValue').value) || 1000;
+            const keyCount = parseInt(document.getElementById('keyCount').value) || 1;
             const res = await api('/api/admin/create_key', {
                 password: adminPass,
                 key_type: type,
-                value: value
+                value: value,
+                key_count: keyCount
             });
             if (res.success) {
                 document.getElementById('newKeyText').innerText = res.key;
@@ -1851,7 +1829,9 @@
         }
 
         document.getElementById('keyType').addEventListener('change', function(e) {
-            document.getElementById('balanceInput').style.display = e.target.value === 'balance' ? 'block' : 'none';
+            const isBalance = e.target.value === 'balance';
+            document.getElementById('balanceInput').style.display = isBalance ? 'block' : 'none';
+            document.getElementById('keyCountInput').style.display = !isBalance ? 'block' : 'none';
         });
     </script>
 </body>
