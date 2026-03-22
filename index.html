@@ -1136,6 +1136,10 @@
                     lastUsedKey = keyText;
                     normalOpenMethod = 'key';
                     startRoulette('normal');
+                } else if (res.type === 'starter') {
+                    showNotification('✅ Открываем стартовый кейс!');
+                    lastUsedKey = keyText;
+                    startRoulette('starter');
                 }
             } else {
                 showNotification(res.message || '❌ Ошибка', 'error');
