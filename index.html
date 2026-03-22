@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLAN CASE | CS2 STYLE</title>
+    <title>CaseRequiem</title>
     <style>
         * {
             margin: 0;
@@ -1138,25 +1138,35 @@
                 } else if (res.type === 'winter') {
                     showNotification('✅ Открываем зимний кейс!');
                     lastUsedKey = keyText;
-                    startRoulette('winter');
+                    const w = caseItems['winter'][Math.floor(Math.random() * caseItems['winter'].length)];
+                    localStorage.setItem('clan_pending_case', JSON.stringify({caseType: 'winter', winItem: w, key: keyText, paidCoins: 0}));
+                    startRouletteWithWinner('winter', w, keyText, 0);
                 } else if (res.type === 'role') {
                     showNotification('✅ Открываем ролевой кейс!');
                     lastUsedKey = keyText;
-                    startRoulette('role');
+                    const r = caseItems['role'][Math.floor(Math.random() * caseItems['role'].length)];
+                    localStorage.setItem('clan_pending_case', JSON.stringify({caseType: 'role', winItem: r, key: keyText, paidCoins: 0}));
+                    startRouletteWithWinner('role', r, keyText, 0);
                 } else if (res.type === 'spring') {
                     showNotification('✅ Открываем весенний кейс!');
                     lastUsedKey = keyText;
                     springOpenMethod = 'key';
-                    startRoulette('spring');
+                    const sp = caseItems['spring'][Math.floor(Math.random() * caseItems['spring'].length)];
+                    localStorage.setItem('clan_pending_case', JSON.stringify({caseType: 'spring', winItem: sp, key: keyText, paidCoins: 0}));
+                    startRouletteWithWinner('spring', sp, keyText, 0);
                 } else if (res.type === 'normal') {
                     showNotification('✅ Открываем обычный кейс!');
                     lastUsedKey = keyText;
                     normalOpenMethod = 'key';
-                    startRoulette('normal');
+                    const n = caseItems['normal'][Math.floor(Math.random() * caseItems['normal'].length)];
+                    localStorage.setItem('clan_pending_case', JSON.stringify({caseType: 'normal', winItem: n, key: keyText, paidCoins: 0}));
+                    startRouletteWithWinner('normal', n, keyText, 0);
                 } else if (res.type === 'starter') {
                     showNotification('✅ Открываем стартовый кейс!');
                     lastUsedKey = keyText;
-                    startRoulette('starter');
+                    const st = caseItems['starter'][Math.floor(Math.random() * caseItems['starter'].length)];
+                    localStorage.setItem('clan_pending_case', JSON.stringify({caseType: 'starter', winItem: st, key: keyText, paidCoins: 0}));
+                    startRouletteWithWinner('starter', st, keyText, 0);
                 }
             } else {
                 showNotification(res.message || '❌ Ошибка', 'error');
@@ -1215,8 +1225,7 @@
                 localStorage.setItem('clan_session', JSON.stringify({username: currentUser, balance}));
                 normalOpenMethod = 'coins';
                 lastUsedKey = '';
-                localStorage.removeItem('clan_pending_case');
-                if (count === 1) { startRoulette('normal'); } else { openMultiCase('normal', count, 3500); }
+                if (count === 1) { const w=JSON.parse(localStorage.getItem('clan_pending_case')||'{}').winItem; startRouletteWithWinner('normal', w, '', total); } else { openMultiCase('normal', count, 3500); }
                 updateAllCounters();
             }
         }
@@ -1238,8 +1247,7 @@
                 localStorage.setItem('clan_session', JSON.stringify({username: currentUser, balance}));
                 springOpenMethod = 'coins';
                 lastUsedKey = '';
-                localStorage.removeItem('clan_pending_case');
-                if (count === 1) { startRoulette('spring'); } else { openMultiCase('spring', count, 45000); }
+                if (count === 1) { const w=JSON.parse(localStorage.getItem('clan_pending_case')||'{}').winItem; startRouletteWithWinner('spring', w, '', total); } else { openMultiCase('spring', count, 45000); }
                 updateAllCounters();
             }
         }
@@ -1333,6 +1341,7 @@
 
         function closeMulti() {
             document.getElementById('multiOverlay').classList.remove('active');
+            localStorage.removeItem('clan_pending_case');
         }
 
         async function openStarterCase() {
@@ -1648,6 +1657,7 @@
             overlay.classList.remove('active');
             track.style.transition = 'none';
             track.style.transform = 'translateX(0)';
+            localStorage.removeItem('clan_pending_case');
         }
 
         // Восстановление после обновления страницы — показываем уже определённый результат
