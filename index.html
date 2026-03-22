@@ -1772,6 +1772,7 @@
                     <span>
                         <span class="user-balance">💰 ${u.balance}</span>
                         <button class="admin-btn-small" style="margin-left:10px;padding:5px 10px;" onclick="addBalance('${u.username}')">➕</button>
+                        <button class="admin-btn-small" style="margin-left:5px;padding:5px 10px;background:#e67e22;" onclick="removeBalance('${u.username}')">➖</button>
                         <button class="admin-btn-small" style="margin-left:5px;padding:5px 10px;background:#555;" onclick="deleteUser('${u.username}')">❌</button>
                     </span>
                 `;
@@ -1794,6 +1795,27 @@
                     await loadUsers();
                     await updateAdminStats();
                     showNotification('✅ Добавлено ' + amount + ' пользователю ' + username);
+                }
+            }
+        }
+
+        async function removeBalance(username) {
+            const amount = prompt('Сколько снять у ' + username + '?', '1000');
+            if (amount && !isNaN(amount) && parseInt(amount) > 0) {
+                const res = await api('/api/admin/remove_balance', {
+                    password: adminPass,
+                    username: username,
+                    amount: parseInt(amount)
+                });
+                if (res.success) {
+                    if (username === currentUser) {
+                        await refreshBalance();
+                    }
+                    await loadUsers();
+                    await updateAdminStats();
+                    showNotification('➖ Снято ' + amount + ' у ' + username);
+                } else {
+                    showNotification(res.message || '❌ Ошибка', 'error');
                 }
             }
         }
