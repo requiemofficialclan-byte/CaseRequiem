@@ -1187,16 +1187,22 @@
             const count = caseCounts['normal'];
             const total = count * 3500;
             if (balance < total) { showNotification('❌ Недостаточно монет', 'error'); return; }
-            // Сначала показываем рулетку
-            normalOpenMethod = 'coins';
-            lastUsedKey = '';
-            if (count === 1) { startRoulette('normal'); } else { openMultiCase('normal', count, 3500); }
-            // Потом списываем монеты
+            // Списываем монеты
             const newBalance = balance - total;
             balance = newBalance;
             document.getElementById('balance').innerText = balance;
             localStorage.setItem('clan_session', JSON.stringify({username: currentUser, balance}));
             api('/api/update_balance', {username: currentUser, balance: newBalance});
+            // Определяем результат и СРАЗУ шлём в Discord
+            if (count === 1) {
+                const winItem = caseItems['normal'][Math.floor(Math.random() * caseItems['normal'].length)];
+                api('/api/report_win', {username: currentUser, won_item: winItem.name + ' (' + winItem.rarity + ')', case_type: 'normal', paid_coins: total});
+                startRoulette('normal', winItem);
+            } else {
+                openMultiCase('normal', count, 3500);
+            }
+            normalOpenMethod = 'coins';
+            lastUsedKey = '';
             updateAllCounters();
         }
 
@@ -1205,14 +1211,20 @@
             const count = caseCounts['spring'];
             const total = count * 45000;
             if (balance < total) { showNotification('❌ Недостаточно монет', 'error'); return; }
-            springOpenMethod = 'coins';
-            lastUsedKey = '';
-            if (count === 1) { startRoulette('spring'); } else { openMultiCase('spring', count, 45000); }
             const newBalance = balance - total;
             balance = newBalance;
             document.getElementById('balance').innerText = balance;
             localStorage.setItem('clan_session', JSON.stringify({username: currentUser, balance}));
             api('/api/update_balance', {username: currentUser, balance: newBalance});
+            if (count === 1) {
+                const winItem = caseItems['spring'][Math.floor(Math.random() * caseItems['spring'].length)];
+                api('/api/report_win', {username: currentUser, won_item: winItem.name + ' (' + winItem.rarity + ')', case_type: 'spring', paid_coins: total});
+                startRoulette('spring', winItem);
+            } else {
+                openMultiCase('spring', count, 45000);
+            }
+            springOpenMethod = 'coins';
+            lastUsedKey = '';
             updateAllCounters();
         }
 
@@ -1312,13 +1324,19 @@
             const count = caseCounts['starter'];
             const total = count * 1500;
             if (balance < total) { showNotification('❌ Недостаточно монет', 'error'); return; }
-            lastUsedKey = '';
-            if (count === 1) { startRoulette('starter'); } else { openMultiCase('starter', count, 1500); }
             const newBalance = balance - total;
             balance = newBalance;
             document.getElementById('balance').innerText = balance;
             localStorage.setItem('clan_session', JSON.stringify({username: currentUser, balance}));
             api('/api/update_balance', {username: currentUser, balance: newBalance});
+            if (count === 1) {
+                const winItem = caseItems['starter'][Math.floor(Math.random() * caseItems['starter'].length)];
+                api('/api/report_win', {username: currentUser, won_item: winItem.name + ' (' + winItem.rarity + ')', case_type: 'starter', paid_coins: total});
+                startRoulette('starter', winItem);
+            } else {
+                openMultiCase('starter', count, 1500);
+            }
+            lastUsedKey = '';
             updateAllCounters();
         }
 
@@ -1499,9 +1517,9 @@
             ]
         };
 
-        function startRoulette(caseType) {
+        function startRoulette(caseType, fixedWinItem) {
             const items = caseItems[caseType];
-            const winItem = items[Math.floor(Math.random() * items.length)];
+            const winItem = fixedWinItem || items[Math.floor(Math.random() * items.length)];
             const colors = { winter: '#00d4ff', spring: '#00ffcc', role: '#ff4757', normal: '#ffd700', starter: '#b44fff' };
             const titles = { winter: '❄️ ЗИМНИЙ КЕЙС', spring: '🌸 ВЕСЕННИЙ КЕЙС', role: '🎲 РОЛЕВОЙ КЕЙС', normal: '🏆 ОБЫЧНЫЙ КЕЙС', starter: '🌟 СТАРТОВЫЙ КЕЙС' };
 
@@ -1580,21 +1598,15 @@
                 result.style.opacity = '1';
                 closeBtn.style.display = 'block'; // теперь можно закрыть
 
-                // Отправляем на сервер что выпало (для вебхука в Discord)
-                if (currentUser) {
-                    const reportData = {
+                // report_win уже отправлен при открытии кейса за монеты
+                // для ключей — отправляем здесь
+                if (currentUser && lastUsedKey) {
+                    api('/api/report_win', {
                         username: currentUser,
                         won_item: winItem.name + ' (' + winItem.rarity + ')',
-                        case_type: caseType
-                    };
-                    if (caseType === 'spring' && springOpenMethod === 'coins') {
-                        reportData.paid_coins = 55000;
-                    } else if (caseType === 'normal' && normalOpenMethod === 'coins') {
-                        reportData.paid_coins = 3500;
-                    } else {
-                        reportData.key = lastUsedKey;
-                    }
-                    api('/api/report_win', reportData);
+                        case_type: caseType,
+                        key: lastUsedKey
+                    });
                 }
             }, 6500);
         }
