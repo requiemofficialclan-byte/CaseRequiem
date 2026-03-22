@@ -249,6 +249,28 @@ def admin_add_balance():
     send_discord('💰 ПОПОЛНЕНИЕ', f'Админ добавил **{amount}** монет пользователю **{username}**')
     return jsonify({'success': True})
 
+@app.route('/api/admin/remove_balance', methods=['POST'])
+def admin_remove_balance():
+    data = request.json
+    if data.get('password') != ADMIN_PASS:
+        return jsonify({'success': False})
+    username = data.get('username')
+    amount = data.get('amount', 0)
+    conn = get_conn()
+    c = conn.cursor()
+    c.execute("SELECT balance FROM users WHERE username = %s", (username,))
+    user = c.fetchone()
+    if not user:
+        conn.close()
+        return jsonify({'success': False, 'message': 'Пользователь не найден'})
+    new_balance = max(0, user[0] - amount)
+    actual = user[0] - new_balance
+    c.execute("UPDATE users SET balance = %s WHERE username = %s", (new_balance, username))
+    conn.commit()
+    conn.close()
+    send_discord('➖ СНЯТИЕ МОНЕТ', f'Админ снял **{actual}** монет у **{username}**\n**Остаток:** {new_balance} монет')
+    return jsonify({'success': True})
+
 @app.route('/api/admin/delete_user', methods=['POST'])
 def admin_delete_user():
     data = request.json
