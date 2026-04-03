@@ -692,7 +692,6 @@
         
         <div id="userInfo" class="user-info" style="display: none;">
             <span class="username" id="username"></span>
-            <button class="logout-btn" style="background:#5865F2;" onclick="linkDiscord()">🔗 Discord</button>
             <button class="logout-btn" onclick="logout()">Выйти</button>
         </div>
 
@@ -1094,21 +1093,6 @@
         }
 
         // ============ ВЫХОД ============
-        async function linkDiscord() {
-            const discordId = prompt('Введи свой Discord ID (правой кнопкой на своём нике → Копировать ID):');
-            if (!discordId || isNaN(discordId)) {
-                showNotification('❌ Неверный Discord ID', 'error');
-                return;
-            }
-            const res = await api('/api/link_discord', {username: currentUser, discord_id: discordId});
-            if (res.success) {
-                showNotification('✅ Discord привязан! Баланс синхронизирован');
-                refreshBalance();
-            } else {
-                showNotification('❌ Ошибка привязки', 'error');
-            }
-        }
-
         function logout() {
             localStorage.removeItem('clan_session');
             currentUser = null;
@@ -1787,7 +1771,6 @@
                     <span>${u.username}</span>
                     <span>
                         <span class="user-balance">💰 ${u.balance}</span>
-                        ${u.discord_id ? '<span style="color:#5865F2;font-size:11px;margin-left:8px;">🔗 DC</span>' : '<span style="color:#666;font-size:11px;margin-left:8px;">нет DC</span>'}
                         <button class="admin-btn-small" style="margin-left:10px;padding:5px 10px;" onclick="addBalance('${u.username}')">➕</button>
                         <button class="admin-btn-small" style="margin-left:5px;padding:5px 10px;background:#e67e22;" onclick="removeBalance('${u.username}')">➖</button>
                         <button class="admin-btn-small" style="margin-left:5px;padding:5px 10px;background:#555;" onclick="deleteUser('${u.username}')">❌</button>
