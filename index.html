@@ -817,15 +817,6 @@
         </div>
     </div>
 
-                <button class="modal-btn" onclick="login()">Войти</button>
-            <button class="modal-btn secondary" onclick="closeModals()">Закрыть</button>
-        </div>
-    </div>
-
-                <button class="modal-btn" onclick="register()">Зарегистрироваться</button>
-            <button class="modal-btn secondary" onclick="closeModals()">Закрыть</button>
-        </div>
-    </div>
 
     <!-- CS2 СТИЛЬ РУЛЕТКА -->
     <div class="roulette-overlay" id="rouletteOverlay">
@@ -959,6 +950,8 @@
                 window.history.replaceState({}, document.title, '/');
                 updateUIForAuth();
                 showNotification('✅ Вошёл через Discord!');
+                // Синхронизируем баланс с сервером (UnbelievaBoat)
+                refreshBalance();
                 return;
             }
             if (urlParams.get('error')) {
@@ -988,8 +981,8 @@
             if (res.balance !== undefined) {
                 balance = res.balance;
                 document.getElementById('balance').innerText = balance;
-                // Обновляем сессию
                 localStorage.setItem('clan_session', JSON.stringify({username: currentUser, balance}));
+                updateAllCounters();
             }
         }
 
