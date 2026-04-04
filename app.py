@@ -6,8 +6,8 @@ import os
 import random
 import string
 import requests
-import urllib.parse
 from datetime import datetime
+import urllib.parse
 
 app = Flask(__name__, static_folder='.')
 CORS(app)
@@ -19,7 +19,8 @@ UB_TOKEN = os.environ.get('UB_TOKEN', '')
 GUILD_ID = '1425098428509061202'
 DISCORD_CLIENT_ID = os.environ.get('DISCORD_CLIENT_ID', '')
 DISCORD_CLIENT_SECRET = os.environ.get('DISCORD_CLIENT_SECRET', '')
-SITE_URL = os.environ.get('SITE_URL', 'https://caserequiem-production.up.railway.app')
+# Убедись, что в Railway SITE_URL указан БЕЗ слеша в конце
+SITE_URL = os.environ.get('SITE_URL', 'https://caserequiem-production.up.railway.app').rstrip('/')
 
 if DATABASE_URL.startswith('postgres://'):
     DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
@@ -29,67 +30,130 @@ def get_conn():
         raise Exception('DATABASE_URL не задан!')
     return psycopg2.connect(DATABASE_URL)
 
-def init_db():
-    conn = get_conn()
-    conn.autocommit = True  # Это критически важно для Railway!
-    c = conn.cursor()
-    
-    # Создаем таблицу пользователей
-    c.execute('''CREATE TABLE IF NOT EXISTS users
-                 (username TEXT PRIMARY KEY, 
-                  password TEXT, 
-                  discord_id TEXT, 
-                  balance INTEGER DEFAULT 0, 
-                  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
-    
-    # Пытаемся добавить колонку discord_id, если её нет (защита от ошибок)
+# ============ UNBELIEVABOAT API ============
+UB_BASE = f'https://unbelievaboat.com/api/v1/guilds/{GUILD_ID}'
+UB_HEADERS = {'Authorization': UB_TOKEN, 'Content-Type': 'application/json'}
+
+def ub_get_balance(user_id):
+    if not UB_TOKEN: return None
     try:
-        c.execute("ALTER TABLE users ADD COLUMN discord_id TEXT")
-    except Exception:
-        pass
+        r = requests.get(f'{UB_BASE}/users/{user_id}', headers=UB_HEADERS, timeout=5)
+        return r.json().get('cash', 0) if r.status_code == 200 else None
+    except: return None
 
-    # Создаем таблицу ключей (SERIAL вместо AUTOINCREMENT)
-    c.execute('''CREATE TABLE IF NOT EXISTS keys
-                 (id SERIAL PRIMARY KEY, 
-                  key_text TEXT UNIQUE, 
-                  key_type TEXT,
-                  value INTEGER DEFAULT 0, 
-                  used INTEGER DEFAULT 0, 
-                  used_by TEXT,
-                  used_at TIMESTAMP, 
-                  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
-    
-    conn.close()
-    print("База данных успешно инициализирована")
+def ub_remove_balance(user_id, amount):
+    if not UB_TOKEN: return None
+    try:
+        r = requests.patch(f'{UB_BASE}/users/{user_id}', headers=UB_HEADERS, 
+                          json={'cash': -amount}, timeout=5)
+        return r.json().get('cash', 0) if r.status_code == 200 else None
+    except: return None
 
-# Запускаем инициализацию сразу
-init_db()
+def ub_add_balance(user_id, amount):
+    if not UB_TOKEN: return None
+    try:
+        r = requests.patch(f'{UB_BASE}/users/{user_id}', headers=UB_HEADERS, 
+                          json={'cash': amount}, timeout=5)
+        return r.json().get('cash', 0) if r.status_code == 200 else None
+    except: return None
 
-def send_discord(title, desc):
-    if not DISCORD_WEBHOOK: return
-    data = {"embeds": [{"title": title, "description": desc, "color": 0x3498db}]}
-    try: requests.post(DISCORD_WEBHOOK, json=data)
+def send_discord(title, description, color=0x5865F2):
+    try:
+        data = {"embeds": [{"title": title, "description": description, "color": color,
+                            "timestamp": datetime.utcnow().isoformat() + "Z",
+                            "footer": {"text": "Clan Case System"}}]}
+        requests.post(DISCORD_WEBHOOK, json=data, timeout=5)
     except: pass
 
-# ============ API ROUTES ============
+# ============ БАЗА ДАННЫХ ============
+def init_db():
+    conn = get_conn()
+    conn.autocommit = True # ПРЕДОТВРАЩАЕТ ЗАВИСАНИЕ ТРАНЗАКЦИЙ
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS users
+                 (username TEXT PRIMARY KEY, password TEXT, discord_id TEXT,
+                  balance INTEGER DEFAULT 0, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
+    try:
+        c.execute("ALTER TABLE users ADD COLUMN discord_id TEXT")
+    except: pass
+    c.execute('''CREATE TABLE IF NOT EXISTS keys
+                 (id SERIAL PRIMARY KEY, key_text TEXT UNIQUE, key_type TEXT,
+                  value INTEGER DEFAULT 0, used INTEGER DEFAULT 0, used_by TEXT,
+                  used_at TIMESTAMP, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
+    conn.close()
+
+init_db()
+
+# ============ РОУТЫ ============
+
+@app.route('/api/auth/discord')
+def auth_discord():
+    # Исправленное формирование ссылки
+    redirect_uri = urllib.parse.quote(f"{SITE_URL}/api/auth/callback")
+    url = (f"https://discord.com/api/oauth2/authorize?client_id={DISCORD_CLIENT_ID}"
+           f"&redirect_uri={redirect_uri}&response_type=code&scope=identify")
+    return redirect(url)
+
+@app.route('/api/auth/callback')
+def auth_callback():
+    code = request.args.get('code')
+    if not code: return redirect('/?error=no_code')
+    
+    redirect_uri = f"{SITE_URL}/api/auth/callback"
+    token_res = requests.post('https://discord.com/api/oauth2/token', data={
+        'client_id': DISCORD_CLIENT_ID,
+        'client_secret': DISCORD_CLIENT_SECRET,
+        'grant_type': 'authorization_code',
+        'code': code,
+        'redirect_uri': redirect_uri,
+    }, headers={'Content-Type': 'application/x-www-form-urlencoded'})
+
+    if token_res.status_code != 200: return redirect('/?error=token_failed')
+    
+    access_token = token_res.json().get('access_token')
+    user_data = requests.get('https://discord.com/api/users/@me', 
+                            headers={'Authorization': f'Bearer {access_token}'}).json()
+    
+    discord_id = user_data['id']
+    username = user_data['username']
+    
+    balance = ub_get_balance(discord_id) or 0
+    
+    conn = get_conn()
+    conn.autocommit = True
+    c = conn.cursor()
+    c.execute("SELECT username FROM users WHERE discord_id = %s", (discord_id,))
+    existing = c.fetchone()
+    
+    if existing:
+        username = existing[0]
+        c.execute("UPDATE users SET balance = %s WHERE discord_id = %s", (balance, discord_id))
+    else:
+        # Если имя уже занято кем-то другим, добавим ID
+        c.execute("SELECT username FROM users WHERE username = %s", (username,))
+        if c.fetchone(): username = f"{username}_{discord_id[-4:]}"
+        c.execute("INSERT INTO users (username, discord_id, balance) VALUES (%s, %s, %s)", 
+                  (username, discord_id, balance))
+        send_discord('📝 РЕГИСТРАЦИЯ', f'**{username}** вошёл через Discord')
+    
+    conn.close()
+    params = urllib.parse.urlencode({'discord_login': '1', 'username': username, 'balance': balance, 'discord_id': discord_id})
+    return redirect(f'/?{params}')
 
 @app.route('/api/register', methods=['POST'])
 def register():
     data = request.json
     user, pwd = data.get('username'), data.get('password')
-    if not user or not pwd: return jsonify({"error": "Пустые поля"}), 400
+    if not user or not pwd: return jsonify({'success': False, 'message': 'Поля пусты'})
     conn = get_conn()
+    conn.autocommit = True
     c = conn.cursor()
     try:
-        c.execute("INSERT INTO users (username, password) VALUES (%s, %s)", (user, pwd))
-        conn.commit()
-        send_discord('📝 РЕГИСТРАЦИЯ', f'Новый пользователь: **{user}**')
-        return jsonify({"success": True})
-    except:
-        conn.rollback()
-        return jsonify({"error": "Имя занято"}), 400
-    finally:
-        conn.close()
+        c.execute("INSERT INTO users (username, password, balance) VALUES (%s, %s, 0)", (user, pwd))
+        send_discord('📝 РЕГИСТРАЦИЯ', f'**{user}** зарегистрировался')
+        return jsonify({'success': True})
+    except: return jsonify({'success': False, 'message': 'Имя занято'})
+    finally: conn.close()
 
 @app.route('/api/login', methods=['POST'])
 def login():
@@ -97,143 +161,53 @@ def login():
     user, pwd = data.get('username'), data.get('password')
     conn = get_conn()
     c = conn.cursor()
-    c.execute("SELECT password, balance FROM users WHERE username = %s", (user,))
+    c.execute("SELECT balance, discord_id FROM users WHERE username = %s AND password = %s", (user, pwd))
     res = c.fetchone()
     conn.close()
-    if res and res[0] == pwd:
-        return jsonify({"success": True, "balance": res[1]})
-    return jsonify({"error": "Неверные данные"}), 401
+    if res:
+        bal, d_id = res
+        if d_id: bal = ub_get_balance(d_id) or bal
+        return jsonify({'success': True, 'balance': bal})
+    return jsonify({'success': False, 'message': 'Ошибка входа'})
 
-@app.route('/api/add_balance', methods=['POST'])
-def add_balance():
+@app.route('/api/use_key', methods=['POST'])
+def use_key():
     data = request.json
-    if data.get('admin_pass') != ADMIN_PASS: return jsonify({"error": "No"}), 403
-    user, amt = data.get('username'), data.get('amount', 0)
+    ktxt, user = data.get('key'), data.get('username')
     conn = get_conn()
-    c = conn.cursor()
-    c.execute("UPDATE users SET balance = balance + %s WHERE username = %s", (amt, user))
-    conn.commit()
-    conn.close()
-    send_discord('💰 БАЛАНС', f'Админ начислил **{amt}** пользователю **{user}**')
-    return jsonify({"success": True})
-
-@app.route('/api/generate_keys', methods=['POST'])
-def gen_keys():
-    data = request.json
-    if data.get('admin_pass') != ADMIN_PASS: return jsonify({"error": "No"}), 403
-    count = int(data.get('count', 1))
-    ktype = data.get('type', 'balance')
-    val = int(data.get('value', 100))
-    new_keys = []
-    conn = get_conn()
-    c = conn.cursor()
-    for _ in range(count):
-        txt = ''.join(random.choices(string.ascii_uppercase + string.digits, k=12))
-        c.execute("INSERT INTO keys (key_text, key_type, value) VALUES (%s, %s, %s)", (txt, ktype, val))
-        new_keys.append(txt)
-    conn.commit()
-    conn.close()
-    return jsonify({"keys": new_keys})
-
-@app.route('/api/activate_key', methods=['POST'])
-def activate_key():
-    data = request.json
-    user, ktxt = data.get('username'), data.get('key')
-    conn = get_conn()
+    conn.autocommit = True
     c = conn.cursor()
     c.execute("SELECT key_type, value, used FROM keys WHERE key_text = %s", (ktxt,))
     res = c.fetchone()
-    if not res or res[2] == 1:
+    
+    if not res or res[2]: 
         conn.close()
-        return jsonify({"error": "Ключ невалиден или использован"}), 400
+        return jsonify({'success': False, 'message': 'Ключ невалиден'})
     
-    ktype, val, _ = res
-    c.execute("UPDATE keys SET used=1, used_by=%s, used_at=%s WHERE key_text=%s", (user, datetime.now(), ktxt))
+    ktype, kval, _ = res
+    c.execute("UPDATE keys SET used=1, used_by=%s, used_at=CURRENT_TIMESTAMP WHERE key_text=%s", (user, ktxt))
+    
     if ktype == 'balance':
-        c.execute("UPDATE users SET balance = balance + %s WHERE username = %s", (val, user))
-    conn.commit()
+        c.execute("SELECT discord_id FROM users WHERE username = %s", (user,))
+        d_id = c.fetchone()[0]
+        if d_id and UB_TOKEN:
+            new_bal = ub_add_balance(d_id, kval)
+        else:
+            c.execute("UPDATE users SET balance = balance + %s WHERE username = %s", (kval, user))
+            c.execute("SELECT balance FROM users WHERE username = %s", (user,))
+            new_bal = c.fetchone()[0]
+        send_discord('💰 КЛЮЧ', f'**{user}** активировал баланс +{kval}')
+        conn.close()
+        return jsonify({'success': True, 'type': 'balance', 'value': kval, 'balance': new_bal})
+    
     conn.close()
-    send_discord('🔑 КЛЮЧ', f'**{user}** активировал ключ на **{val}**')
-    return jsonify({"success": True, "value": val})
-
-@app.route('/api/update_balance', methods=['POST'])
-def update_balance_api():
-    data = request.json
-    user, bal = data.get('username'), data.get('balance')
-    conn = get_conn()
-    c = conn.cursor()
-    c.execute("UPDATE users SET balance = %s WHERE username = %s", (bal, user))
-    conn.commit()
-    conn.close()
-    return jsonify({"success": True})
-
-@app.route('/api/get_stats', methods=['GET'])
-def get_stats():
-    pwd = request.args.get('admin_pass')
-    if pwd != ADMIN_PASS: return "Access Denied", 403
-    conn = get_conn()
-    c = conn.cursor()
-    c.execute("SELECT username, balance, discord_id FROM users")
-    u = c.fetchall()
-    c.execute("SELECT key_text, key_type, value, used, used_by FROM keys")
-    k = c.fetchall()
-    conn.close()
-    return jsonify({"users": u, "keys": k})
-
-@app.route('/login/discord')
-def discord_login():
-    url = f"https://discord.com/api/oauth2/authorize?client_id={DISCORD_CLIENT_ID}&redirect_uri={urllib.parse.quote(SITE_URL+'/login/discord/callback')}&response_type=code&scope=identify"
-    return redirect(url)
-
-@app.route('/login/discord/callback')
-def discord_callback():
-    code = request.args.get('code')
-    data = {
-        'client_id': DISCORD_CLIENT_ID,
-        'client_secret': DISCORD_CLIENT_SECRET,
-        'grant_type': 'authorization_code',
-        'code': code,
-        'redirect_uri': f"{SITE_URL}/login/discord/callback"
-    }
-    r = requests.post('https://discord.com/api/oauth2/token', data=data)
-    token = r.json().get('access_token')
-    u = requests.get('https://discord.com/api/users/@me', headers={'Authorization': f'Bearer {token}'}).json()
-    
-    discord_id = u.get('id')
-    discord_username = u.get('username')
-    
-    conn = get_conn()
-    c = conn.cursor()
-    # Проверяем, есть ли уже такой пользователь
-    c.execute("SELECT username, balance FROM users WHERE discord_id = %s", (discord_id,))
-    existing = c.fetchone()
-    
-    if existing:
-        username, balance = existing
-    else:
-        username = discord_username
-        balance = 0
-        try:
-            c.execute("INSERT INTO users (username, discord_id, balance) VALUES (%s, %s, %s)", 
-                      (username, discord_id, balance))
-            send_discord('📝 РЕГИСТРАЦИЯ', f'**{username}** вошёл через Discord')
-        except:
-            conn.rollback()
-            # Если имя занято, добавим хвостик ID
-            username = f"{discord_username}_{discord_id[-4:]}"
-            c.execute("INSERT INTO users (username, discord_id, balance) VALUES (%s, %s, %s)", 
-                      (username, discord_id, balance))
-    
-    conn.commit()
-    conn.close()
-    
-    params = urllib.parse.urlencode({'discord_login': '1', 'username': username, 'balance': balance, 'discord_id': discord_id})
-    return redirect('/?' + params)
+    send_discord('🎁 КЛЮЧ', f'**{user}** активировал кейс {ktype}')
+    return jsonify({'success': True, 'type': ktype, 'key_count': kval})
 
 @app.route('/')
 def index():
     return send_from_directory('.', 'index.html')
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 8080))
+    port = int(os.environ.get('PORT', 8080))
     app.run(host='0.0.0.0', port=port)
