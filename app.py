@@ -133,12 +133,27 @@ def login():
 @app.route('/api/get_balance', methods=['POST'])
 def get_balance():
     data = request.json
+    username = data.get('username')
     conn = get_conn()
     c = conn.cursor()
-    c.execute("SELECT balance FROM users WHERE username = %s", (data.get('username'),))
-    balance = c.fetchone()
+    c.execute("SELECT balance, discord_id FROM users WHERE username = %s", (username,))
+    row = c.fetchone()
     conn.close()
-    return jsonify({'balance': balance[0] if balance else 0})
+    if not row:
+        return jsonify({'balance': 0})
+    balance, discord_id = row
+    # Всегда берём актуальный баланс из UnbelievaBoat
+    if discord_id and UB_TOKEN:
+        ub_balance = ub_get_balance(discord_id)
+        if ub_balance is not None:
+            balance = ub_balance
+            # Синхронизируем в БД
+            conn2 = get_conn()
+            c2 = conn2.cursor()
+            c2.execute("UPDATE users SET balance = %s WHERE username = %s", (balance, username))
+            conn2.commit()
+            conn2.close()
+    return jsonify({'balance': balance})
 
 @app.route('/api/update_balance', methods=['POST'])
 def update_balance():
