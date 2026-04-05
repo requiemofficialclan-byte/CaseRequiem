@@ -986,14 +986,18 @@
             }
         }
 
+        let balanceInterval = null;
+
         function updateUIForAuth() {
             document.getElementById('authButtons').style.display = 'none';
             document.getElementById('userInfo').style.display = 'flex';
             document.getElementById('username').innerText = currentUser;
             document.getElementById('balance').innerText = balance;
             document.getElementById('mainContent').style.display = 'block';
-            // Обновляем счётчики кейсов
             setTimeout(updateAllCounters, 100);
+            // Автообновление баланса каждые 30 секунд
+            if (balanceInterval) clearInterval(balanceInterval);
+            balanceInterval = setInterval(refreshBalance, 30000);
         }
 
         // ============ МОДАЛКИ ============
@@ -1089,6 +1093,7 @@
 
         // ============ ВЫХОД ============
         function logout() {
+            if (balanceInterval) clearInterval(balanceInterval);
             localStorage.removeItem('clan_session');
             currentUser = null;
             balance = 0;
