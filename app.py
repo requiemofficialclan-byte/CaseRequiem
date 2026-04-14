@@ -197,10 +197,23 @@ def use_key():
     c.execute("UPDATE keys SET used = 1, used_by = %s, used_at = CURRENT_TIMESTAMP WHERE key_text = %s", (username, key_text))
 
     if key_type == 'balance':
-        c.execute("UPDATE users SET balance = balance + %s WHERE username = %s", (key_value, username))
+        # Получаем discord_id пользователя
+        c.execute("SELECT discord_id FROM users WHERE username = %s", (username,))
+        user_row = c.fetchone()
+        discord_id = user_row[0] if user_row else None
+        if discord_id and UB_TOKEN:
+            # Добавляем через UnbelievaBoat
+            new_balance = ub_add_balance(discord_id, key_value)
+            if new_balance is None:
+                conn.rollback()
+                conn.close()
+                return jsonify({'success': False, 'message': '❌ Ошибка UnbelievaBoat'})
+            c.execute("UPDATE users SET balance = %s WHERE username = %s", (new_balance, username))
+        else:
+            c.execute("UPDATE users SET balance = balance + %s WHERE username = %s", (key_value, username))
+            c.execute("SELECT balance FROM users WHERE username = %s", (username,))
+            new_balance = c.fetchone()[0]
         conn.commit()
-        c.execute("SELECT balance FROM users WHERE username = %s", (username,))
-        new_balance = c.fetchone()[0]
         conn.close()
         send_discord('💰 КЛЮЧ ИСПОЛЬЗОВАН',
             f'**Пользователь:** {username}\n**Тип:** Баланс\n**Ключ:** ||`{key_text}`||\n**Получено:** +{key_value} монет\n**Новый баланс:** {new_balance} монет',
