@@ -10,22 +10,23 @@ from datetime import datetime
 app = Flask(__name__, static_folder='.')
 CORS(app)
 
-ADMIN_PASS = "34512"
+ADMIN_PASS = "345DQ"
 DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1485332673080590429/0ZD2pBkATVamUPhpdriBzBUzvMP5oOKo4H91JO4maCaRGIty1ipE7ZYnrGjL2dSa7-0d"
 DATABASE_URL = os.environ.get('DATABASE_URL', '')
-UB_TOKEN = os.environ.get('UB_TOKEN', '')
-GUILD_ID = '1425098428509061202'
-DISCORD_CLIENT_ID = os.environ.get('DISCORD_CLIENT_ID', '')
-DISCORD_CLIENT_SECRET = os.environ.get('DISCORD_CLIENT_SECRET', '')
-SITE_URL = os.environ.get('SITE_URL', 'https://caserequiem-production.up.railway.app')
-
+# Railway даёт postgres://, psycopg2 требует postgresql://
 if DATABASE_URL.startswith('postgres://'):
     DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
 
 def get_conn():
     if not DATABASE_URL:
-        raise Exception('DATABASE_URL не задан! Добавьте PostgreSQL в Railway.')
+        raise Exception('DATABASE_URL не задан!')
     return psycopg2.connect(DATABASE_URL)
+
+UB_TOKEN = os.environ.get('UB_TOKEN', '')
+GUILD_ID = os.environ.get('GUILD_ID', '1425098428509061202')
+DISCORD_CLIENT_ID = os.environ.get('DISCORD_CLIENT_ID', '')
+DISCORD_CLIENT_SECRET = os.environ.get('DISCORD_CLIENT_SECRET', '')
+SITE_URL = os.environ.get('SITE_URL', 'https://caserequiem.onrender.com')
 
 def ub_get_balance(discord_id):
     try:
@@ -73,6 +74,7 @@ def init_db():
     c.execute('''CREATE TABLE IF NOT EXISTS users
                  (username TEXT PRIMARY KEY, password TEXT, discord_id TEXT,
                   balance INTEGER DEFAULT 0, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
+    # Добавляем discord_id если нет
     try:
         c.execute("ALTER TABLE users ADD COLUMN discord_id TEXT")
         conn.commit()
@@ -84,6 +86,7 @@ def init_db():
                   used_at TIMESTAMP, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
     conn.commit()
     conn.close()
+    print("DB initialized OK")
 
 init_db()
 
@@ -112,69 +115,33 @@ def login():
     username, password = data.get('username'), data.get('password')
     conn = get_conn()
     c = conn.cursor()
-    c.execute("SELECT balance, discord_id FROM users WHERE username = %s AND password = %s", (username, password))
+    c.execute("SELECT balance FROM users WHERE username = %s AND password = %s", (username, password))
     user = c.fetchone()
     conn.close()
     if user:
-        balance = user[0]
-        discord_id = user[1]
-        if discord_id and UB_TOKEN:
-            ub_balance = ub_get_balance(discord_id)
-            if ub_balance is not None:
-                balance = ub_balance
-                conn2 = get_conn()
-                c2 = conn2.cursor()
-                c2.execute("UPDATE users SET balance = %s WHERE username = %s", (balance, username))
-                conn2.commit()
-                conn2.close()
-        return jsonify({'success': True, 'balance': balance})
+        send_discord('🔐 ВХОД', f'**{username}** вошел в систему')
+        return jsonify({'success': True, 'balance': user[0]})
     return jsonify({'success': False, 'message': 'Неверный логин или пароль'})
 
 @app.route('/api/get_balance', methods=['POST'])
 def get_balance():
     data = request.json
-    username = data.get('username')
     conn = get_conn()
     c = conn.cursor()
-    c.execute("SELECT balance, discord_id FROM users WHERE username = %s", (username,))
-    row = c.fetchone()
+    c.execute("SELECT balance FROM users WHERE username = %s", (data.get('username'),))
+    balance = c.fetchone()
     conn.close()
-    if not row:
-        return jsonify({'balance': 0})
-    balance, discord_id = row
-    # Всегда берём актуальный баланс из UnbelievaBoat
-    if discord_id and UB_TOKEN:
-        ub_balance = ub_get_balance(discord_id)
-        if ub_balance is not None:
-            balance = ub_balance
-            # Синхронизируем в БД
-            conn2 = get_conn()
-            c2 = conn2.cursor()
-            c2.execute("UPDATE users SET balance = %s WHERE username = %s", (balance, username))
-            conn2.commit()
-            conn2.close()
-    return jsonify({'balance': balance})
+    return jsonify({'balance': balance[0] if balance else 0})
 
 @app.route('/api/update_balance', methods=['POST'])
 def update_balance():
     data = request.json
-    username = data.get('username')
-    new_balance = data.get('balance')
     conn = get_conn()
     c = conn.cursor()
-    c.execute("SELECT balance, discord_id FROM users WHERE username = %s", (username,))
-    row = c.fetchone()
-    if row:
-        old_balance, discord_id = row
-        diff = old_balance - new_balance
-        if discord_id and UB_TOKEN and diff > 0:
-            result = ub_remove_balance(discord_id, diff)
-            if result is not None:
-                new_balance = result
-    c.execute("UPDATE users SET balance = %s WHERE username = %s", (new_balance, username))
+    c.execute("UPDATE users SET balance = %s WHERE username = %s", (data.get('balance'), data.get('username')))
     conn.commit()
     conn.close()
-    return jsonify({'success': True, 'balance': new_balance})
+    return jsonify({'success': True})
 
 @app.route('/api/use_key', methods=['POST'])
 def use_key():
@@ -197,26 +164,13 @@ def use_key():
     c.execute("UPDATE keys SET used = 1, used_by = %s, used_at = CURRENT_TIMESTAMP WHERE key_text = %s", (username, key_text))
 
     if key_type == 'balance':
-        # Получаем discord_id пользователя
-        c.execute("SELECT discord_id FROM users WHERE username = %s", (username,))
-        user_row = c.fetchone()
-        discord_id = user_row[0] if user_row else None
-        if discord_id and UB_TOKEN:
-            # Добавляем через UnbelievaBoat
-            new_balance = ub_add_balance(discord_id, key_value)
-            if new_balance is None:
-                conn.rollback()
-                conn.close()
-                return jsonify({'success': False, 'message': '❌ Ошибка UnbelievaBoat'})
-            c.execute("UPDATE users SET balance = %s WHERE username = %s", (new_balance, username))
-        else:
-            c.execute("UPDATE users SET balance = balance + %s WHERE username = %s", (key_value, username))
-            c.execute("SELECT balance FROM users WHERE username = %s", (username,))
-            new_balance = c.fetchone()[0]
+        c.execute("UPDATE users SET balance = balance + %s WHERE username = %s", (key_value, username))
         conn.commit()
+        c.execute("SELECT balance FROM users WHERE username = %s", (username,))
+        new_balance = c.fetchone()[0]
         conn.close()
         send_discord('💰 КЛЮЧ ИСПОЛЬЗОВАН',
-            f'**Пользователь:** {username}\n**Тип:** Баланс\n**Ключ:** ||`{key_text}`||\n**Получено:** +{key_value} монет\n**Новый баланс:** {new_balance} монет',
+            f'**Пользователь:** {username}\n**Тип:** Баланс\n**Ключ:** ||`{key_text}`||\n**Получено:** +{value} монет\n**Новый баланс:** {new_balance} монет',
             color=0xFFD700)
         return jsonify({'success': True, 'type': 'balance', 'value': key_value, 'balance': new_balance})
 
@@ -333,17 +287,7 @@ def admin_add_balance():
     username, amount = data.get('username'), data.get('amount', 0)
     conn = get_conn()
     c = conn.cursor()
-    c.execute("SELECT discord_id FROM users WHERE username = %s", (username,))
-    row = c.fetchone()
-    discord_id = row[0] if row else None
-    if discord_id and UB_TOKEN:
-        new_bal = ub_add_balance(discord_id, amount)
-        if new_bal is not None:
-            c.execute("UPDATE users SET balance = %s WHERE username = %s", (new_bal, username))
-        else:
-            c.execute("UPDATE users SET balance = balance + %s WHERE username = %s", (amount, username))
-    else:
-        c.execute("UPDATE users SET balance = balance + %s WHERE username = %s", (amount, username))
+    c.execute("UPDATE users SET balance = balance + %s WHERE username = %s", (amount, username))
     conn.commit()
     conn.close()
     send_discord('💰 ПОПОЛНЕНИЕ', f'Админ добавил **{amount}** монет пользователю **{username}**')
@@ -413,12 +357,12 @@ import urllib.parse
 
 @app.route('/api/auth/discord')
 def auth_discord():
+    from flask import redirect as flask_redirect
     redirect_uri = SITE_URL + '/api/auth/callback'
     url = ('https://discord.com/api/oauth2/authorize'
            '?client_id=' + DISCORD_CLIENT_ID +
            '&redirect_uri=' + urllib.parse.quote(redirect_uri, safe='') +
            '&response_type=code&scope=identify')
-    from flask import redirect as flask_redirect
     return flask_redirect(url)
 
 @app.route('/api/auth/callback')
@@ -433,6 +377,7 @@ def auth_callback():
         'grant_type': 'authorization_code', 'code': code, 'redirect_uri': redirect_uri,
     }, headers={'Content-Type': 'application/x-www-form-urlencoded'}, timeout=10)
     if token_res.status_code != 200:
+        print(f'Token error: {token_res.status_code} {token_res.text}')
         return flask_redirect('/?error=token_failed')
     access_token = token_res.json().get('access_token')
     user_res = requests.get('https://discord.com/api/users/@me',
@@ -469,7 +414,7 @@ def auth_callback():
             return flask_redirect('/?error=register_failed')
     conn.commit()
     conn.close()
-    params = urllib.parse.urlencode({'discord_login': '1', 'username': username, 'balance': balance})
+    params = urllib.parse.urlencode({'discord_login': '1', 'username': username, 'balance': balance, 'discord_id': discord_id})
     return flask_redirect('/?' + params)
 
 @app.route('/')
